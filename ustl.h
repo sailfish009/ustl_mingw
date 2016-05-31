@@ -14,7 +14,6 @@
 #include "ustl/ulist.h"
 #include "ustl/uheap.h"
 #include "ustl/ustdxept.h"
-#include "ustl/uatomic.h"
 
 /// \mainpage
 ///

@@ -5,6 +5,7 @@
 
 #pragma once
 #include "unew.h"
+#include "uatomic.h"
 #include "uiterator.h"
 #include "ulimits.h"
 #include "upair.h"
@@ -164,8 +165,8 @@ public:
     using reference		= element_type&;
 private:
     struct container {
-	pointer	p;
-	size_t	refs;
+	pointer		p;
+	atomic<size_t>	refs;
 	inline constexpr explicit container (pointer np) : p(np),refs(1) {}
 	inline	~container (void) noexcept { assert (!refs); delete p; }
     };
