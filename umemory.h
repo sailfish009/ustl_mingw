@@ -444,7 +444,7 @@ ForwardIterator uninitialized_fill_n (ForwardIterator first, size_t n, const T& 
 
 //}}}-------------------------------------------------------------------
 //{{{ initializer_list
-#if HAVE_CPP11
+#if HAVE_CPP11 && WITHOUT_LIBSTDCPP
 
 namespace std {	// Internal stuff must be in std::
 
