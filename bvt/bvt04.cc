@@ -40,6 +40,9 @@ void TestVector (void)
     cout << v << endl;
     v.insert (v.begin() + 10, 3, 666);
     v.at(5) = 777;
+    vector<int>::const_pointer p5 = v.data()+5;
+    if (*p5 != 777)
+	cout << "at(5) did not work\n";
     cout << v << endl;
     v.resize (v.size() - 5);
     if (v.empty())

@@ -65,9 +65,9 @@ public:
   inline const_reverse_iterator	rend (void) const		{ return const_reverse_iterator (begin());	}
   inline const_reverse_iterator	crbegin (void) const		{ return rbegin(); }
   inline const_reverse_iterator	crend (void) const		{ return rend(); }
-    inline iterator		data (void)			{ return _data.data(); }
-    inline const_iterator	data (void) const		{ return _data.data(); }
-    inline const_iterator	cdata (void) const		{ return _data.cdata(); }
+    inline pointer		data (void)			{ return pointer (_data.data()); }
+    inline const_pointer	data (void) const		{ return const_pointer (_data.data()); }
+    inline const_pointer	cdata (void) const		{ return const_pointer (_data.cdata()); }
     inline iterator		iat (size_type i)		{ assert (i <= size()); return begin() + i; }
     inline const_iterator	iat (size_type i) const		{ assert (i <= size()); return begin() + i; }
     inline reference		at (size_type i)		{ assert (i < size()); return begin()[i]; }
