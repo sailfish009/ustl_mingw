@@ -209,10 +209,6 @@ int main (void)
 #endif
     printf ("s/@BYTE_ORDER@/%s_ENDIAN/g\n"
 	SET(RETSIGTYPE,void)
-	"s/#undef const/\\/\\* #define const \\*\\//g\n"
-	"s/#undef inline/\\/\\* #define inline __inline \\*\\//g\n"
-	"s/#undef off_t/\\/\\* typedef long off_t; \\*\\//g\n"
-	"s/#undef size_t/\\/\\* typedef long size_t; \\*\\//g\n"
 	SET(SIZE_OF_CHAR,%zd)
 	SET(SIZE_OF_SHORT,%zd)
 	SET(SIZE_OF_INT,%zd)

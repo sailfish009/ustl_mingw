@@ -13,7 +13,7 @@ namespace ustl {
 
 //----------------------------------------------------------------------
 
-/*static*/ constexpr const string::pos_type string::npos;
+constexpr const string::pos_type string::npos;
 
 //----------------------------------------------------------------------
 
@@ -110,7 +110,7 @@ string::size_type string::copy (pointer p, size_type n, pos_type start) const no
 /// \li 0 if this string is equal to string \p s
 /// \li -1 if this string is less than string \p s
 ///
-/*static*/ int string::compare (const_iterator first1, const_iterator last1, const_iterator first2, const_iterator last2) noexcept
+int string::compare (const_iterator first1, const_iterator last1, const_iterator first2, const_iterator last2) noexcept // static
 {
     assert (first1 <= last1 && (first2 <= last2 || !last2) && "Negative ranges result in memory allocation errors.");
     const size_type len1 = distance (first1, last1), len2 = distance (first2, last2);
@@ -383,7 +383,7 @@ void string::write (ostream& os) const
 }
 
 /// Returns a hash value for [first, last)
-/*static*/ hashvalue_t string::hash (const char* first, const char* last) noexcept
+hashvalue_t string::hash (const char* first, const char* last) noexcept // static
 {
     hashvalue_t h = 0;
     // This has the bits flowing into each other from both sides of the number

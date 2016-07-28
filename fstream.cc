@@ -80,7 +80,7 @@ void fstream::detach (void) noexcept
 }
 
 /// Converts openmode bits into libc open flags.
-/*static*/ int fstream::om_to_flags (openmode m) noexcept
+int fstream::om_to_flags (openmode m) noexcept // static
 {
     static const int s_OMFlags [nombits] = {
 	0,		// in

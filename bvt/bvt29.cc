@@ -27,7 +27,7 @@ public:
     virtual void Function (void) = 0;
     static int s_var __attribute__((unused));
 };
-/*static*/ int Polymorphic::s_var = 0;
+int Polymorphic::s_var = 0;
 }
 
 POD_CLASS (TTA);

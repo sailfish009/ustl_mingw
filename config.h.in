@@ -83,15 +83,6 @@
     #endif
 #endif
 
-// Define to empty if 'const' does not conform to ANSI C.
-#undef const
-// Define as '__inline' if that is what the C compiler calls it
-#undef inline
-// Define to 'long' if <sys/types.h> does not define.
-#undef off_t
-// Define to 'unsigned' if <sys/types.h> does not define.
-#undef size_t
-
 /// gcc has lately decided that inline is just a suggestion
 /// Define to 1 if when you say 'inline' you mean it!
 #undef WANT_ALWAYS_INLINE
