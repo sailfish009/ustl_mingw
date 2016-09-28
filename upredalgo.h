@@ -134,7 +134,7 @@ template <typename InputIterator, typename OutputIterator, typename Predicate>
 inline OutputIterator remove_copy_if (InputIterator first, InputIterator last, OutputIterator result, Predicate pred)
 {
     for (; first != last; ++first)
-	if (pred (*first))
+	if (!pred (*first))
 	    *result++ = *first;
     return result;
 }

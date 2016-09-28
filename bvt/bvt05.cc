@@ -231,6 +231,11 @@ static void TestAlgorithms (void)
     PrintVector (v);
     v.assign (first, last);
 
+    cout << "remove_if(is_even)\n";
+    remove_if (v, is_even);
+    PrintVector (v);
+    v.assign (first, last);
+
     cout << "unique\n";
     unique (v);
     PrintVector (v);
