@@ -326,6 +326,10 @@ static void TestAlgorithms (void)
 		"minmax_element(greater): min 18, max 1\n";
 #endif
 
+    cout.format ("clamp(4,1,9) = %d\n", clamp(4,1,9));
+    cout.format ("clamp(14,1,9) = %d\n", clamp(14,1,9));
+    cout.format ("clamp(-4,1,9) = %d\n", clamp(-4,1,9));
+
     cout << "partial_sort\n";
     reverse (v);
     partial_sort (v.begin(), v.iat(v.size() / 2), v.end());

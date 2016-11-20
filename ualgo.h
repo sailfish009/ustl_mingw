@@ -608,6 +608,14 @@ inline bool prev_permutation (BidirectionalIterator first, BidirectionalIterator
     return prev_permutation (first, last, less<value_type>());
 }
 
+/// Returns \p v clamped to the given range
+template <typename T, typename Compare>
+inline T clamp (const T& v, const T& l, const T& h, Compare comp)
+    { return comp(v, l) ? l : comp(h, v) ? h : v; }
+template <typename T>
+inline T clamp (const T& v, const T& l, const T& h)
+    { return v < l ? l : (h < v ? h : v); }
+
 /// Returns iterator to the max element in [first,last)
 /// \ingroup SearchingAlgorithms
 template <typename ForwardIterator>
