@@ -22,12 +22,20 @@ template <typename T>
 inline constexpr T&& forward (typename tm::RemoveReference<T>::Result&& v) noexcept
     { return static_cast<T&&>(v); }
 
-template <typename Assignable> 
-inline void swap (Assignable& a, Assignable& b)
+template <typename T>
+inline void swap (T& a, T& b)
 {
-    Assignable tmp = move(a);
+    T t = move(a);
     a = move(b);
-    b = move(tmp);
+    b = move(t);
+}
+
+template <typename T, typename U = T>
+T exchange (T& a, U&& b)
+{
+    T t = move(a);
+    a = forward<U>(b);
+    return t;
 }
 
 #else
