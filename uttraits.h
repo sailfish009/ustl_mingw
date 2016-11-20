@@ -95,6 +95,10 @@ template <typename T> using remove_all_extents_t = typename remove_all_extents<T
 template <typename T> struct underlying_type	{ using type = __underlying_type(T); };
 template <typename T> using underlying_type_t = typename underlying_type<T>::type;
 
+#if HAVE_CPP14
+template <typename...> using void_t = void;
+#endif
+
 template <typename T> struct make_signed	{ using type = T; };
 template <> struct make_signed<char>		{ using type = signed char; };
 template <> struct make_signed<unsigned char>	{ using type = signed char; };
@@ -279,9 +283,12 @@ UNARY_TRAIT_DEFB (is_final,		__is_final(T));
 #endif
 UNARY_TRAIT_DEFB (is_standard_layout,	__is_standard_layout(T));
 UNARY_TRAIT_DEFB (is_pod,		__is_pod(T) || is_scalar<T>::value || (is_array<T>::value && is_scalar<remove_all_extents_t<T>>::value));
-UNARY_TRAIT_DEFB (is_trivial,		is_pod<T>::value || __is_trivial(T));
-UNARY_TRAIT_DEFB (has_trivial_copy,	is_pod<T>::value || __has_trivial_copy(T));
-UNARY_TRAIT_DEFB (has_trivial_assign,	is_pod<T>::value || __has_trivial_assign(T));
+UNARY_TRAIT_DEFB (has_unique_object_representations,	is_pod<T>::value);
+UNARY_TRAIT_DEFB (is_trivial,			is_trivial<T>::value || __is_trivial(T));
+UNARY_TRAIT_DEFB (is_swappable,			is_trivial<T>::value);
+UNARY_TRAIT_DEFB (is_nothrow_swappable,		is_trivial<T>::value);
+UNARY_TRAIT_DEFB (has_trivial_copy,		is_pod<T>::value || __has_trivial_copy(T));
+UNARY_TRAIT_DEFB (has_trivial_assign,		is_pod<T>::value || __has_trivial_assign(T));
 UNARY_TRAIT_DEFB (has_trivial_constructor,	is_pod<T>::value || __has_trivial_constructor(T));
 UNARY_TRAIT_DEFB (has_trivial_destructor,	is_pod<T>::value || __has_trivial_destructor(T));
 UNARY_TRAIT_DEFB (has_virtual_destructor,	__has_virtual_destructor(T));
@@ -305,6 +312,15 @@ template <typename T> struct __decay<T, true, false>	{ using type = remove_exten
 template <typename T> struct __decay<T, false, true>	{ using type = add_pointer_t<T>; };
 template <typename T> struct decay : public __decay<remove_reference_t<T>> {};
 template <typename T> using decay_t = typename decay<T>::type;
+
+template <typename ...T> struct common_type;
+template <typename T> struct common_type<T> { using type = decay_t<T>; };
+template <typename ...T> using common_type_t = typename common_type<T...>::type;
+template <typename T, typename U> struct common_type<T, U>
+    { using type = decay_t<decltype(true ? declval<T>() : declval<U>())>; };
+template <typename T, typename U, typename... V>
+struct common_type<T, U, V...>
+    { using type = common_type_t<common_type_t<T, U>, V...>; };
 
 //}}}-------------------------------------------------------------------
 //{{{ Constructability and destructability
@@ -426,6 +442,13 @@ template <typename F, typename T>
 struct is_convertible : public __is_convertible<F, T>::type {};
 
 #endif
+
+template <typename T, typename U> struct is_swappable_with
+    : public integral_constant<bool,
+		is_convertible<U,T>::value && is_convertible<T,U>::value> {};
+template <typename T, typename U> struct is_nothrow_swappable_with
+    : public integral_constant<bool,
+		is_convertible<U,T>::value && is_convertible<T,U>::value> {};
 
 /// Defines a has_member_function_name template where has_member_function_name<O>::value is true when O::name exists
 /// Example: HAS_MEMBER_FUNCTION(read, void (O::*)(istream&)); has_member_function_read<vector<int>>::value == true
