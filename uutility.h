@@ -15,6 +15,7 @@ namespace ustl {
 #if HAVE_CPP11
     using nullptr_t	= decltype(nullptr);
 #endif
+using max_align_t	= uintptr_t;
 
 #if __GNUC__
     /// Returns the number of elements in a static vector
