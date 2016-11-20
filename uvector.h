@@ -149,7 +149,7 @@ inline void vector<T>::resize (size_type n, bool bExact)
     const size_type nb = n * sizeof(T);
     if (_data.capacity() < nb)
 	reserve (n, bExact);
-    construct (end(), end() + (nb - _data.size())/sizeof(T));
+    uninitialized_default_construct_n (end(), (nb - _data.size())/sizeof(T));
     _data.memlink::resize (nb);
 }
 
@@ -246,7 +246,7 @@ template <typename T>
 inline typename vector<T>::iterator vector<T>::insert_space (const_iterator ip, size_type n)
 {
     iterator ih = insert_hole (ip, n);
-    construct (ih, ih+n);
+    uninitialized_default_construct_n (ih, n);
     return ih;
 }
 
@@ -264,7 +264,7 @@ template <typename T>
 inline typename vector<T>::iterator vector<T>::insert (const_iterator ip, const T& v)
 {
     iterator d = insert_hole (ip, 1);
-    construct (d, v);
+    construct_at (d, v);
     return d;
 }
 
@@ -283,7 +283,7 @@ template <typename T>
 inline typename vector<T>::iterator vector<T>::erase (const_iterator ep, size_type n)
 {
     iterator d = const_cast<iterator>(ep);
-    destroy (d, d+n);
+    destroy_n (d, n);
     return iterator (_data.erase (memblock::iterator(d), n * sizeof(T)));
 }
 
@@ -299,7 +299,7 @@ inline typename vector<T>::iterator vector<T>::erase (const_iterator ep1, const_
 template <typename T>
 inline void vector<T>::push_back (const T& v)
 {
-    construct (append_hole(1), v);
+    construct_at (append_hole(1), v);
 }
 
 #if HAVE_CPP11

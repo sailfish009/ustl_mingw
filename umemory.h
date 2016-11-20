@@ -302,16 +302,34 @@ auto make_unique_resource_checked (R r, R invalid, D d) noexcept
 /// \ingroup RawStorageAlgorithms
 ///
 template <typename T>
+inline void construct_at (T* p)
+    { new (p) T; }
+
+/// Calls the placement new on \p p.
+/// \ingroup RawStorageAlgorithms
+///
+template <typename T>
+inline void construct_at (T* p, const T& value)
+    { new (p) T (value); }
+
+#if HAVE_CPP11
+/// Calls the move placement new on \p p.
+/// \ingroup RawStorageAlgorithms
+///
+template <typename T>
+inline void construct_at (T* p, T&& value)
+    { new (p) T (move<T>(value)); }
+#endif
+
+template <typename T>
 inline void construct (T* p)
-{
-    new (p) T;
-}
+    { construct_at(p); }
 
 /// Calls the placement new on \p p.
 /// \ingroup RawStorageAlgorithms
 ///
 template <typename ForwardIterator>
-inline void construct (ForwardIterator first, ForwardIterator last)
+inline void uninitialized_default_construct (ForwardIterator first, ForwardIterator last)
 {
     typedef typename iterator_traits<ForwardIterator>::value_type value_type;
 #if HAVE_CPP11
@@ -322,26 +340,37 @@ inline void construct (ForwardIterator first, ForwardIterator last)
 	memset ((void*) first, 0, max(distance(first,last),0)*sizeof(value_type));
     else
 	for (--last; intptr_t(first) <= intptr_t(last); ++first)
-	    construct (&*first);
+	    construct_at (&*first);
 }
+template <typename ForwardIterator>
+inline void uninitialized_default_construct_n (ForwardIterator first, size_t n)
+    { uninitialized_default_construct (first, first+n); }
+template <typename ForwardIterator>
+inline void construct (ForwardIterator first, ForwardIterator last)
+    { uninitialized_default_construct (first, last); }
 
-/// Calls the placement new on \p p.
-/// \ingroup RawStorageAlgorithms
-///
-template <typename T>
-inline void construct (T* p, const T& value)
+/// Calls the placement new on \p [first,last) with iterator_traits::value_type()
+template <typename ForwardIterator>
+inline void uninitialized_value_construct (ForwardIterator first, ForwardIterator last)
 {
-    new (p) T (value);
+    typedef typename iterator_traits<ForwardIterator>::value_type value_type;
+    for (--last; intptr_t(first) <= intptr_t(last); ++first)
+	construct_at (&*first, value_type());
 }
+template <typename ForwardIterator>
+inline void uninitialized_value_construct_n (ForwardIterator first, size_t n)
+    { uninitialized_value_construct (first, first+n); }
 
 /// Calls the destructor of \p p without calling delete.
 /// \ingroup RawStorageAlgorithms
 ///
 template <typename T>
+inline void destroy_at (T* p) noexcept
+    { p->~T(); }
+
+template <typename T>
 inline void destroy (T* p) noexcept
-{
-    p->~T();
-}
+    { destroy_at(p); }
 
 // Helper templates to not instantiate anything for integral types.
 template <typename T>
@@ -369,6 +398,9 @@ inline void destroy (ForwardIterator first, ForwardIterator last) noexcept
     Sdtorsr<ForwardIterator,numeric_limits<value_type>::is_integral>()(first, last);
 #endif
 }
+template <typename ForwardIterator>
+inline void destroy_n (ForwardIterator first, size_t n) noexcept
+    { destroy (first, first+n); }
 
 //}}}-------------------------------------------------------------------
 //{{{ Raw storage algorithms
@@ -404,7 +436,7 @@ template <typename InputIterator, typename ForwardIterator>
 ForwardIterator uninitialized_copy (InputIterator first, InputIterator last, ForwardIterator result)
 {
     for (; first < last; ++result, ++first)
-	construct (&*result, *first);
+	construct_at (&*result, *first);
     return result;
 }
 
@@ -415,7 +447,7 @@ template <typename InputIterator, typename ForwardIterator>
 ForwardIterator uninitialized_copy_n (InputIterator first, size_t n, ForwardIterator result)
 {
     for (++n; --n; ++result, ++first)
-	construct (&*result, *first);
+	construct_at (&*result, *first);
     return result;
 }
 
@@ -426,7 +458,7 @@ template <typename ForwardIterator, typename T>
 void uninitialized_fill (ForwardIterator first, ForwardIterator last, const T& v)
 {
     for (; first < last; ++first)
-	construct (&*first, v);
+	construct_at (&*first, v);
 }
 
 /// Calls construct on all elements in [first, first + n) with value \p v.
@@ -436,10 +468,36 @@ template <typename ForwardIterator, typename T>
 ForwardIterator uninitialized_fill_n (ForwardIterator first, size_t n, const T& v)
 {
     for (++n; --n; ++first)
-	construct (&*first, v);
+	construct_at (&*first, v);
     return first;
 }
+
+#if HAVE_CPP11
     
+/// Moves [first, last) into result by calling move constructors in result.
+/// \ingroup RawStorageAlgorithms
+///
+template <typename InputIterator, typename ForwardIterator>
+ForwardIterator uninitialized_move (InputIterator first, InputIterator last, ForwardIterator result)
+{
+    for (; first < last; ++result, ++first)
+	construct_at (&*result, move(*first));
+    return result;
+}
+
+/// Moves [first, first + n) into result by calling move constructors in result.
+/// \ingroup RawStorageAlgorithms
+///
+template <typename InputIterator, typename ForwardIterator>
+ForwardIterator uninitialized_move_n (InputIterator first, size_t n, ForwardIterator result)
+{
+    for (++n; --n; ++result, ++first)
+	construct_at (&*result, move(*first));
+    return result;
+}
+
+#endif // HAVE_CPP11
+
 } // namespace ustl
 
 //}}}-------------------------------------------------------------------

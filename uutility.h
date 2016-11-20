@@ -155,6 +155,10 @@ UNVOID_DISTANCE(const,)
 #undef UNVOID_DISTANCE
 #endif
 
+template <typename T>
+T* addressof (T& v)
+    { return reinterpret_cast<T*>(&const_cast<char&>(reinterpret_cast<const volatile char&>(v))); }
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 // The compiler issues a warning if an unsigned type is compared to 0.
 template <typename T, bool IsSigned> struct __is_negative { inline constexpr bool operator()(const T& v) const { return v < 0; } };
