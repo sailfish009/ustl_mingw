@@ -62,6 +62,9 @@ template <typename T> struct add_const			{ using type = T const; };
 template <typename T> struct add_const<const T>		{ using type = T const; };
 template <typename T> using add_const_t = typename add_const<T>::type;
 
+template <typename T> constexpr add_const_t<T>& as_const (T& v) { return v; }
+template <class T> void as_const(const T&&) = delete;
+
 template <typename T> struct add_volatile		{ using type = T volatile; };
 template <typename T> struct add_volatile<volatile T>	{ using type = T volatile; };
 template <typename T> using add_volatile_t = typename add_volatile<T>::type;

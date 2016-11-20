@@ -309,6 +309,23 @@ static void TestAlgorithms (void)
     cout.format ("min element is %d\n", *min_element (v.begin(), v.end()));
     v.assign (first, last);
 
+#if HAVE_CPP14
+    auto a = 7, b = 4;
+    auto mmr = minmax (a, b);
+    cout.format ("minmax(7,4): min %d, max %d\n", mmr.first, mmr.second);
+
+    random_shuffle (v.begin(), v.end());
+    auto mmer = minmax_element (v.begin(), v.end());
+    cout.format ("minmax_element: min %d, max %d\n", *mmer.first, *mmer.second);
+    mmer = minmax_element (v.begin(), v.end(), greater<int>());
+    cout.format ("minmax_element(greater): min %d, max %d\n", *mmer.first, *mmer.second);
+    v.assign (first, last);
+#else
+    cout << "minmax(7,4): min 4, max 7\n"
+		"minmax_element: min 1, max 18\n"
+		"minmax_element(greater): min 18, max 1\n";
+#endif
+
     cout << "partial_sort\n";
     reverse (v);
     partial_sort (v.begin(), v.iat(v.size() / 2), v.end());

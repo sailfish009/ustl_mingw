@@ -608,7 +608,7 @@ inline bool prev_permutation (BidirectionalIterator first, BidirectionalIterator
     return prev_permutation (first, last, less<value_type>());
 }
 
-/// \brief Returns iterator to the max element in [first,last)
+/// Returns iterator to the max element in [first,last)
 /// \ingroup SearchingAlgorithms
 template <typename ForwardIterator>
 inline ForwardIterator max_element (ForwardIterator first, ForwardIterator last)
@@ -617,13 +617,77 @@ inline ForwardIterator max_element (ForwardIterator first, ForwardIterator last)
     return max_element (first, last, less<value_type>());
 }
 
-/// \brief Returns iterator to the min element in [first,last)
+/// Returns iterator to the min element in [first,last)
 /// \ingroup SearchingAlgorithms
 template <typename ForwardIterator>
 inline ForwardIterator min_element (ForwardIterator first, ForwardIterator last)
 {
     typedef typename iterator_traits<ForwardIterator>::value_type value_type;
     return min_element (first, last, less<value_type>());
+}
+
+#if HAVE_CPP14
+
+/// Returns min,max pair of the argument
+template <typename T>
+inline constexpr auto minmax (const T& a, const T& b)
+    { return a < b ? make_pair<const T&,const T&>(a,b) : make_pair<const T&,const T&>(b,a); }
+template <typename T>
+inline constexpr auto minmax (T& a, T& b)
+    { return a < b ? make_pair<T&,T&>(a,b) : make_pair<T&,T&>(b,a); }
+template <typename T, typename Compare>
+inline constexpr auto minmax (const T& a, const T& b, Compare comp)
+    { return comp(a,b) ? make_pair<const T&,const T&>(a,b) : make_pair<const T&,const T&>(b,a); }
+template <typename T> constexpr void minmax (T&& a, T&& b) = delete;
+template <typename T, typename Compare> constexpr void minmax (const T& a, const T& b, Compare comp) = delete;
+
+template <typename T>
+auto minmax (std::initializer_list<T> l)
+{
+    auto r = make_pair (*l.begin(),*l.begin());
+    for (auto& i : l) {
+	r.first = min (r.first, i);
+	r.second = max (r.second, i);
+    }
+    return r;
+}
+template <typename T, typename Compare>
+auto minmax (std::initializer_list<T> l, Compare comp)
+{
+    auto r = make_pair (*l.begin(),*l.begin());
+    for (auto& i : l) {
+	if (comp(i, r.first))
+	    r.first = i;
+	if (comp(r.second, i))
+	    r.second = i;
+    }
+    return r;
+}
+#endif
+
+template <typename ForwardIterator>
+pair<ForwardIterator,ForwardIterator> minmax_element (ForwardIterator first, ForwardIterator last)
+{
+    pair<ForwardIterator,ForwardIterator> r = make_pair (first, first);
+    for (; first != last; ++first) {
+	if (*first < *r.first)
+	    r.first = first;
+	if (*r.second < *first)
+	    r.second = first;
+    }
+    return r;
+}
+template <typename ForwardIterator, typename Compare>
+pair<ForwardIterator,ForwardIterator> minmax_element (ForwardIterator first, ForwardIterator last, Compare comp)
+{
+    pair<ForwardIterator,ForwardIterator> r = make_pair (first, first);
+    for (; first != last; ++first) {
+	if (comp (*first, *r.first))
+	    r.first = first;
+	if (comp (*r.second, *first))
+	    r.second = first;
+    }
+    return r;
 }
 
 /// \brief Makes [first,middle) a part of the sorted array.
