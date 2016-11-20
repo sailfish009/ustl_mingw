@@ -96,7 +96,7 @@ struct iterator_traits<const void*> {
 /// \ingroup IteratorAdaptors
 /// \brief Wraps \p Iterator to behave in an exactly opposite manner.
 ///
-template <class Iterator>
+template <typename Iterator>
 class reverse_iterator {
 public:
     typedef typename iterator_traits<Iterator>::value_type	value_type;
@@ -121,18 +121,64 @@ public:
     inline reverse_iterator	operator+ (size_t n) const { return reverse_iterator (_i - n); }
     inline reverse_iterator	operator- (size_t n) const { return reverse_iterator (_i + n); }
     inline reference		operator[] (uoff_t n) const { return *(*this + n); }
-    inline difference_type	operator- (const reverse_iterator& i) const { return distance (_i, i._i); }
+    inline difference_type	operator- (const reverse_iterator& i) const { return distance (i._i, _i); }
 protected:
     Iterator			_i;
 };
 
+template <typename Iterator>
+inline reverse_iterator<Iterator> make_reverse_iterator (Iterator i)
+    { return reverse_iterator<Iterator>(i); }
+
+//----------------------------------------------------------------------
+#if HAVE_CPP11
+
+/// \class move_iterator uiterator.h ustl.h
+/// \ingroup IteratorAdaptors
+/// \brief Wraps \p Iterator to behave in an exactly opposite manner.
+///
+template <typename Iterator>
+class move_iterator {
+public:
+    using value_type		= typename iterator_traits<Iterator>::value_type;
+    using difference_type	= typename iterator_traits<Iterator>::difference_type;
+    using pointer		= typename iterator_traits<Iterator>::pointer;
+    using reference		= value_type&&;
+    using iterator_category	= typename iterator_traits<Iterator>::iterator_category;
+public:
+				move_iterator (void)		: _i() {}
+    explicit			move_iterator (Iterator iter)	: _i (iter) {}
+    inline bool			operator== (const move_iterator& iter) const	{ return _i == iter._i; }
+    inline bool			operator< (const move_iterator& iter) const	{ return _i < iter._i; }
+    inline Iterator		base (void) const		{ return _i; }
+    inline reference		operator* (void) const		{ return move(*_i); }
+    inline pointer		operator-> (void) const		{ return &*_i; }
+    inline move_iterator&	operator++ (void)		{ ++_i; return *this; }
+    inline move_iterator&	operator-- (void)		{ --_i; return *this; }
+    inline move_iterator	operator++ (int)		{ move_iterator r (*this); ++ _i; return r; }
+    inline move_iterator	operator-- (int)		{ move_iterator r (*this); -- _i; return r; }
+    inline move_iterator&	operator+= (size_t n)		{ _i += n; return *this; }
+    inline move_iterator&	operator-= (size_t n)		{ _i -= n; return *this; }
+    inline move_iterator	operator+ (size_t n) const	{ return move_iterator (_i - n); }
+    inline move_iterator	operator- (size_t n) const	{ return move_iterator (_i + n); }
+    inline reference		operator[] (uoff_t n) const	{ return move(*(*this + n)); }
+    inline difference_type	operator- (const move_iterator& i) const	{ return distance (_i, i._i); }
+protected:
+    Iterator			_i;
+};
+
+template <typename Iterator>
+inline move_iterator<Iterator> make_move_iterator (Iterator i)
+    { return move_iterator<Iterator>(i); }
+
+#endif
 //----------------------------------------------------------------------
 
 /// \class insert_iterator uiterator.h ustl.h
 /// \ingroup IteratorAdaptors
 /// \brief Calls insert on bound container for each assignment.
 ///
-template <class Container>
+template <typename Container>
 class insert_iterator {
 public:
     typedef typename Container::value_type	value_type;
@@ -154,11 +200,9 @@ protected:
 };
 
 /// Returns the insert_iterator for \p ctr.
-template <class Container>
+template <typename Container>
 inline insert_iterator<Container> inserter (Container& ctr, typename Container::iterator ip)
-{
-    return insert_iterator<Container> (ctr, ip);
-}
+    { return insert_iterator<Container> (ctr, ip); }
 
 //----------------------------------------------------------------------
 
@@ -188,9 +232,37 @@ protected:
 /// Returns the back_insert_iterator for \p ctr.
 template <class Container>
 inline back_insert_iterator<Container> back_inserter (Container& ctr)
-{
-    return back_insert_iterator<Container> (ctr);
-}
+    { return back_insert_iterator<Container> (ctr); }
+
+//----------------------------------------------------------------------
+
+/// \class front_insert_iterator uiterator.h ustl.h
+/// \ingroup IteratorAdaptors
+/// \brief Calls push_front on bound container for each assignment.
+///
+template <class Container>
+class front_insert_iterator {
+public:
+    typedef typename Container::value_type	value_type;
+    typedef typename Container::difference_type	difference_type;
+    typedef typename Container::pointer		pointer;
+    typedef typename Container::reference	reference;
+    typedef output_iterator_tag			iterator_category;
+public:
+    explicit				front_insert_iterator (Container& ctr) : _rctr (ctr) {}
+    inline front_insert_iterator&	operator= (typename Container::const_reference v)
+					    { _rctr.push_front (v); return *this; }
+    inline front_insert_iterator&	operator* (void)  { return *this; }
+    inline front_insert_iterator&	operator++ (void) { return *this; }
+    inline front_insert_iterator	operator++ (int)  { return *this; }
+protected:
+    Container&		_rctr;
+};
+
+/// Returns the front_insert_iterator for \p ctr.
+template <class Container>
+inline front_insert_iterator<Container> front_inserter (Container& ctr)
+    { return front_insert_iterator<Container> (ctr); }
 
 //----------------------------------------------------------------------
 
