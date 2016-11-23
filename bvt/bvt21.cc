@@ -109,6 +109,11 @@ void TestUtility (void)
     cout << "min(6U,1U) = " << min(6U,1U) << endl;
     cout << "max(-3,-6) = " << max(-3,-6) << endl;
     cout << "max(-3L,6L) = " << max(-3L,6L) << endl;
+    cout.unsetf (ios::showpos);
+    cout << "gcd(36,62) = " << gcd(36,62) << endl;
+    cout << "gcd(45,30) = " << gcd(45,30) << endl;
+    cout << "lcm(-36,62) = " << lcm(-36,62) << endl;
+    cout << "lcm(45,30) = " << lcm(45,30) << endl;
 }
 
 StdBvtMain (TestUtility)

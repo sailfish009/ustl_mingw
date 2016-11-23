@@ -196,6 +196,20 @@ inline constexpr size_t size_of_elements (size_t n, const T*)
     return n * sizeof(T);
 }
 
+/// Returns the greatest common divisor
+template <typename T>
+constexpr T gcd (T a, T b)
+{
+    return b ? gcd(b,a%b) : absv(a);
+}
+
+/// Returns the least common multiple
+template <typename T>
+constexpr T lcm (T a, T b)
+{
+    return a/gcd(a,b)*b;
+}
+
 // Defined in byteswap.h, which is usually unusable.
 #undef bswap_16
 #undef bswap_32

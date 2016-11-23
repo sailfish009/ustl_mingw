@@ -373,9 +373,11 @@ inline void destroy (T* p) noexcept
     { destroy_at(p); }
 
 // Helper templates to not instantiate anything for integral types.
+namespace {
+
 template <typename T>
 void dtors (T first, T last) noexcept
-    { for (--last; intptr_t(first) <= intptr_t(last); ++first) destroy (&*first); }
+    { for (--last; intptr_t(first) <= intptr_t(last); ++first) destroy_at (&*first); }
 template <typename T, bool bIntegral>
 struct Sdtorsr {
     inline void operator()(T first, T last) noexcept { dtors (first, last); }
@@ -384,6 +386,7 @@ template <typename T>
 struct Sdtorsr<T,true> {
     inline void operator()(T, T) noexcept {}
 };
+} // namespace
 
 /// Calls the destructor on elements in range [first, last) without calling delete.
 /// \ingroup RawStorageAlgorithms
