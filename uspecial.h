@@ -15,6 +15,7 @@
 #include "ufunction.h"
 #include "uctrstrm.h"
 #include "sistream.h"
+#include "uratio.h"
 
 namespace ustl {
 
@@ -179,6 +180,16 @@ ostringstream& operator<< (ostringstream& os, const matrix<NX,NY,T>& v)
 	    os << v[row][column] << ",)"[column == NX-1];
     }
     os << ')';
+    return os;
+}
+
+//----{ ratio }---------------------------------------------------------
+
+/// Writes ratio \p r to stream \p os.
+template <intmax_t N, intmax_t D>
+ostringstream& operator<< (ostringstream& os, const ratio<N,D>&)
+{
+    os.format ("%jd/%jd", N, D);
     return os;
 }
 
