@@ -20,6 +20,7 @@ struct integral_constant {
     constexpr operator value_type() const	{ return value; }
     constexpr value_type operator()() const	{ return value; }
 };
+template <typename T, T v> constexpr const T integral_constant<T,v>::value;
 
 using true_type = integral_constant<bool, true>;
 using false_type = integral_constant<bool, false>;

@@ -114,9 +114,6 @@ void TestUtility (void)
     cout << "gcd(45,30) = " << gcd(45,30) << endl;
     cout << "lcm(-36,62) = " << lcm(-36,62) << endl;
     cout << "lcm(45,30) = " << lcm(45,30) << endl;
-    cout << "2/6 + 4/15 = " << ratio_add<ratio<2,6>,ratio<4,15>>::type() << endl;
-    cout << "2/6 / 4/15 = " << ratio_divide<ratio<2,6>,ratio<4,15>>::type() << endl;
-    cout << "2/6 > 4/15 = " << ratio_greater<ratio<2,6>,ratio<4,15>>::value << endl;
 }
 
 StdBvtMain (TestUtility)
