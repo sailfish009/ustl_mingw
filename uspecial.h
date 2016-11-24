@@ -183,18 +183,6 @@ ostringstream& operator<< (ostringstream& os, const matrix<NX,NY,T>& v)
     return os;
 }
 
-//----{ ratio }---------------------------------------------------------
-#if HAVE_CPP11
-
-/// Writes ratio \p r to stream \p os.
-template <intmax_t N, intmax_t D>
-ostringstream& operator<< (ostringstream& os, const ratio<N,D>&)
-{
-    os.format ("%jd/%jd", N, D);
-    return os;
-}
-
-#endif
 //----{ long4grain }----------------------------------------------------
 
 #if SIZE_OF_LONG == 8 && HAVE_INT64_T

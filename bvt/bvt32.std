@@ -1,4 +1,4 @@
-2/6 + 4/15 = 9/15
+2/6 + 4/15 = 3/5
 2/6 / 4/15 = 5/4
 2/6 > 4/15 = true
 
@@ -10,12 +10,13 @@
 0.82672 microfortnights
 0.316957 nanocenturies
 
-4000 ms
-5000 ms
+4000_ms
+5_s
 system_clock::now() <= high_resolution_clock::now()
 high_resolution_clock::now() >= system_clock::now()
-0 ms
-0 ms
-7200042 ms
-7200000 ms
-7200000 ms
+0_ms
+0_ms
+Tue Jan  1 00:42:00 1980
+7200042_ms
+7200_s
+7200000_ms

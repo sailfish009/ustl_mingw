@@ -6,11 +6,6 @@
 #include "stdtest.h"
 
 #if HAVE_CPP11
-static void print_ms (const chrono::milliseconds& tp) 
-    { cout << tp.count() << " ms\n"; }
-static void print_ms (const chrono::time_point<chrono::high_resolution_clock,chrono::milliseconds>& tp) 
-    { print_ms (tp.time_since_epoch()); }
- 
 void TestChrono (void)
 {
     cout << "2/6 + 4/15 = " << ratio_add<ratio<2,6>,ratio<4,15>>::type() << endl;
@@ -41,11 +36,10 @@ void TestChrono (void)
     chrono::time_point<chrono::high_resolution_clock, chrono::seconds> tps (chrono::seconds(4));
     // implicit cast, no precision loss
     chrono::time_point<chrono::high_resolution_clock, chrono::milliseconds> tpms (tps);
-    print_ms (tpms);
+    cout << tpms << endl;
     tpms = chrono::time_point<chrono::high_resolution_clock, chrono::milliseconds> (chrono::milliseconds(5756));
     // explicit cast, 5756 truncated to 5000
-    tps = chrono::time_point_cast<chrono::seconds>(tpms);
-    print_ms (tps);	// 5000 ms
+    cout << chrono::time_point_cast<chrono::seconds>(tpms) << endl;
 
     // Excercise the clock code
     auto nowsc = chrono::system_clock::now();
@@ -59,23 +53,25 @@ void TestChrono (void)
 
     auto steadypt1 = chrono::steady_clock::now();
     auto steadypt2 = chrono::steady_clock::now();
-    auto steadyd = chrono::duration_cast<chrono::milliseconds> (steadypt2 - steadypt1);
-    print_ms (steadyd);
+    cout << chrono::duration_cast<chrono::milliseconds> (steadypt2 - steadypt1) << endl;
 
     auto mspt1 = chrono::system_clock_ms::now();
-    auto mspt2 = chrono::system_clock_ms::now();
-    print_ms (mspt2 - mspt1);
+    cout << chrono::system_clock_ms::now() - mspt1 << endl;
+
+    // Check time_point printing
+    chrono::system_clock::time_point ty1980 (chrono::years(10));
+    ty1980 -= chrono::hours(7);
+    ty1980 += chrono::minutes(42);
+    cout << ty1980 << endl;
 
     // Exercise duration arithmetic
     nowhr -= nowhr.time_since_epoch();
     nowhr += chrono::hours(2);
     nowhr += chrono::milliseconds(42);
-    tpms = chrono::time_point_cast<chrono::milliseconds> (nowhr);
-    print_ms (tpms);
+    cout << chrono::time_point_cast<chrono::milliseconds> (nowhr) << endl;
     tps = chrono::time_point_cast<chrono::seconds> (nowhr);
-    print_ms (tps);
-    tpms = chrono::time_point_cast<chrono::milliseconds> (tps);
-    print_ms (tpms);
+    cout << tps << endl;
+    cout << chrono::time_point_cast<chrono::milliseconds> (tps) << endl;
 }
 #else
 void TestChrono (void)

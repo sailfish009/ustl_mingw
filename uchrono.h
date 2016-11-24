@@ -29,7 +29,14 @@ ToDuration duration_cast (const duration<Rep, Period>& d)
     { return __duration_cast_impl<ToDuration,Rep,Period>::cast (d); }
 
 //}}}-------------------------------------------------------------------
-//{{{ treat_as_floating_point
+//{{{ duration_values and treat_as_floating_point
+
+template <typename Rep>
+struct duration_values {
+    static constexpr Rep	zero (void)	{ return Rep(0); }
+    static constexpr Rep	min (void)	{ return numeric_limits<Rep>::lowest(); }
+    static constexpr Rep	max (void)	{ return numeric_limits<Rep>::max(); }
+};
 
 template <typename Rep>
 struct treat_as_floating_point : public is_floating_point<Rep> {};
@@ -110,13 +117,25 @@ struct duration {
     bool>::type			operator< (const duration<rep,Period2>& v) const
 				    { return operator< (duration(v)); }
 
+    inline void			read (istream& is)		{ is >> _r; }
+    inline void			write (ostream& os) const	{ os << _r; }
+    inline streamsize		stream_size (void) const	{ return stream_size_of(_r); }
+    inline void			text_write (ostringstream& os) const;
+
     // Named ctors for special values
-    static constexpr duration	zero (void)	{ return duration (0); }
-    static constexpr duration	min (void)	{ return duration (numeric_limits<rep>::lowest()); }
-    static constexpr duration	max (void)	{ return duration (numeric_limits<rep>::max()); }
+    static constexpr duration	zero (void)	{ return duration (duration_values<rep>::zero()); }
+    static constexpr duration	min (void)	{ return duration (duration_values<rep>::min()); }
+    static constexpr duration	max (void)	{ return duration (duration_values<rep>::max()); }
 private:
     rep	_r;
 };
+
+template <typename Duration>
+struct duration_text_write {
+    static inline void text_write (ostringstream& os, const typename Duration::rep& r) { os << r; }
+};
+template <typename R, typename P>
+void duration<R,P>::text_write (ostringstream& os) const { duration_text_write<duration<R,P>>::text_write(os,_r); }
 
 //}}}-------------------------------------------------------------------
 //{{{ Standard durations
@@ -133,6 +152,23 @@ using years		= duration<intmax_t, ratio<365*days::period::num+days::period::num/
 using months		= duration<intmax_t, ratio<years::period::num/12>>;
 using centuries		= duration<intmax_t, ratio<years::period::num*100>>;
 using millenia		= duration<intmax_t, ratio<years::period::num*1000>>;
+
+#define DURATION_TEXT_SUFFIX(d,suffix) \
+template <> struct duration_text_write<d> { \
+    static inline void text_write (ostringstream& os, const typename d::rep& r) \
+	{ os << r << suffix; }}
+DURATION_TEXT_SUFFIX (nanoseconds, "_ns");
+DURATION_TEXT_SUFFIX (microseconds, "_us");
+DURATION_TEXT_SUFFIX (milliseconds, "_ms");
+DURATION_TEXT_SUFFIX (seconds, "_s");
+DURATION_TEXT_SUFFIX (minutes, "_min");
+DURATION_TEXT_SUFFIX (hours, "_hours");
+DURATION_TEXT_SUFFIX (days, "_days");
+DURATION_TEXT_SUFFIX (weeks, "_weeks");
+DURATION_TEXT_SUFFIX (years, "_years");
+DURATION_TEXT_SUFFIX (months, "_months");
+DURATION_TEXT_SUFFIX (centuries, "_centuries");
+DURATION_TEXT_SUFFIX (millenia, "_millenia");
 
 //}}}-------------------------------------------------------------------
 //{{{ hrtime_t
@@ -205,11 +241,27 @@ struct hrtime_t : public timespec {
     inline hrtime_t		operator/ (intmax_t v) const		{ hrtime_t r(*this); return r /= v; }
     inline constexpr bool	operator== (const hrtime_t& v) const	{ return tv_sec == v.tv_sec && tv_nsec == v.tv_nsec; }
     inline constexpr bool	operator< (const hrtime_t& v) const	{ return tv_sec < v.tv_sec || (tv_sec == v.tv_sec && tv_nsec < v.tv_nsec); }
+    inline void			read (istream& is)			{ is >> tv_sec >> tv_nsec; }
+    inline void			write (ostream& os) const		{ os << tv_sec << tv_nsec; }
+    void			text_write (ostringstream& os) const	{ os.format ("%ld.%09ld", tv_sec, tv_nsec); }
+    inline streamsize		stream_size (void) const		{ return stream_size_of(tv_sec) + stream_size_of(tv_nsec); }
 };
 
+// numeric_limits<hrtime_t>::min,max will always return 0
+template <> struct duration_values<hrtime_t> {
+    static constexpr hrtime_t zero (void)
+	{ return hrtime_t(); }
+    static constexpr hrtime_t min (void)
+	{ return hrtime_t (numeric_limits<decltype(hrtime_t::tv_sec)>::lowest(), nano::den-1); }
+    static constexpr hrtime_t max (void)
+	{ return hrtime_t (numeric_limits<decltype(hrtime_t::tv_sec)>::max(), nano::den-1); }
+};
+
+// timespec has a very high resolution, so is convertible as float
+template <> struct treat_as_floating_point<hrtime_t> : public true_type {};
+
 // Override duration_cast to avoid intermediate conversion to intmax_t nanoseconds
-template <>
-template <typename ToDuration, typename Period>
+template <> template <typename ToDuration, typename Period>
 struct __duration_cast_impl<ToDuration, hrtime_t, Period> {
     using to_rep	= typename ToDuration::rep;
     using ns_conv_ratio	= typename ratio_divide<Period, typename ToDuration::period>::type;
@@ -221,10 +273,6 @@ struct __duration_cast_impl<ToDuration, hrtime_t, Period> {
 		+ static_cast<to_rep>(t.tv_nsec) * ns_conv_ratio::num / ns_conv_ratio::den);
     }
 };
-
-// timespec has a very high resolution, so is convertible as float
-template <>
-struct treat_as_floating_point<hrtime_t> : public true_type {};
 
 //}}}-------------------------------------------------------------------
 //{{{ time_point
@@ -261,11 +309,23 @@ struct time_point {
     template <typename Duration2 = duration>
     inline constexpr bool	operator< (const time_point<clock,Duration2>& t) const
 				    { return time_since_epoch() < t.time_since_epoch(); }
+    inline void			read (istream& is)		{ is >> _t; }
+    inline void			write (ostream& os) const	{ os << _t; }
+    inline streamsize		stream_size (void) const	{ return stream_size_of(_t); }
+    inline void			text_write (ostringstream& os) const;
+    static constexpr time_point	zero (void)	{ return time_point (duration::zero()); }
     static constexpr time_point	min (void)	{ return time_point (duration::min()); }
     static constexpr time_point	max (void)	{ return time_point (duration::max()); }
 private:
     duration	_t;
 };
+
+template <typename TimePoint>
+struct time_point_text_write {
+    static inline void text_write (ostringstream& os, const TimePoint& r) { os << r.time_since_epoch(); }
+};
+template <typename C, typename D>
+void time_point<C,D>::text_write (ostringstream& os) const { time_point_text_write<time_point<C,D>>::text_write(os,*this); }
 
 //}}}-------------------------------------------------------------------
 //{{{ system_clock
@@ -283,6 +343,17 @@ struct system_clock {
     static inline time_point	now (void) noexcept
 				    { return from_time_t (time (nullptr)); }
     static constexpr bool	is_steady = false;
+};
+
+template <> struct time_point_text_write<system_clock::time_point> {
+    static inline void text_write (ostringstream& os, const system_clock::time_point& tp) {
+	auto tt = system_clock::to_time_t (tp);
+	auto tstr = ctime (&tt);
+	if (!tstr)
+	    return;
+	tstr[strlen(tstr)-1] = 0; // remove trailing newline
+	os << tstr;
+    }
 };
 
 //}}}-------------------------------------------------------------------
@@ -305,11 +376,20 @@ public:
 //}}}-------------------------------------------------------------------
 //{{{ steady_clock
 
+// Monotonically increasing clock
 struct steady_clock : public high_resolution_clock {
-    using time_point		= ::ustl::chrono::time_point<steady_clock, duration>;
-    static time_point		now (void) noexcept
-				    { return time_point (duration (rep_now (CLOCK_MONOTONIC))); }
-    static constexpr bool	is_steady = true;
+    using duration	= nanoseconds;
+    using rep		= typename duration::rep;
+    using period	= typename duration::period;
+    using time_point	= ::ustl::chrono::time_point<steady_clock, duration>;
+public:
+    static time_point now (void) noexcept {
+	return time_point (
+		duration_cast<duration>(
+		    high_resolution_clock::duration(
+			rep_now (CLOCK_MONOTONIC))));
+    }
+    static constexpr bool is_steady = true;
 };
 
 //}}}-------------------------------------------------------------------

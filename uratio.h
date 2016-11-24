@@ -4,7 +4,7 @@
 // This file is free software, distributed under the MIT License.
 
 #pragma once
-#include "uutility.h"
+#include "sostream.h"
 
 #if HAVE_CPP11	// ratio requires constexpr
 namespace ustl {
@@ -16,6 +16,8 @@ struct ratio {
     enum : intmax_t { init_gcd = gcd(N,D) };
     static constexpr intmax_t num = N*sign(D) / init_gcd;
     static constexpr intmax_t den = absv(D) / init_gcd;
+    void text_write (ostringstream& os) const
+	{ os.format ("%jd/%jd", num, den); }
 };
 
 //{{{ Arithmetic operations --------------------------------------------
