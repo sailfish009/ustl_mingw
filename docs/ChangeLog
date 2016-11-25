@@ -1,3 +1,41 @@
+2016-11-25 Release 2.5
+	* Implement chrono.
+	* Implement ratio.
+	* Implement gcd and lcm.
+	* Implement exchange, clamp, minmax, and minmax_element algorithms.
+	* Implement front_insert_iterator and move_iterator.
+	* Add uninitialized_default_construct and uninitialized_value_construct.
+	* Implement uninitialized_move, destroy_at, and destroy_n.
+	* Add void_t, is_swappable, and common_type type traits.
+	* Implement c++11 float fields in numeric_limits.
+	* Implement ostringstream fill and setfill manip.
+	* Fix some clang compatibility warnings.
+	* Give descriptive names to tests.
+
+2016-05-10 Release 2.4
+	* Implement scope_exit and unique_resource
+	* Implement c++11 members of priority_queue, stack, and queue
+	* Do not remove lvalue make_pair for c++11
+	* Fix previously broken heap implementation
+	* Fix utf8out_iterator postfix ++ to not create a new iterator
+	* A more thorough utf8 encoder test
+	* Add constexpr to definition of string::npos
+	* Support dash shell for configure
+	* Fix compiling --with-libstdc++
+	* Fix early inclusion of system headers when using force-inline
+
+2016-01-16 Release 2.3
+	* Implement unique_ptr and shared_ptr
+	* Implement atomic
+	* Implement is_constructible, is_destructible, is_assignable, and variations
+	* Enable c++14 compilation for clang 3.6+ and gcc 5+
+	* Numerous improvements to streams API
+	* Add all stream formatting manipulators: setw, setprecision, etc.
+	* Increase default stream buffer size to improve ifstream/ofstream performance.
+	* Implement string-number conversions.
+	* Rename libc_exception to system_error; in c++14 that is now a standard
+	* Fixes to compile on Debian and OS X
+
 2015-01-18 Release 2.2
 	* Implement C++11 type traits
 	* Some fixes for incorrect behavior of array
