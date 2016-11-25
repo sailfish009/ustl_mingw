@@ -1,6 +1,6 @@
 DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = uSTL
-PROJECT_NUMBER         = 2.4
+PROJECT_NUMBER         = 2.5
 PROJECT_BRIEF          =
 PROJECT_LOGO           =
 OUTPUT_DIRECTORY       = docs
@@ -92,7 +92,7 @@ FILE_PATTERNS          = *.cc *.h
 RECURSIVE              = NO
 EXCLUDE                =
 EXCLUDE_SYMLINKS       = NO
-EXCLUDE_PATTERNS       = */bvt/*
+EXCLUDE_PATTERNS       = */test/*
 EXCLUDE_SYMBOLS        =
 EXAMPLE_PATH           =
 EXAMPLE_PATTERNS       =
