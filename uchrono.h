@@ -176,8 +176,8 @@ DURATION_TEXT_SUFFIX (millenia, "_millenia");
 // Extends struct timespec, used by libc time functions, as an arithmetic type
 struct hrtime_t : public timespec {
     inline constexpr		hrtime_t (void)			: timespec{}{}
-    inline constexpr		hrtime_t (const hrtime_t&) = default;
-    inline constexpr hrtime_t&	operator= (const hrtime_t&) = default;
+				hrtime_t (const hrtime_t&) = default;
+    hrtime_t&			operator= (const hrtime_t&) = default;
     inline explicit constexpr	hrtime_t (const timespec& v)	: timespec{v}{}
     inline constexpr		hrtime_t (time_t s, long ns)	: timespec{s,ns}{}
     inline explicit constexpr	hrtime_t (intmax_t v)		: timespec{v/nano::den,v%nano::den}{}
@@ -261,7 +261,7 @@ template <> struct duration_values<hrtime_t> {
 template <> struct treat_as_floating_point<hrtime_t> : public true_type {};
 
 // Override duration_cast to avoid intermediate conversion to intmax_t nanoseconds
-template <> template <typename ToDuration, typename Period>
+template <typename ToDuration, typename Period>
 struct __duration_cast_impl<ToDuration, hrtime_t, Period> {
     using to_rep	= typename ToDuration::rep;
     using ns_conv_ratio	= typename ratio_divide<Period, typename ToDuration::period>::type;

@@ -78,7 +78,7 @@ void TestChrono (void)
 {
     static const char* c_StdPaths[] = { "bvt/bvt32.std", "../../bvt/bvt32.std", "bvt32.std" };
     string so;
-    for (unsigned i = 0; i < ArraySize(c_StdPaths); ++i)
+    for (unsigned i = 0; i < VectorSize(c_StdPaths); ++i)
 	if (0 == access (c_StdPaths[i], R_OK))
 	    so.read_file (c_StdPaths[i]);
     cout << so;

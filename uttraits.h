@@ -288,7 +288,7 @@ UNARY_TRAIT_DEFB (is_final,		__is_final(T));
 UNARY_TRAIT_DEFB (is_standard_layout,	__is_standard_layout(T));
 UNARY_TRAIT_DEFB (is_pod,		__is_pod(T) || is_scalar<T>::value || (is_array<T>::value && is_scalar<remove_all_extents_t<T>>::value));
 UNARY_TRAIT_DEFB (has_unique_object_representations,	is_pod<T>::value);
-UNARY_TRAIT_DEFB (is_trivial,			is_trivial<T>::value || __is_trivial(T));
+UNARY_TRAIT_DEFB (is_trivial,			is_pod<T>::value || __is_trivial(T));
 UNARY_TRAIT_DEFB (is_swappable,			is_trivial<T>::value);
 UNARY_TRAIT_DEFB (is_nothrow_swappable,		is_trivial<T>::value);
 UNARY_TRAIT_DEFB (has_trivial_copy,		is_pod<T>::value || __has_trivial_copy(T));
@@ -370,11 +370,15 @@ struct __is_move_constructible {
 };
 template <typename T> struct is_move_constructible : public decltype(__is_move_constructible::test<T>(0)) {};
 
+#if __clang_major__ > 3 || (__clang_major__ == 3 && __clang_minor__ >= 9)
+template <typename T, typename U> struct is_assignable : public integral_constant<bool, __is_assignable(T,U)> {};
+#else
 struct __is_assignable {
     template <typename T, typename U, typename = decltype(declval<T>() = declval<U>())> static true_type test (int);
     template <typename T, typename U> static false_type test (...);
 };
 template <typename T, typename U> struct is_assignable : public decltype(__is_assignable::test<T,U>(0)) {};
+#endif
 
 template <typename T> struct is_copy_assignable : public is_assignable<T&, const T&> {};
 template <typename T> struct is_move_assignable : public is_assignable<T&, T&&> {};

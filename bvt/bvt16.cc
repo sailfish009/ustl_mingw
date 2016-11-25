@@ -41,7 +41,7 @@ void TestUTF8 (void)
 	    m1 = 0x80;
 	}
 	if ((encoded[i] & m1) != h1)
-	    cout.format ("Char %x has incorrect encoded header %02hhx instead of %02hhx\n", ci, encoded[i] & m1, h1);
+	    cout.format ("Char %x has incorrect encoded header %02x instead of %02hhx\n", ci, encoded[i] & m1, h1);
 	++i;
 	for (unsigned j = 1; j < seqb; ++j, ++i)
 	    if ((encoded[i] & 0xC0) != 0x80)

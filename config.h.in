@@ -82,6 +82,11 @@
 	#define __builtin_constant_p(x)	0
     #endif
 #endif
+#if __clang__
+    // Turn off exception spec warnings for operator new/delete
+    // uSTL does not use explicit throw specifications on them
+    #pragma GCC diagnostic ignored "-Wmissing-exception-spec"
+#endif
 
 /// gcc has lately decided that inline is just a suggestion
 /// Define to 1 if when you say 'inline' you mean it!
