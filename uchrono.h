@@ -175,10 +175,10 @@ DURATION_TEXT_SUFFIX (millenia, "_millenia");
 
 // Extends struct timespec, used by libc time functions, as an arithmetic type
 struct hrtime_t : public timespec {
-    inline constexpr		hrtime_t (void)			: timespec{}{}
+    inline constexpr		hrtime_t (void)			: timespec(){}
 				hrtime_t (const hrtime_t&) = default;
     hrtime_t&			operator= (const hrtime_t&) = default;
-    inline explicit constexpr	hrtime_t (const timespec& v)	: timespec{v}{}
+    inline explicit constexpr	hrtime_t (const timespec& v)	: timespec(v){}
     inline constexpr		hrtime_t (time_t s, long ns)	: timespec{s,ns}{}
     inline explicit constexpr	hrtime_t (intmax_t v)		: timespec{v/nano::den,v%nano::den}{}
     inline explicit constexpr	hrtime_t (float v)		: timespec{time_t(v),time_t((v-time_t(v))*nano::den)}{}
