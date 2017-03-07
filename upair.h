@@ -8,6 +8,10 @@
 
 namespace ustl {
 
+class istream;
+class ostream;
+class ostringstream;
+
 /// \class pair upair.h ustl.h
 /// \ingroup AssociativeContainers
 ///
@@ -31,6 +35,10 @@ public:
     inline bool		operator== (const pair& v)const	{ return first == v.first && second == v.second; }
     inline bool		operator< (const pair& v) const	{ return first < v.first || (first == v.first && second < v.second); }
     inline void		swap (pair& v)			{ swap(first,v.first); swap(second,v.second); }
+    inline void		read (istream& is);
+    inline void		write (ostream& os) const;
+    void		text_write (ostringstream& os) const;
+    inline size_t	stream_size (void) const;
 #if HAVE_CPP11
 			pair (const pair&) = default;
 			pair (pair&&) = default;

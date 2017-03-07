@@ -9,6 +9,8 @@
 
 namespace ustl {
 
+class istringstream;
+
 typedef uint32_t	bitset_value_type;
 
 void convert_to_bitstring (const bitset_value_type* v, size_t n, string& buf) noexcept;
@@ -118,6 +120,7 @@ public:
     inline void		read (istream& is)			{ nr_container_read (is, *this); }
     inline void		write (ostream& os) const		{ nr_container_write (os, *this); }
     inline void		text_write (ostringstream& os) const	{ os << to_string(); }
+    void		text_read (istringstream& is);
     inline size_t	stream_size (void) const		{ return sizeof(_bits); }
 private:
     value_type		_bits [s_nWords];

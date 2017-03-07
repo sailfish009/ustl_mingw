@@ -19,48 +19,6 @@
 namespace ustl {
 
 //----------------------------------------------------------------------
-// Macros for easily declaring a container streamable.
-//----------------------------------------------------------------------
-
-/// \brief Declares container template \p type streamable.
-///
-/// Use TEMPLATE_TYPE and TEMPLATE_DECL macros to pass in templated
-/// type with commas and the template declaration.
-///
-#define STD_TEMPLATE_CTR_STREAMABLE(type, template_decl)	\
-    template_decl						\
-    inline istream& operator>> (istream& is, type& v)		\
-    { return container_read (is, v); } 			\
-    template_decl						\
-    inline ostream& operator<< (ostream& os, const type& v)	\
-    { return container_write (os, v); } 			\
-    template_decl						\
-    inline ostringstream& operator<< (ostringstream& os, const type& v)	\
-    { return container_text_write (os, v); }			\
-    template_decl						\
-    struct object_stream_size<type > {				\
-	inline size_t operator()(const type& v)	const		\
-	    { return container_stream_size (v); }		\
-    };
-
-/// \brief Declares non-resizable container template \p type streamable.
-#define STD_TEMPLATE_NR_CTR_STREAMABLE(type, template_decl)	\
-    template_decl						\
-    inline istream& operator>> (istream& is, type& v)		\
-    { return nr_container_read (is, v); } 			\
-    template_decl						\
-    inline ostream& operator<< (ostream& os, const type& v)	\
-    { return nr_container_write (os, v); } 			\
-    template_decl						\
-    inline ostringstream& operator<< (ostringstream& os, const type& v)	\
-    { return container_text_write (os, v); }			\
-    template_decl						\
-    struct object_stream_size<type > {				\
-	inline size_t operator()(const type& v)	const		\
-	    { return nr_container_stream_size (v); }		\
-    };
-
-//----------------------------------------------------------------------
 // Fixed size container serialization.
 //----------------------------------------------------------------------
 

@@ -42,43 +42,38 @@ TEMPLATE_SWAP_PSPEC (TEMPLATE_TYPE2 (tuple,N,T),	TEMPLATE_FULL_DECL2 (size_t,N,t
 
 /// \brief Reads pair \p p from stream \p is.
 template <typename T1, typename T2>
-istream& operator>> (istream& is, pair<T1,T2>& p)
+void pair<T1,T2>::read (istream& is)
 {
-    is >> p.first;
-    is.align (stream_align_of(p.second));
-    is >> p.second;
-    is.align (stream_align_of(p.first));
-    return is;
+    is >> first;
+    is.align (stream_align_of(second));
+    is >> second;
+    is.align (stream_align_of(first));
 }
 
 /// Writes pair \p p to stream \p os.
 template <typename T1, typename T2>
-ostream& operator<< (ostream& os, const pair<T1,T2>& p)
+void pair<T1,T2>::write (ostream& os) const
 {
-    os << p.first;
-    os.align (stream_align_of(p.second));
-    os << p.second;
-    os.align (stream_align_of(p.first));
-    return os;
-}
-
-/// Writes pair \p p to stream \p os.
-template <typename T1, typename T2>
-ostringstream& operator<< (ostringstream& os, const pair<T1,T2>& p)
-{
-    os << '(' << p.first << ',' << p.second << ')';
-    return os;
+    os << first;
+    os.align (stream_align_of(second));
+    os << second;
+    os.align (stream_align_of(first));
 }
 
 /// Returns the written size of the object.
 template <typename T1, typename T2>
-struct object_stream_size<pair<T1,T2> > {
-    inline size_t operator()(const pair<T1,T2>& v) const
-    {
-	return Align (stream_size_of(v.first), stream_align_of(v.second)) +
-		Align (stream_size_of(v.second), stream_align_of(v.first));
-    }
-};
+size_t pair<T1,T2>::stream_size (void) const
+{
+    return Align (stream_size_of(first), stream_align_of(second)) +
+	    Align (stream_size_of(second), stream_align_of(first));
+}
+
+/// Writes pair \p p to stream \p os.
+template <typename T1, typename T2>
+void pair<T1,T2>::text_write (ostringstream& os) const
+{
+    os << '(' << first << ',' << second << ')';
+}
 
 /// \brief Takes a pair and returns pair.first
 /// This is an extension, available in uSTL and the SGI STL.
@@ -120,25 +115,14 @@ inline size_t stream_align_of (const vector<T>&)
 
 /// Writes bitset \p v into stream \p os.
 template <size_t Size>
-istringstream& operator>> (istringstream& is, bitset<Size>& v)
+void bitset<Size>::text_read (istringstream& is)
 {
     char c;
     for (int i = Size; --i >= 0 && (is >> c).good();)
-	v.set (i, c == '1');
-    return is;
+	set (i, c == '1');
 }
 
 //----{ tuple }---------------------------------------------------------
-
-template <size_t N, typename T>
-inline istream& operator>> (istream& is, tuple<N,T>& v)
-    { v.read (is); return is; }
-template <size_t N, typename T>
-inline ostream& operator<< (ostream& os, const tuple<N,T>& v)
-    { v.write (os); return os; }
-template <size_t N, typename T>
-inline ostringstream& operator<< (ostringstream& os, const tuple<N,T>& v)
-    { v.text_write (os); return os; }
 
 template <size_t N, typename T>
 struct numeric_limits<tuple<N,T> > {
@@ -169,18 +153,17 @@ inline ostringstream& container_element_text_write (ostringstream& os, const int
 
 //----{ matrix }--------------------------------------------------------
 
-/// Writes tuple \p v into stream \p os.
+/// Writes matrix \p v into stream \p os.
 template <size_t NX, size_t NY, typename T>
-ostringstream& operator<< (ostringstream& os, const matrix<NX,NY,T>& v)
+void matrix<NX,NY,T>::text_write (ostringstream& os) const
 {
     os << '(';
     for (uoff_t row = 0; row < NY; ++ row) {
 	os << '(';
         for (uoff_t column = 0; column < NX; ++column)
-	    os << v[row][column] << ",)"[column == NX-1];
+	    os << at(row)[column] << ",)"[column == NX-1];
     }
     os << ')';
-    return os;
 }
 
 //----{ long4grain }----------------------------------------------------
