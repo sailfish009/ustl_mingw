@@ -86,8 +86,8 @@ inline void istringstream::read_number (T& v)
     iterator ilast;
     do {
 	str_to_num<T> (ipos(), &ilast, (_flags & hex) ? 16 : (_flags & oct) ? 8 : 0, v);
+	skip (distance (ipos(), ilast));
     } while (ilast == end() && underflow());
-    skip (distance (ipos(), ilast));
 }
 
 void istringstream::iread (int& v)		{ read_number (v); }
