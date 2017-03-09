@@ -158,10 +158,10 @@ template <size_t NX, size_t NY, typename T>
 void matrix<NX,NY,T>::text_write (ostringstream& os) const
 {
     os << '(';
-    for (uoff_t row = 0; row < NY; ++ row) {
+    for (uoff_t iRow = 0; iRow < NY; ++ iRow) {
 	os << '(';
-        for (uoff_t column = 0; column < NX; ++column)
-	    os << at(row)[column] << ",)"[column == NX-1];
+        for (uoff_t iColumn = 0; iColumn < NX; ++iColumn)
+	    os << at(iRow)[iColumn] << ",)"[iColumn == NX-1];
     }
     os << ')';
 }
