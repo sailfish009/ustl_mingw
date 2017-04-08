@@ -115,7 +115,7 @@ endif
 clean:
 	@if [ -h ${ONAME} ]; then\
 	    rm -f ${OBJS} ${DEPS} ${SLIBT} ${SLINKS} ${LIBA} $O.d ${ONAME};\
-	    ${RMPATH} ${BUILDDIR};\
+	    ${RMPATH} ${BUILDDIR} > /dev/null 2>&1 || true;\
 	fi
 
 html:	${SRCS} ${INCS} ${NAME}doc.in
