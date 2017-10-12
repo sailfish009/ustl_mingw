@@ -9,9 +9,6 @@
     "bugs"		: "https://github.com/msharov/ustl/issues",
     "author"		: "Mike Sharov <msharov@users.sourceforge.net>",
     "os"		: ["linux","bsd","macos","sunos","solaris","!win"],
-    "devDependencies"	: {
-	"gcc"	:	">= 4.7"
-    },
     "directories"	: {
 	"doc"	:	"doc",
 	"test"	:	"test"
