@@ -102,10 +102,9 @@ fi
 
 # Determine gcc private directory
 LIBGCC=`$CC -print-libgcc-file-name`
-GCCDIR=`dirname $LIBGCC`
-PINCDIR=$GCCDIR/include
-PLIBDIR=$GCCDIR
-if [ -d $PLIBDIR/lib ]; then PLIBDIR=$PLIBDIR/lib; fi
+PLIBDIR=`dirname $LIBGCC`
+PINCDIR=$PLIBDIR/include
+[ -d $PINCDIR ] || PINCDIR=$PLIBDIR/../include
 
 # Create and build the C configurator
 cat>config.cpu.c<<\SRC
