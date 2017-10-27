@@ -101,9 +101,10 @@ fi
 [ -z "$CC" ] && "No C compiler found" && die
 
 # Determine gcc private directory
-PSTDDEF=`echo "#include <stddef.h>"|$CC -E -|grep stddef.h|head -n1|cut -d' ' -f3|cut -d'"' -f2`
-PINCDIR=`dirname $PSTDDEF`
-PLIBDIR=`dirname $PINCDIR`
+LIBGCC=`$CC -print-libgcc-file-name`
+GCCDIR=`dirname $LIBGCC`
+PINCDIR=$GCCDIR/include
+PLIBDIR=$GCCDIR
 if [ -d $PLIBDIR/lib ]; then PLIBDIR=$PLIBDIR/lib; fi
 
 # Create and build the C configurator
