@@ -8,8 +8,6 @@
 #if HAVE_CPP11
 void TestChrono (void)
 {
-    tzset();	// chrono uses ctime, which uses libc timezone information
-
     // How to time a block of code with system_clock_ms
     auto mspt1 = chrono::system_clock_ms::now();
     // ... timed code here
@@ -64,13 +62,6 @@ void TestChrono (void)
     auto nowschr = chrono::time_point_cast<chrono::high_resolution_clock::duration>(nowsc);
     if (nowhr.time_since_epoch() >= nowschr.time_since_epoch())
 	cout << "high_resolution_clock::now() >= system_clock::now()\n";
-
-    // Check time_point printing
-    chrono::system_clock::time_point ty1980 (chrono::years(10));
-    ty1980 -= chrono::hours(2);
-    ty1980 += chrono::minutes(42);
-    ty1980 -= chrono::seconds(timezone);	// make it local time so test always passes
-    cout << ty1980 << endl;
 
     // Exercise duration arithmetic
     nowhr -= nowhr.time_since_epoch();

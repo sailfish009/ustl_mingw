@@ -17,7 +17,6 @@
 5_s
 system_clock::now() <= high_resolution_clock::now()
 high_resolution_clock::now() >= system_clock::now()
-Tue Jan  1 00:42:00 1980
 7200042_ms
 7200_s
 7200000_ms
