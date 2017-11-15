@@ -28,6 +28,10 @@ name=[with-debug]
 desc=[	compile for debugging]
 seds=[s/^#\(DEBUG\)/\1/]
 }{
+name=[with-native]
+desc=[	Use -march=native]
+seds=[s/ -std=c/ -march=native -std=c/]
+}{
 name=[with-demangler]
 desc=[demangle C++ symbols in backtrace]
 seds=[s/#undef \(WANT_NAME_DEMANGLING\)/#define \1 1/]
