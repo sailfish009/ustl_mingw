@@ -57,11 +57,7 @@ void memblock::manage (void* p, size_type n) noexcept
 /// "Instantiate" a linked block by allocating and copying the linked data.
 void memblock::copy_link (void)
 {
-    const pointer p (begin());
-    const size_t sz (size());
-    if (is_linked())
-	unlink();
-    assign (p, sz);
+    reserve (size());
 }
  
 /// Copies data from \p p, \p n.
@@ -126,7 +122,7 @@ memblock::iterator memblock::erase (const_iterator start, size_type n)
 {
     const uoff_t ep = start - begin();
     assert (ep + n <= size());
-    reserve (size() - n);
+    reserve (size());	// copy-on-write
     iterator iep = iat(ep);
     memlink::erase (iep, n);
     memlink::resize (size() - n);
