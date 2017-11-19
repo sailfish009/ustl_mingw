@@ -109,6 +109,17 @@ uninstall:
 	@echo "Removing library from ${LIBDIR} ..."
 	@rm -f ${LIBTI} ${LIBLI} ${LIBSI} ${LIBAI}
 endif
+ifdef PKGCONFIGDIR
+PCI	:= ${PKGCONFIGDIR}/ustl.pc
+install:	${PCI}
+${PCI}:	ustl.pc
+	@echo "Installing $@ ..."
+	@${INSTALLDATA} $< $@
+
+uninstall:	uninstall-pc
+uninstall-pc:
+	@if [ -f ${PCI} ]; then echo "Removing ${PCI} ..."; rm -f ${PCI}; fi
+endif
 
 ################ Maintenance ###########################################
 
@@ -135,7 +146,8 @@ ${BUILDDIR}/.d:	Makefile
 ${OBJS}:		${MKDEPS}
 Config.mk:		Config.mk.in
 config.h:		config.h.in
-Config.mk config.h:	configure
+ustl.pc:		ustl.pc.in
+Config.mk config.h ustl.pc:	configure
 	@if [ -x config.status ]; then			\
 	    echo "Reconfiguring ..."; ./config.status;	\
 	else						\

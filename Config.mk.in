@@ -26,6 +26,7 @@ RMPATH		:= rmdir -p --ignore-fail-on-non-empty
 
 INCDIR		:= @includedir@
 LIBDIR		:= @libdir@
+#PKGCONFIGDIR	:= @pkgconfigdir@
 
 ################ Compiler options ####################################
 

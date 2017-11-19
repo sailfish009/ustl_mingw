@@ -64,10 +64,9 @@ your C++ code generates, then uSTL is probably not for you.
 </ul>
 <h2 id="Installation">Installation</h2>
 <p>
-To start with you'll need a decent compiler. Although uSTL will compile
-under gcc 2.95, some features require at least gcc 3.4 and are simply
-turned off with an older version. The minimum requirement to enable
-C++11 features is gcc 4.6 or clang 3.2.
+The only dependency is a C++ compiler. gcc requires version 3.4, clang
+requires version 3.2. C++11 support requires gcc 4.6 or clang 3.2.
+C++14 support requires gcc 5 or clang 3.6.
 </p><p>
 The latest version of uSTL can always be downloaded from its GitHub
 <a href="https://github.com/msharov/ustl/releases/latest">release page</a>.
@@ -87,8 +86,10 @@ You might want to specify a different installation prefix with
 Developers will want to build with <kbd>--with-debug</kbd> to get a
 lot of assert error checking, which I highly recommend. If you have
 gcc 4.4 or later, you may want to also use <kbd>--force-inline</kbd>
-(see the bottom of this page for a fuller explanation). If you are the
-type to edit configuration manually, it's in Config.mk and config.h. When
+(see the bottom of this page for a fuller explanation). Unless you are
+compiling a package for distribution, <kbd>--with-native</kbd> should
+be enabled to tune the output for your processor. If you are the type
+to edit configuration manually, it's in Config.mk and config.h. When
 it's built, you can run the included tests with <kbd>make check</kbd>.
 Finally, here's a simple hello world application:
 </p><pre>
@@ -109,6 +110,13 @@ to g++ if you want to use uSTL to completely replace libstdc++. This is
 where the actual space savings happen. (If you want to see just how much
 you can save, skip to the <a href="#Savings">Template Bloat Be Gone</a>
 section)
+</p><p>
+If you build uSTL as a static library, you will also need to explicitly
+link all projects using it with -lsupc++ and other libraries that shared
+uSTL would have been linked to. The easiest way to get the list is to
+use <kbd>pkg-config --libs --static ustl</kbd>. The pkgconfig description
+file for uSTL is installed if you have pkg-config on your system. Also,
+the list is available in the <tt>STAL_LIBS</tt> variable in Config.mk.
 </p>
 <h2 id="Containers">Containers and Iterators</h2>
 <p>

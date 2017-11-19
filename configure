@@ -11,7 +11,7 @@ PKG_VERSTR="v2.5"
 PKG_BUGREPORT="Mike Sharov <msharov@users.sourceforge.net>"
 
 # Files that get created by this script
-FILES="Config.mk config.h"
+FILES="Config.mk config.h ustl.pc"
 
 # Package options
 COMPONENTS='
@@ -272,6 +272,7 @@ s/@libdir@/${ac_var_libdir:=$ac_var_prefix\/lib}/g
 s/@builddir@/\/tmp\/$USER\/make/g
 s/@gccincludedir@/${ac_var_gccincludedir:=`escpath $PINCDIR`}/g
 s/@gcclibdir@/${ac_var_gcclibdir:=`escpath $PLIBDIR`}/g
+s/@pkgconfigdir@/${ac_var_pkgconfigdir:=$ac_var_libdir\/pkgconfig}/g
 s/@customincdir@/${ac_var_customincdir:=$ac_var_prefix\/include}/g
 s/@customlibdir@/${ac_var_customlibdir:=$ac_var_prefix\/lib}/g"
 
@@ -280,6 +281,10 @@ if [ "$ac_var_prefix" != "\/usr\/local" -a "$ac_var_prefix" != "\/usr" ]; then
 else
     sub "s/ @CUSTOMINCDIR@//g;s/ @CUSTOMLIBDIR@//g"
 fi
+
+# See if pkg-config is installed
+PKGCONFIGDIR=`echo $ac_var_pkgconfigdir | sed 's/\\\\//g'`
+[ ! -d $PKGCONFIGDIR ] || sub "s/#\(PKGCONFIGDIR\)/\1/"
 
 #### Find headers, libs, programs, and subs ##########################
 
