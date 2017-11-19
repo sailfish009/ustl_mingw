@@ -233,7 +233,7 @@ inline tuple<N,T1> operator/ (const tuple<N,T1>& t1, const tuple<N,T2>& t2)
 //----------------------------------------------------------------------
 // Define SIMD specializations for member functions.
 
-#if CPU_HAS_SSE
+#if __SSE__
 #define SSE_TUPLE_SPECS(n,type)							\
 template <> inline tuple<n,type>::tuple (void)					\
 { asm("xorps %%xmm0, %%xmm0\n\tmovups %%xmm0, %0":"+m"(_v[0])::"xmm0","memory"); } \
@@ -266,7 +266,7 @@ LONG_TUPLE_SPECS(2,uint32_t)
 LONG_TUPLE_SPECS(8,int8_t)
 LONG_TUPLE_SPECS(8,uint8_t)
 #undef LONG_TUPLE_SPECS
-#elif CPU_HAS_MMX
+#elif __MMX__
 #define MMX_TUPLE_SPECS(n,type)		\
 template <> inline tuple<n,type>::tuple (void)	\
 {  asm ("pxor %%mm0, %%mm0\n\tmovq %%mm0, %0"	\
@@ -287,7 +287,7 @@ MMX_TUPLE_SPECS(8,uint8_t)
 #undef MMX_TUPLE_SPECS
 #endif
 
-#if __i386__ || __x86_64__
+#if __x86__
 #define UINT32_TUPLE_SPECS(type,otype)		\
 template <> inline tuple<2,type>::tuple (void)	\
 { asm("":"+m"(_v[0]),"+m"(_v[1])::"memory");	\

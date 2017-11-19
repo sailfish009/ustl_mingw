@@ -229,15 +229,9 @@ template <typename T> inline const T* const& ptr4grain (const T* const& p) { ret
 
 } // namespace ustl
 
-// This is here because there really is no other place to put it.
-#if SIZE_OF_BOOL != SIZE_OF_CHAR
+ALIGNOF (_long4grain, 4)
+ALIGNOF(ustl::CBacktrace, sizeof(void*))
+ALIGNOF (ustl::string, stream_align_of (string::value_type()))
 // bool is a big type on some machines (like DEC Alpha), so it's written as a byte.
 ALIGNOF(bool, sizeof(uint8_t))
 CAST_STREAMABLE(bool, uint8_t)
-#endif
-#if SIZE_OF_LONG == 8 && HAVE_INT64_T
-ALIGNOF (_long4grain, 4)
-#endif
-
-ALIGNOF(ustl::CBacktrace, sizeof(void*))
-ALIGNOF (ustl::string, stream_align_of (string::value_type()))

@@ -244,7 +244,7 @@ inline void ipassign (tuple<n,type>::const_iterator oin, tuple<n,type>& oout)
 template <>					\
 inline void pconvert (const tuple<n,type1>& oin, tuple<n,type2>& oout, optype<type1,type2>)
 
-#if CPU_HAS_MMX
+#if __MMX__
 #define STD_MMX_ARGS	: "m"(oout[0]), "m"(oin[0]) : "mm0", "st", "memory"
 #define DBL_MMX_ARGS	: "m"(oout[0]), "m"(oout[2]), "m"(oin[0]), "m"(oin[2]) : "mm0", "mm1", "st", "st(1)", "memory"
 #define MMX_PKOP2_SPEC(n,type,optype,instruction)	\
@@ -341,7 +341,7 @@ MMX_DBL_PKOP2_SPEC(4,int32_t,bitwise_xor,pxor)
 //MMX_DBL_PKOP2_SPEC(2,int32_t,fpshl,pslld)
 //MMX_DBL_PKOP2_SPEC(2,int32_t,fpshr,psrld)
 
-#if CPU_HAS_SSE || CPU_HAS_3DNOW
+#if __SSE2__ || __3DNOW__
 MMX_PKOP2_SPEC(8,uint8_t,fpavg,pavgb)
 MMX_PKOP2_SPEC(8,int8_t,fpavg,pavgb)
 MMX_PKOP2_SPEC(4,uint16_t,fpavg,pavgw)
@@ -350,30 +350,30 @@ MMX_PKOP2_SPEC(8,uint8_t,fpmin,pminub)
 MMX_PKOP2_SPEC(8,uint8_t,fpmax,pmaxub)
 MMX_PKOP2_SPEC(4,int16_t,fpmax,pmaxsw)
 MMX_PKOP2_SPEC(4,int16_t,fpmin,pminsw)
-#endif // CPU_HAS_SSE || CPU_HAS_3DNOW
+#endif // __SSE__ || __3DNOW__
 
-#if CPU_HAS_3DNOW
+#if __3DNOW__
 MMX_PASSIGN_SPEC(2,float)
 MMX_PKOP2_SPEC(2,float,plus,pfadd)
 MMX_PKOP2_SPEC(2,float,minus,pfsub)
 MMX_PKOP2_SPEC(2,float,multiplies,pfmul)
 MMX_PKOP2_SPEC(2,float,fpmin,pfmin)
 MMX_PKOP2_SPEC(2,float,fpmax,pfmax)
-#ifndef CPU_HAS_SSE
+#ifndef __SSE__
 MMX_DBL_PKOP2_SPEC(4,float,plus,pfadd)
 MMX_DBL_PKOP2_SPEC(4,float,minus,pfsub)
 MMX_DBL_PKOP2_SPEC(4,float,multiplies,pfmul)
 MMX_DBL_PKOP2_SPEC(4,float,fpmin,pfmin)
 MMX_DBL_PKOP2_SPEC(4,float,fpmax,pfmax)
 #endif
-#endif // CPU_HAS_3DNOW
+#endif // __3DNOW__
 
 MMX_IPASSIGN_SPEC(8,uint8_t)
 MMX_IPASSIGN_SPEC(4,uint16_t)
 MMX_IPASSIGN_SPEC(2,uint32_t)
 MMX_IPASSIGN_SPEC(2,float)
 
-#ifndef CPU_HAS_SSE
+#ifndef __SSE__
 MMX_DBL_PASSIGN_SPEC(4,float)
 MMX_DBL_PASSIGN_SPEC(4,uint32_t)
 MMX_DBL_PASSIGN_SPEC(4,int32_t)
@@ -386,9 +386,9 @@ MMX_DBL_IPASSIGN_SPEC(4,int32_t)
 #undef MMX_PASSIGN_SPEC
 #undef MMX_PKOP2_SPEC
 #undef STD_MMX_ARGS
-#endif // CPU_HAS_MMX
+#endif // __MMX__
 
-#if CPU_HAS_SSE
+#if __SSE__
 #define STD_SSE_ARGS	: "m"(oout[0]), "m"(oin[0]) : "xmm0", "memory"
 #define SSE_PKOP2_SPEC(n,type,optype,instruction)	\
 SIMD_PKOP2_SPEC(n,type,optype)		\
@@ -450,7 +450,7 @@ SSE_IPASSIGN_SPEC(4,uint32_t)
 #undef SSE_PASSIGN_SPEC
 #undef SSE_PKOP2_SPEC
 #undef STD_SSE_ARGS
-#endif // CPU_HAS_SSE
+#endif // __SSE__
 
 #undef SIMDA_RI
 #undef SIMDA_RO

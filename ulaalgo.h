@@ -63,9 +63,8 @@ void transpose (matrix<N,N,T>& m)
 
 #if WANT_UNROLLED_COPY
 
-#if CPU_HAS_SSE
-
-#if linux // Non-linux gcc versions (BSD, Solaris) can't handle "x" constraint and provide no alternative.
+#if __SSE__
+#if __linux__ // Non-linux gcc versions (BSD, Solaris) can't handle "x" constraint and provide no alternative.
 template <>
 inline void load_identity (matrix<4,4,float>& m)
 {
@@ -143,7 +142,7 @@ inline matrix<4,4,float> operator* (const matrix<4,4,float>& m1, const matrix<4,
     return result;
 }
 
-#elif CPU_HAS_3DNOW
+#elif __3DNOW__
 
 /// Specialization for 4-component vector transform, the slow part of 3D graphics.
 template <>
@@ -210,7 +209,7 @@ template <> inline tuple<4,float> operator* (const tuple<4,float>& t, const matr
     return tr;
 }
 
-#endif	// CPU_HAS_3DNOW
+#endif	// __3DNOW__
 #endif	// WANT_UNROLLED_COPY
 
 } // namespace ustl

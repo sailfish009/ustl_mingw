@@ -93,7 +93,7 @@ void istringstream::iread (fmtflags_bits f)
 /// Sets delimiters to the contents of \p delimiters.
 void istringstream::set_delimiters (const char* delimiters)
 {
-#if (__i386__ || __x86_64__) && CPU_HAS_SSE && HAVE_VECTOR_EXTENSIONS
+#if __x86__ && __SSE__ && HAVE_VECTOR_EXTENSIONS
     typedef uint32_t v16ud_t __attribute__((vector_size(16)));
     asm("xorps\t%%xmm0, %%xmm0\n\tmovups\t%%xmm0, %0":"=m"(*noalias_cast<v16ud_t*>(_delimiters))::"xmm0");
 #else

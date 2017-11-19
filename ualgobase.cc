@@ -15,7 +15,7 @@ namespace ustl {
 template <typename T> static inline void stosv (T*& p, size_t n, T v)
     { while (n--) *p++ = v; }
 
-#if __i386__ || __x86_64__
+#if __x86__
 
 //----------------------------------------------------------------------
 // Copy functions
@@ -40,7 +40,7 @@ static inline void movsd (const void*& src, size_t nWords, void*& dest)
 	: "memory");
 }
 
-#if CPU_HAS_MMX
+#if __MMX__
 template <> inline void stosv (uint8_t*& p, size_t n, uint8_t v)
 { asm volatile ("rep;\n\tstosb" : "=&D"(p), "=c"(n) : "0"(p), "1"(n), "a"(v) : "memory"); }
 #endif
@@ -49,7 +49,7 @@ template <> inline void stosv (uint16_t*& p, size_t n, uint16_t v)
 template <> inline void stosv (uint32_t*& p, size_t n, uint32_t v)
 { asm volatile ("rep;\n\tstosl" : "=&D"(p), "=c"(n) : "0"(p), "1"(n), "a"(v) : "memory"); }
 
-#if CPU_HAS_MMX
+#if __MMX__
 #define MMX_ALIGN	16U	// Data must be aligned on this grain
 #define MMX_BS		32U	// Assembly routines copy data this many bytes at a time.
 
@@ -57,7 +57,7 @@ static inline void simd_block_copy (const void* src, void* dest)
 {
     const char* csrc ((const char*) src);
     char* cdest ((char*) dest);
-    #if CPU_HAS_SSE
+    #if __SSE__
     asm (
 	"movaps\t%2, %%xmm0	\n\t"
 	"movaps\t%3, %%xmm1	\n\t"
@@ -84,7 +84,7 @@ static inline void simd_block_copy (const void* src, void* dest)
 
 static inline void simd_block_store (uint8_t* dest)
 {
-    #if CPU_HAS_SSE
+    #if __SSE__
     asm volatile (
 	"movntq %%mm0, %0\n\t"
 	"movntq %%mm0, %1\n\t"
@@ -105,7 +105,7 @@ static inline void simd_block_store (uint8_t* dest)
 
 static inline void simd_block_cleanup (void)
 {
-    #if !CPU_HAS_SSE
+    #if !__SSE__
 	simd::reset_mmx();
     #endif
     asm volatile ("sfence");
@@ -132,7 +132,7 @@ void copy_n_fast (const void* src, size_t nBytes, void* dest) noexcept
     }
     movsb (src, nBytes, dest);
 }
-#endif // CPU_HAS_MMX
+#endif // __MMX__
 
 /// The fastest optimized backwards raw memory copy.
 void copy_backward_fast (const void* first, const void* last, void* result) noexcept
@@ -156,13 +156,13 @@ void copy_backward_fast (const void* first, const void* last, void* result) noex
     movsb (last, nBytes, result);
     movsb_dir_up();
 }
-#endif // __i386__
+#endif // __x86__
 
 //----------------------------------------------------------------------
 // Fill functions
 //----------------------------------------------------------------------
 
-#if CPU_HAS_MMX
+#if __MMX__
 template <typename T> static inline void build_block (T) {}
 template <> inline void build_block (uint8_t v)
 {
@@ -217,7 +217,7 @@ void fill_n32_fast (uint32_t* dest, size_t count, uint32_t v) noexcept
 void fill_n8_fast (uint8_t* dest, size_t count, uint8_t v) noexcept { memset (dest, v, count); }
 void fill_n16_fast (uint16_t* dest, size_t count, uint16_t v) noexcept { stosv (dest, count, v); }
 void fill_n32_fast (uint32_t* dest, size_t count, uint32_t v) noexcept { stosv (dest, count, v); }
-#endif // CPU_HAS_MMX
+#endif // __MMX__
 
 /// Exchanges ranges [first, middle) and [middle, last)
 void rotate_fast (void* first, void* middle, void* last) noexcept

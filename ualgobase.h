@@ -146,13 +146,13 @@ inline OutputIterator fill_n (OutputIterator first, size_t count, const T& value
     return first;
 }
 
-#if CPU_HAS_MMX
+#if __MMX__
 extern "C" void copy_n_fast (const void* src, size_t count, void* dest) noexcept;
 #else
 inline void copy_n_fast (const void* src, size_t count, void* dest) noexcept
     { memmove (dest, src, count); }
 #endif
-#if __i386__ || __x86_64__
+#if __x86__
 extern "C" void copy_backward_fast (const void* first, const void* last, void* result) noexcept;
 #else
 inline void copy_backward_fast (const void* first, const void* last, void* result) noexcept
@@ -216,7 +216,7 @@ template <> inline uint32_t* unrolled_fill (uint32_t* result, size_t count, uint
 template <> inline float* unrolled_fill (float* result, size_t count, float value)
     { fill_n32_fast ((uint32_t*) result, count, *noalias_cast<uint32_t*>(&value)); return advance (result, count); }
 
-#if CPU_HAS_MMX
+#if __MMX__
 #define UNROLLED_COPY_SPECIALIZATION(type)						\
 template <> inline type* copy (const type* first, const type* last, type* result)	\
 { return unrolled_copy (first, distance (first, last), result); }			\
@@ -238,7 +238,7 @@ UNROLLED_FILL_SPECIALIZATION(float)
 #undef UNROLLED_FILL_SPECIALIZATION
 #undef UNROLLED_COPY_SPECIALIZATION
 #endif // WANT_UNROLLED_COPY
-#endif // CPU_HAS_MMX
+#endif // __MMX__
 
 // Specializations for void* and char*, aliasing the above optimized versions.
 //
@@ -261,7 +261,7 @@ COPY_ALIAS_FUNC(uint8_t, uint8_t, uint8_t)
 COPY_ALIAS_FUNC(const int16_t, int16_t, uint16_t)
 COPY_ALIAS_FUNC(int16_t, int16_t, uint16_t)
 COPY_ALIAS_FUNC(uint16_t, uint16_t, uint16_t)
-#if CPU_HAS_MMX || (SIZE_OF_LONG > 4)
+#if __MMX__ || (SIZE_OF_LONG > 4)
 COPY_ALIAS_FUNC(const int32_t, int32_t, uint32_t)
 COPY_ALIAS_FUNC(int32_t, int32_t, uint32_t)
 COPY_ALIAS_FUNC(uint32_t, uint32_t, uint32_t)
@@ -299,7 +299,7 @@ FILL_ALIAS_FUNC(char, uint8_t, uint8_t)
 #endif
 FILL_ALIAS_FUNC(int8_t, uint8_t, int8_t)
 FILL_ALIAS_FUNC(int16_t, uint16_t, int16_t)
-#if CPU_HAS_MMX || (SIZE_OF_LONG > 4)
+#if __MMX__ || (SIZE_OF_LONG > 4)
 FILL_ALIAS_FUNC(int32_t, uint32_t, int32_t)
 #endif
 #endif
@@ -320,7 +320,7 @@ COPY_N_ALIAS_FUNC(const int8_t, int8_t, uint8_t)
 COPY_N_ALIAS_FUNC(int16_t, int16_t, uint16_t)
 COPY_N_ALIAS_FUNC(uint16_t, uint16_t, uint16_t)
 COPY_N_ALIAS_FUNC(const int16_t, int16_t, uint16_t)
-#if CPU_HAS_MMX || (SIZE_OF_LONG > 4)
+#if __MMX__ || (SIZE_OF_LONG > 4)
 COPY_N_ALIAS_FUNC(int32_t, int32_t, uint32_t)
 COPY_N_ALIAS_FUNC(uint32_t, uint32_t, uint32_t)
 COPY_N_ALIAS_FUNC(const int32_t, int32_t, uint32_t)
@@ -339,7 +339,7 @@ FILL_N_ALIAS_FUNC(char, uint8_t, uint8_t)
 #endif
 FILL_N_ALIAS_FUNC(int8_t, uint8_t, int8_t)
 FILL_N_ALIAS_FUNC(int16_t, uint16_t, int16_t)
-#if CPU_HAS_MMX || (SIZE_OF_LONG > 4)
+#if __MMX__ || (SIZE_OF_LONG > 4)
 FILL_N_ALIAS_FUNC(int32_t, uint32_t, int32_t)
 #endif
 #endif

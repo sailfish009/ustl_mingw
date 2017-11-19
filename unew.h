@@ -13,6 +13,12 @@ extern "C" void nfree (void* p) noexcept;
 
 #if WITHOUT_LIBSTDCPP
 
+#if __clang__
+    // Turn off exception spec warnings for operator new/delete
+    // uSTL does not use explicit throw specifications on them
+    #pragma GCC diagnostic ignored "-Wmissing-exception-spec"
+#endif
+
 //
 // These are replaceable signatures:
 //  - normal single new and delete (no arguments, throw @c bad_alloc on error)

@@ -7,12 +7,6 @@
 #define __STDC_LIMIT_MACROS	// For WCHAR_MIN and WCHAR_MAX in stdint.
 #define __STDC_CONSTANT_MACROS	// For UINT??_C macros to avoid using L and UL suffixes on constants.
 #include "config.h"
-#ifndef STDC_HEADERS
-    #error "This library requires standard C and C++ headers to compile."
-#endif
-#ifndef STDUNIX_HEADERS
-    #error "This library requires standard UNIX headers to compile."
-#endif
 #if HAVE_STDINT_H
     #include <stdint.h>
 #elif HAVE_INTTYPES_H

@@ -31,7 +31,7 @@ LIBDIR		:= @libdir@
 
 WARNOPTS	:= -Wall -Wextra -Woverloaded-virtual -Wpointer-arith\
 		-Wshadow -Wredundant-decls -Wcast-qual
-TGTOPTS		:= @PROCESSOR_OPTS@ @CUSTOMINCDIR@
+TGTOPTS		:= @TGT_OPTS@ @CUSTOMINCDIR@
 INLINEOPTS	:= @INLINE_OPTS@
 
 CXXFLAGS	:= ${WARNOPTS} ${TGTOPTS} -fPIC
