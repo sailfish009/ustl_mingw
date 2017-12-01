@@ -16,13 +16,13 @@ FILES="Config.mk config.h ustl.pc"
 # Package options
 COMPONENTS='
 {
-name=[without-shared]
-desc=[do not build the shared library]
-seds=[s/^\(BUILD_SHARED\)/#\1/]
-}{
 name=[with-static]
 desc=[	build the static library]
-seds=[s/^#\(BUILD_STATIC\)/\1/;s/-fPIC/-fPIC -ffunction-sections -fdata-sections/;s/-gc-sections/-gc-sections -static-libgcc/]
+seds=[s/^#\(BUILD_STATIC\)/\1/;s/-fPIC/-fPIC -ffunction-sections -fdata-sections/]
+}{
+name=[without-shared]
+desc=[do not build the shared library]
+seds=[s/^\(BUILD_SHARED\)/#\1/;s/ -fPIC//]
 }{
 name=[with-debug]
 desc=[	compile for debugging]
