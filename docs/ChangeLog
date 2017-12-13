@@ -1,3 +1,15 @@
+2017-12-13 Release 2.6
+	* Bugfix release.
+	* Fix erase cow sometimes truncating strings.
+	* Fix hang in istringstream read_number at end of stream.
+	* Fix test failures new with gcc 7.2.
+	* Fix configure directory detection with new gcc.
+	* Remove operator<< and operator>> templates for ustl types.
+	* Add pkg-config file
+	* Do not use memcpy in fallback implementation of copy_n_fast.
+	* Remove -march=native from default compiler flags.
+	* Add configure --with-native flag.
+
 2016-11-25 Release 2.5
 	* Implement chrono.
 	* Implement ratio.
