@@ -64,7 +64,7 @@ HEADERS="alloca.h execinfo.h inttypes.h math.h stdint.h sys/mman.h sys/types.h";
 LIBS="supc++ gcc_eh c++abi SystemStubs"
 
 # First pair is used if nothing matches
-PROGS="CC=gcc CC=clang CC=cc CXX=g++ CXX=clang++ CXX=c++ DOXYGEN=doxygen LD=ld AR=ar RANLIB=ranlib RANLIB=touch INSTALL=install"
+PROGS="CC=gcc CC=clang CXX=g++ CXX=clang++ LD=ld AR=ar RANLIB=ranlib RANLIB=touch INSTALL=install"
 
 # Environment variables
 ENVIRONS="CXXFLAGS LDFLAGS"

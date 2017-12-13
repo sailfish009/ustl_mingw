@@ -133,9 +133,6 @@ clean:
 	    ${RMPATH} ${BUILDDIR} > /dev/null 2>&1 || true;\
 	fi
 
-html:	${SRCS} ${INCS} ${NAME}doc.in
-	@${DOXYGEN} ${NAME}doc.in
-
 distclean:	clean
 	@rm -f Config.mk config.h config.status
 
