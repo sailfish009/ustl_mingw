@@ -9,6 +9,16 @@ DEPS	:= ${OBJS:.o=.d}
 MKDEPS	:= Makefile Config.mk config.h $O.d
 ONAME	:= $(notdir $(abspath $O))
 
+SLIBL	:= $O$(call slib_lnk,${NAME})
+SLIBS	:= $O$(call slib_son,${NAME})
+SLIBT	:= $O$(call slib_tgt,${NAME})
+SLINKS	:= ${SLIBL}
+ifneq (${SLIBS},${SLIBT})
+SLINKS	+= ${SLIBS}
+endif
+
+LIBA	:= $Olib${NAME}.a
+
 ################ Compilation ###########################################
 
 .PHONY: all clean html check distclean maintainer-clean
@@ -17,13 +27,6 @@ ALLTGTS	:= ${MKDEPS}
 all:	${ALLTGTS}
 
 ifdef BUILD_SHARED
-SLIBL	:= $O$(call slib_lnk,${NAME})
-SLIBS	:= $O$(call slib_son,${NAME})
-SLIBT	:= $O$(call slib_tgt,${NAME})
-SLINKS	:= ${SLIBL}
-ifneq (${SLIBS},${SLIBT})
-SLINKS	+= ${SLIBS}
-endif
 ALLTGTS	+= ${SLIBT} ${SLINKS}
 
 all:	${SLIBT} ${SLINKS}
@@ -35,12 +38,11 @@ ${SLINKS}:	${SLIBT}
 
 endif
 ifdef BUILD_STATIC
-LIBA	:= $Olib${NAME}.a
 ALLTGTS	+= ${LIBA}
 
 all:	${LIBA}
 ${LIBA}:	${OBJS}
-	@echo "Linking $@ ..."
+	@echo "Linking $(notdir $@) ..."
 	@rm -f $@
 	@${AR} qc $@ ${OBJS}
 	@${RANLIB} $@
@@ -87,9 +89,11 @@ endif
 ####### Install libraries (shared and/or static)
 
 ifdef LIBDIR
-ifdef BUILD_SHARED
 LIBTI	:= ${LIBDIR}/$(notdir ${SLIBT})
 LIBLI	:= $(addprefix ${LIBDIR}/,$(notdir ${SLINKS}))
+LIBAI	:= ${LIBDIR}/$(notdir ${LIBA})
+
+ifdef BUILD_SHARED
 install:	${LIBTI} ${LIBLI}
 ${LIBTI}:	${SLIBT}
 	@echo "Installing $@ ..."
@@ -97,8 +101,8 @@ ${LIBTI}:	${SLIBT}
 ${LIBLI}: ${LIBTI}
 	@(cd ${LIBDIR}; rm -f $@; ln -s $(notdir $<) $(notdir $@))
 endif
+
 ifdef BUILD_STATIC
-LIBAI	:= ${LIBDIR}/$(notdir ${LIBA})
 install:	${LIBAI}
 ${LIBAI}:	${LIBA}
 	@echo "Installing $@ ..."
