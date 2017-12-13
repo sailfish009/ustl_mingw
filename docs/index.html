@@ -58,7 +58,7 @@ your C++ code generates, then uSTL is probably not for you.
     <li><a href="#Streams">Streams</a></li>
     <li><a href="#Arrays">Arrays</a></li>
     <li><a href="#Exceptions">Exceptions</a></li>
-    <li><a href="#Savings">Template Bloat Be Gone</a></li>
+    <li><a href="#Savings">Savings</a></li>
     <li><a href="#Contact">Bug reporting</a></li>
     <li><a href="html/index.html">Doxygen reference</a></li>
 </ul>
@@ -77,17 +77,15 @@ Linux, BSD, MacOS, SunOS, and Solaris. Windows-based systems and embedded
 platforms, are not, and will not be supported by the mainline. However,
 if you make a port, I'll be happy to mention it here. After unpacking:
 </p><pre>
-./configure
-make install
+./configure &amp;&amp; make install
 </pre><p>
 <kbd>./configure --help</kbd> lists available build options.
 You might want to specify a different installation prefix with
 <kbd>--prefix=/usr</kbd>; the default destination is /usr/local.
-Developers will want to build with <kbd>--with-debug</kbd> to get a
-lot of assert error checking, which I highly recommend. If you have
-gcc 4.4 or later, you may want to also use <kbd>--force-inline</kbd>
-(see the bottom of this page for a fuller explanation). Unless you are
-compiling a package for distribution, <kbd>--with-native</kbd> should
+Developers will want to build with <kbd>--with-debug</kbd> to get a lot
+of assert error checking, which I highly recommend. If you have gcc 4.4
+or later, you may want to also use <kbd>--force-inline</kbd>. Unless you
+are compiling a package for distribution, <kbd>--with-native</kbd> should
 be enabled to tune the output for your processor. If you are the type
 to edit configuration manually, it's in Config.mk and config.h. When
 it's built, you can run the included tests with <kbd>make check</kbd>.
@@ -107,16 +105,15 @@ without linking to libstdc++ (except on BSD platforms where gcc does not
 support it) Because g++ links to it by default, you'll need to link your
 applications with gcc, or to pass <kbd>-nodefaultlibs -lgcc_s -lc</kbd>
 to g++ if you want to use uSTL to completely replace libstdc++. This is
-where the actual space savings happen. (If you want to see just how much
-you can save, skip to the <a href="#Savings">Template Bloat Be Gone</a>
-section)
+where most of the space savings happen. (If you want to see just how much
+you can save, skip to the <a href="#Savings">Savings</a> section)
 </p><p>
 If you build uSTL as a static library, you will also need to explicitly
 link all projects using it with -lsupc++ and other libraries that shared
-uSTL would have been linked to. The easiest way to get the list is to
-use <kbd>pkg-config --libs --static ustl</kbd>. The pkgconfig description
-file for uSTL is installed if you have pkg-config on your system. Also,
-the list is available in the <tt>STAL_LIBS</tt> variable in Config.mk.
+uSTL would have been linked to. The easiest way to get the list is to use
+<kbd>pkg-config --libs --static ustl</kbd>. The pkg-config description
+file for uSTL is installed if you have pkg-config on your system. The
+list is also available in the <tt>STAL_LIBS</tt> variable in Config.mk.
 </p>
 <h2 id="Containers">Containers and Iterators</h2>
 <p>
@@ -598,116 +595,109 @@ int main (void)
     return (EXIT_SUCCESS);
 }
 </pre><p>
-Feel free to compile it and see for yourself. I'm compiling on a Core i7
-with gcc 5.3 and <kbd>-Os -DNDEBUG=1 -march=native</kbd>. The libstdc++
-version is linked implicitly with it, and uSTL version is linked with gcc
-(instead of g++) and <kbd>-lustl</kbd>. Both executables are stripped.
-The libstdc++ version looks like this:
+The example is compiled with g++ 7.2 on an Intel Core i7 using <kbd>-Os
+-DNDEBUG=1 -march=native</kbd>. The libstdc++ version is linked implicitly
+with it by g++, and uSTL version is linked using gcc. Both executables
+are stripped. uSTL was configured with <kbd>./configure --with-native
+--without-bounds --force-inline</kbd>. The libstdc++ version looks
+like this:
 </p><pre>
 % ls -l std/tes
-6912 tes
+10368 tes
 % size std/tes
 text	data	bss	dec	hex	filename
-3464	656	8	4128	1020	std/tes
+3291    696     8       3995    f9b     std/tes
 % size -A std/tes.o
-std/tes.o:
-section														size
-.group														  12
-.group														  12
-.group														  12
-.group														  12
-.group														  12
-.text														   0
-.data														   0
-.bss														   0
-.text._ZNKSt6vectorIiSaIiEE12_M_check_lenEmPKc									  72
-.text._ZNSt20__copy_move_backwardILb0ELb1ESt26random_access_iterator_tagE13__copy_move_bIiEEPT_PKS3_S6_S4_	  51
-.text._ZNSt11__copy_moveILb0ELb1ESt26random_access_iterator_tagE8__copy_mIiEEPT_PKS3_S6_S4_			  42
-.rodata.str1.1													  45
-.text._ZNSt6vectorIiSaIiEE13_M_insert_auxEN9__gnu_cxx17__normal_iteratorIPiS1_EERKi				 226
-.text._ZNSt6vectorIiSaIiEE14_M_fill_insertEN9__gnu_cxx17__normal_iteratorIPiS1_EEmRKi				 386
-.text.startup													 301
-.gcc_except_table												  20
-.comment													  18
-.note.GNU-stack													   0
-.eh_frame													 344
-Total														1565
+std/tes.o  :
+section                                                                                                    size
+.group                                                                                                        8
+.group                                                                                                        8
+.group                                                                                                        8
+.group                                                                                                        8
+.text                                                                                                         0
+.data                                                                                                         0
+.bss                                                                                                          0
+.text._ZNKSt6vectorIiSaIiEE12_M_check_lenEmPKc                                                               72
+.text._ZNSt11__copy_moveILb1ELb1ESt26random_access_iterator_tagE8__copy_mIiEEPT_PKS3_S6_S4_                  38
+.rodata._ZNSt6vectorIiSaIiEE17_M_realloc_insertIJiEEEvN9__gnu_cxx17__normal_iteratorIPiS1_EEDpOT_.str1.1     26
+.text._ZNSt6vectorIiSaIiEE17_M_realloc_insertIJiEEEvN9__gnu_cxx17__normal_iteratorIPiS1_EEDpOT_             180
+.rodata.str1.1                                                                                               26
+.text.startup                                                                                               506
+.gcc_except_table                                                                                            15
+.data.DW.ref.__gxx_personality_v0                                                                             8
+.comment                                                                                                     18
+.note.GNU-stack                                                                                               0
+.eh_frame                                                                                                   256
+Total                                                                                                      1177
 </pre><p>
 The uSTL version looks like this:
 </p><pre>
 % ls -l ustl/tes
-5848 tes
+6272 tes
 % size ustl/tes
-text	data	bss	dec	hex	filename
-2505	640	8	3153	c51	ustl/tes
+text    data     bss     dec     hex filename
+2750    680      8       3438    d6e ustl/tes
 % size -A ustl/tes.o
-.text			  0
-.data			  0
-.bss			  0
-.text.unlikely		  0
-.text.startup		273
-.gcc_except_table	 15
-.comment		 18
-.note.GNU-stack		  0
-.eh_frame		 72
-Total			378
+ustl/tes.o  :
+section                             size
+.group                                 8
+.text                                  0
+.data                                  0
+.bss                                   0
+.text.startup                        309
+.gcc_except_table                     15
+.data.DW.ref.__gxx_personality_v0      8
+.comment                              18
+.note.GNU-stack                        0
+.eh_frame                             80
+Total                                438
 </pre><p>
-As you can see, the libstdc++ version instantiates quite a bit of code
-for just this one vector type, with out-of-line functions for copy, move,
-insert, and fill. Because uSTL aggregates memory management into a single
-location (the memblock class), all of those calls can be efficiently
-forwarded there, saving about a kilobyte of code. 1k doesn't seem like
-much, but consider that you get it for <em>every type of container you
-instantiate</em>! An int vector here, a float vector here, a bunch of
-object containers there, and before you know it you are using half your
-executable just for container overhead.
+As you can see, the libstdc++ version instantiates the copy_move and
+realloc_insert functions for the vector, in addition to larger inlined
+functionality. This particular libstdc++ that comes with gcc 7.2 does
+significantly better in code size than previous versions. Just like uSTL,
+it now uses realloc to resize the storage, but still instantiates a
+specialized version of it for each vector and uses c++11 move semantics
+to optimize the element copying.
 </p><p>
-But wait, there is more! Let's look at the total memory footprint:
+uSTL instead resizes the memory raw and relies on the objects being
+relocatable. This allows all the memory management code to be shared
+by all vector types, eliminating the need for specialized versions,
+and resulting in smaller code size.
+</p><p>
+Previously, uSTL was able to save 1k of code size per vector type.
+With version 7.2, libstdc++ has dramatically improved its result and
+now the savings are only half that. Vectors with complex objects will
+save more using uSTL due to the larger size of the emitted move_copy
+that uSTL replaces with a direct object storage relocation.
+</p><p>
+However, there is more! Let's look at the total memory footprint:
 </p><pre>
-% footprint std/tes
    text    data     bss     dec     hex filename
-   3464     656       8    4128    1020 tes
-  86254     976     672   87902   1575e libgcc_s.so.1
-1033970     892      12 1034874   fca7a libm.so.6
-1514876   46936   14240 1576052  180c74 libstdc++.so.6
-1678707   20344   17240 1716291  1a3043 libc.so.6
-4317271   69804   32172 4419247  436eaf (TOTALS)
+   3291     696       8    3995     f9b std/tes
+  86773     880     688   88341   15915 libgcc_s.so.1
+ 147446    6060     376  153882   2591a ld-linux-x86-64.so.2
+1354200    1360       8 1355568  14af30 libm.so.6
+1534466   47080   13504 1595050  1856aa libstdc++.so.6
+1758373   20672   17072 1796117  1b6815 libc.so.6
+4884549   76748   31656 4992953  4c2fb9 (TOTALS)
 
-% footprint ustl/tes
-   text	   data	    bss	    dec	    hex	filename
-   2505     640       8    3153     c51 tes
-  86254     976     672   87902   1575e libgcc_s.so.1
- 141262    7840     536  149638   24886 libustl.so.2
-1678707   20344   17240 1716291  1a3043 libc.so.6
-1908728   29800   18456 1956984  1ddc78 (TOTALS)
+   text    data     bss     dec     hex filename
+   2750     680       8    3438     d6e ustl/tes
+  86773     880     688   88341   15915 libgcc_s.so.1
+ 144640    7944     536  153120   25620 libustl.so.2
+ 147446    6060     376  153882   2591a ld-linux-x86-64.so.2
+1758373   20672   17072 1796117  1b6815 libc.so.6
+2139982   36236   18680 2194898  217dd2 (TOTALS)
 </pre><p>
 As you can see, the footprint for the uSTL version is less than half
-the size, saving 2.5 megabytes. If you don't count libc, measuring only
-the C++-specific overhead, std/tes loads 2.7 megabytes of libraries,
-while ustl/tes loads only 237k, <em>eleven times less</em>!
+the size, saving 2.8 megabytes. If you don't count libc, libgcc_s, and ld-linux,
+measuring only the C++-specific overhead, std/tes loads 2.9 megabytes
+of libraries, while ustl/tes loads only 157k, <em>eighteen times less</em>!
 </p><p>
-Finally, if you build a static libustl.a, it is only 33k. Linking with
-libsupc++.a adds 75k, of which 45k is ABI name demangling, only used for
-printing backtraces. Linking statically can thus lower the C++ overhead
-to less than 64k, a forty-fold reduction from libstdc++.so.
-</p><p>
-One final note concerns the current gcc versions, 4.4 and later. gcc
-developers have decided, for various reasons, to treat the inline keyword
-as nothing more than a hint to the optimizer, resulting in a lot less
-inlining for uSTL-using code.  You can see which functions fail to inline
-if you turn on -Winline warning. Back in gcc 3 days there were various
-parameters that could be tweaked to get the inlining to happen. These no
-longer seem to work. Because it takes quite a bit of code to make these
-failures happen, I am unable to submit a gcc bug for it. Simple examples
-don't exhibit inlining failures and submitting the entire uSTL codebase
-seems inappropriate. Therefore I've pretty much given up on it. The only
-solution I can come up with is to just clobber the optimizer over the head
-with <code>#define inline __attribute__((always_inline)) inline</code>. It
-is enabled if you configure with <kbd>--force-inline</kbd>. The above
-examples are compiled with this option. Amusingly, libstdc++ developers
-have taken the same approach, defining _GLIBCXX_ALWAYS_INLINE. If even
-gcc developers do not trust gcc to make the correct inlining decisions,
-why the policy? Oh well...
+Finally, if you build a static libustl.a, it is only 34k. Linking with
+libsupc++.a adds 80k. ustl/tes linked with these is 79k. That is the
+entire C++-specific overhead, a 37-fold reduction from libstdc++.so.
 </p>
 <h2 id="Contact">Bug reporting</h2>
 <p>
