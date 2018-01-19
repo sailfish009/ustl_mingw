@@ -48,7 +48,8 @@ public:
     inline			operator cmemlink (void)	{ return cmemlink (_data); }
     inline			operator memlink (void)		{ return memlink (_data); }
     inline void			reserve (size_type n, bool bExact = false);
-    inline void			resize (size_type n, bool bExact = true);
+    inline void			resize (size_type n);
+    void			resize (size_type n, const_reference v);
     inline size_type		capacity (void) const		{ return _data.capacity() / sizeof(T);	}
     inline size_type		size (void) const		{ return _data.size() / sizeof(T);		}
     inline size_type		max_size (void) const		{ return _data.max_size() / sizeof(T);	}
@@ -143,13 +144,25 @@ inline typename vector<T>::iterator vector<T>::append_hole (size_type n)
 
 /// Resizes the vector to contain \p n elements.
 template <typename T>
-inline void vector<T>::resize (size_type n, bool bExact)
+void vector<T>::resize (size_type n)
 {
     destroy (begin()+n, end());
     const size_type nb = n * sizeof(T);
     if (_data.capacity() < nb)
-	reserve (n, bExact);
+	reserve (n);
     uninitialized_default_construct_n (end(), (nb - _data.size())/sizeof(T));
+    _data.memlink::resize (nb);
+}
+
+/// Resizes the vector to contain \p n elements.
+template <typename T>
+void vector<T>::resize (size_type n, const_reference v)
+{
+    destroy (begin()+n, end());
+    const size_type nb = n * sizeof(T);
+    if (_data.capacity() < nb)
+	reserve (n);
+    uninitialized_fill_n (end(), (nb - _data.size())/sizeof(T), v);
     _data.memlink::resize (nb);
 }
 

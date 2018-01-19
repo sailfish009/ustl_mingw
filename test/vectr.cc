@@ -63,6 +63,8 @@ void TestVector (void)
     v2 = v;
     if (v == v2)
 	cout << "v == v2\n";
+    v.resize (v.size()+3, 42);
+    cout << v << endl;
     vector<A> ctv;
     A a;
     ctv.assign (3, a);
