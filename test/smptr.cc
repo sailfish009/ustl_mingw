@@ -29,13 +29,17 @@ void TestSmartPtrs (void)
 #if HAVE_CPP14
     auto plo = make_unique<LoggedObj> (42);
     auto ploa = make_unique<LoggedObj[]> (3);
-    auto plos = make_shared<LoggedObj> (72);
+    auto plosm = make_shared<LoggedObj> (72);
+    shared_ptr<LoggedObj> plos;
+    plos.swap (plosm);
     auto exprint = make_scope_exit ([]{ cout.format ("~scope_exit\n"); });
     auto uniqres = make_unique_resource (4, [](int v) { cout.format ("Closing resource %d\n", v); });
 #elif HAVE_CPP11
     auto plo = unique_ptr<LoggedObj> (new LoggedObj (42));
     auto ploa = unique_ptr<LoggedObj[]> (new LoggedObj [3]);
-    auto plos = shared_ptr<LoggedObj> (new LoggedObj (72));
+    auto plosm = shared_ptr<LoggedObj> (new LoggedObj (72));
+    shared_ptr<LoggedObj> plos;
+    plos.swap (plosm);
     auto exprint = scope_exit<pfn_scope_exit_t> (PrintScopeExit);
     auto uniqres = scope_exit<pfn_scope_exit_t> (PrintResourceDestruct);
 #else
