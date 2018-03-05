@@ -22,16 +22,8 @@ template <typename T>
 inline constexpr T&& forward (typename tm::RemoveReference<T>::Result&& v) noexcept
     { return static_cast<T&&>(v); }
 
-template <typename T>
-inline void swap (T&& a, T&& b)
-{
-    auto t = move(a);
-    a = move(b);
-    b = move(t);
-}
-
 template <typename T, typename U = T>
-auto exchange (T&& a, U&& b)
+auto exchange (T& a, U&& b)
 {
     auto t = move(a);
     a = forward<U>(b);
@@ -40,19 +32,27 @@ auto exchange (T&& a, U&& b)
 
 #else
 
+template <typename T>
+inline constexpr typename tm::RemoveReference<T>::Result& move (T& v) noexcept
+    { return v; }
+
+template <typename T>
+inline constexpr T& forward (typename tm::RemoveReference<T>::Result& v) noexcept
+    { return v; }
+
+#endif
+
 /// Assigns the contents of a to b and the contents of b to a.
 /// This is used as a primitive operation by many other algorithms. 
 /// \ingroup SwapAlgorithms
 ///
-template <typename Assignable> 
-inline void swap (Assignable& a, Assignable& b)
+template <typename T>
+inline void swap (T& a, T& b)
 {
-    Assignable tmp = a;
-    a = b;
-    b = tmp;
+    typename tm::RemoveReference<T>::Result t = move(a);
+    a = move(b);
+    b = move(t);
 }
-
-#endif
 
 /// Equivalent to swap (*a, *b)
 /// \ingroup SwapAlgorithms

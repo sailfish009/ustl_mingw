@@ -95,8 +95,12 @@ static void TestAlgorithms (void)
     PrintVector (v);
     v.assign (first, last);
 
+#if HAVE_CPP11
     pair<int,int> p1 (1,2);
     p1.swap (make_pair(3,4));
+#else
+    pair<int,int> p1 (3,4);
+#endif
     cout << "swap(pair<3,4>) = " << p1 << endl;
 
     cout << "copy(0,8,9)\n";

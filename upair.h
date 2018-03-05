@@ -49,7 +49,7 @@ public:
     inline pair&	operator= (pair&& p2)		{ first = move(p2.first); second = move(p2.second); return *this; }
     template <typename T3, typename T4>
     inline pair&	operator= (pair<T3,T4>&& p2)	{ first = forward<T3>(p2.first); second = forward<T4>(p2.second); return *this; }
-    inline void		swap (pair&& v)			{ ::ustl::swap(move(first),move(v.first)); ::ustl::swap(move(second),move(v.second)); }
+    inline void		swap (pair&& v)			{ ::ustl::swap(first,v.first); ::ustl::swap(second,v.second); }
 #endif
 public:
     first_type		first;
