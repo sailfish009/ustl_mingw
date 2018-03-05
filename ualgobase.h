@@ -23,17 +23,17 @@ inline constexpr T&& forward (typename tm::RemoveReference<T>::Result&& v) noexc
     { return static_cast<T&&>(v); }
 
 template <typename T>
-inline void swap (T& a, T& b)
+inline void swap (T&& a, T&& b)
 {
-    T t = move(a);
+    auto t = move(a);
     a = move(b);
     b = move(t);
 }
 
 template <typename T, typename U = T>
-T exchange (T& a, U&& b)
+auto exchange (T&& a, U&& b)
 {
-    T t = move(a);
+    auto t = move(a);
     a = forward<U>(b);
     return t;
 }
