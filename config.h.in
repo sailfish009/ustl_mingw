@@ -169,10 +169,10 @@
     #undef HAVE_VECTOR_EXTENSIONS
 #endif
 
-#if CPU_HAS_SSE && __GNUC__
+#if __SSE__ && __GNUC__
     #define __sse_align	__attribute__((aligned(16)))
 #else
-    #define __sse_align	
+    #define __sse_align
 #endif
 
 #if HAVE_CPP11

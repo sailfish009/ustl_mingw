@@ -44,10 +44,6 @@ name=[without-fastcopy]
 desc=[disable specializations for copy/fill]
 seds=[s/#define \(WANT_UNROLLED_COPY\) 1/#undef \1/]
 }{
-name=[without-mmx]
-desc=[	disable use of MMX/SSE/3dNow! instructions]
-seds=[s/#define \(WANT_MMX\) 1/#undef \1/]
-}{
 name=[force-inline]
 desc=[make inline keyword mean always inline, not just a hint]
 seds=[s/#undef \(WANT_ALWAYS_INLINE\)/#define \1 1/]
