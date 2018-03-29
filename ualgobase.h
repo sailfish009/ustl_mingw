@@ -22,6 +22,7 @@ template <typename T>
 inline constexpr T&& forward (typename tm::RemoveReference<T>::Result&& v) noexcept
     { return static_cast<T&&>(v); }
 
+#if HAVE_CPP14
 template <typename T, typename U = T>
 auto exchange (T& a, U&& b)
 {
@@ -29,6 +30,7 @@ auto exchange (T& a, U&& b)
     a = forward<U>(b);
     return t;
 }
+#endif
 
 #else
 
