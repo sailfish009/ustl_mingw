@@ -22,7 +22,7 @@ seds=[s/^#\(BUILD_STATIC\)/\1/;s/-fPIC/-fPIC -ffunction-sections -fdata-sections
 }{
 name=[without-shared]
 desc=[do not build the shared library]
-seds=[s/^\(BUILD_SHARED\)/#\1/;s/ -fPIC//]
+seds=[s/^\(BUILD_SHARED\)/#\1/;s/ -fPIC//;/^Libs:/{h;d};/^Libs\.private:/{x;G;s/\nLibs\.private://}]
 }{
 name=[with-debug]
 desc=[	compile for debugging]
