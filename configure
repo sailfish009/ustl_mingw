@@ -261,7 +261,7 @@ done
 #### Set directory prefixes ##########################################
 
 sub "s/@prefix@/${ac_var_prefix:=\/usr\/local}/g
-s/@bindir@/$ac_var_prefix\/bin/g
+s/@bindir@/${ac_var_bindir:=$ac_var_prefix\/bin}/g
 s/@includedir@/${ac_var_includedir:=$ac_var_prefix\/include}/g
 s/@oldincludedir@/${ac_var_oldincludedir:=\/usr\/include}/g
 s/@libdir@/${ac_var_libdir:=$ac_var_prefix\/lib}/g
@@ -272,10 +272,39 @@ s/@pkgconfigdir@/${ac_var_pkgconfigdir:=$ac_var_libdir\/pkgconfig}/g
 s/@customincdir@/${ac_var_customincdir:=$ac_var_prefix\/include}/g
 s/@customlibdir@/${ac_var_customlibdir:=$ac_var_prefix\/lib}/g"
 
+# See if pkg-config is installed
+PKGCONFIGDIR=`echo $ac_var_pkgconfigdir | sed 's/\\\\//g'`
+if [ ! -d $PKGCONFIGDIR -a -d /usr/lib/pkgconfig ]; then
+    sub "s/$ac_var_pkgconfigdir/\/usr\/lib\/pkgconfig/"
+    ac_var_pkgconfigdir=/usr/lib/pkgconfig;
+    sub "s/#\(PKGCONFIGDIR\)/\1/";
+fi
+[ ! -d $PKGCONFIGDIR ] || sub "s/#\(PKGCONFIGDIR\)/\1/"
+
+# Replace prefix variables, where available
+if [ "$ac_var_includedir" == "$ac_var_prefix\/include" ]; then
+    sub "s/$ac_var_includedir/\${prefix}\/include/";
+fi
+if [ "$ac_var_pkgconfigdir" == "$ac_var_libdir\/pkgconfig" ]; then
+    sub "s/$ac_var_pkgconfigdir/\${LIBDIR}\/pkgconfig/";
+fi
+if [ "$ac_var_libdir" == "$ac_var_prefix\/lib" ]; then
+    sub "s/$ac_var_libdir/\${prefix}\/lib/";
+fi
+if [ "$ac_var_bindir" == "$ac_var_prefix\/bin" ]; then
+    sub "s/$ac_var_bindir/\${prefix}\/bin/";
+fi
+if [ "$ac_var_libdir" == "\/usr\/local\/lib" -o "$ac_var_libdir" == "\/usr\/lib" ]; then
+    sub "s/ -L\${libdir}//";
+fi
+if [ "$ac_var_includedir" == "\/usr\/local\/include" -o "$ac_var_includedir" == "\/usr\/include" ]; then
+    sub "s/ -I\${includedir}//";
+fi
+
 if [ "$ac_var_prefix" != "\/usr\/local" -a "$ac_var_prefix" != "\/usr" ]; then
-    sub "s/ @CUSTOMINCDIR@/ -I$ac_var_customincdir/g;s/ @CUSTOMLIBDIR@/ -L$ac_var_customlibdir/g"
+    sub "s/ @CUSTOMINCDIR@/ -I$ac_var_customincdir/;s/ @CUSTOMLIBDIR@/ -L$ac_var_customlibdir/"
 else
-    sub "s/ @CUSTOMINCDIR@//g;s/ @CUSTOMLIBDIR@//g"
+    sub "s/ @CUSTOMINCDIR@//;s/ @CUSTOMLIBDIR@//"
 fi
 
 # See if pkg-config is installed
