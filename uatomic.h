@@ -66,16 +66,16 @@ public:
     inline T		xor_fetch (T v, memory_order order = memory_order_seq_cst )
 			    { return __atomic_xor_fetch (&_v, v, order); }
     inline		operator T (void) const	{ return load(); }
-    inline T		operator= (T v)		{ store(v); return v; }
-    inline T		operator++ (int)	{ return fetch_add (1); }
-    inline T		operator-- (int)	{ return fetch_sub (1); }
-    inline T		operator++ (void)	{ return add_fetch (1); }
-    inline T		operator-- (void)	{ return sub_fetch (1); }
-    inline T		operator+= (T v)	{ return add_fetch (v); }
-    inline T		operator-= (T v)	{ return sub_fetch (v); }
-    inline T		operator&= (T v)	{ return and_fetch (v); }
-    inline T		operator|= (T v)	{ return  or_fetch (v); }
-    inline T		operator^= (T v)	{ return xor_fetch (v); }
+    inline atomic&	operator= (T v)		{ store(v); return *this; }
+    inline atomic	operator++ (int)	{ return fetch_add (1); }
+    inline atomic	operator-- (int)	{ return fetch_sub (1); }
+    inline atomic&	operator++ (void)	{ add_fetch (1); return *this; }
+    inline atomic&	operator-- (void)	{ sub_fetch (1); return *this; }
+    inline atomic&	operator+= (T v)	{ add_fetch (v); return *this; }
+    inline atomic&	operator-= (T v)	{ sub_fetch (v); return *this; }
+    inline atomic&	operator&= (T v)	{ and_fetch (v); return *this; }
+    inline atomic&	operator|= (T v)	{  or_fetch (v); return *this; }
+    inline atomic&	operator^= (T v)	{ xor_fetch (v); return *this; }
 };
 #define ATOMIC_VAR_INIT	{0}
 

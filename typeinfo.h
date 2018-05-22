@@ -25,9 +25,14 @@ public:
     virtual bool	__do_catch (const type_info* __thr_type, void** __thr_obj, unsigned __outer) const;
     virtual bool	__do_upcast (const __cxxabiv1::__class_type_info* __target, void** __obj_ptr) const;
     explicit inline	type_info (const char* newname)		: __name(newname) { }
+#if HAVE_CPP11
+    type_info&		operator= (const type_info&) = delete;
+			type_info (const type_info&) = delete;
+#else
 private:
-    inline void		operator= (const type_info&)		{ }
-    inline		type_info (const type_info&)		{ }
+    inline type_info&	operator= (const type_info&)	{ return *this; }
+    inline		type_info (const type_info& t)	:__name(t.__name) { }
+#endif
 protected:
     const char*		__name;
 };

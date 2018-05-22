@@ -46,8 +46,8 @@ void TestUtility (void)
     cout << endl;
     cout << "advance(42,0) = " << advance(42,0) << endl;
     cout << "advance(42,3) = " << advance(42,3) << endl;
-    const void *cvp = (const void*) 0x1234;
-    void* vp = (void*) 0x4321;
+    const void *cvp = reinterpret_cast<const void*>(0x1234);
+    void* vp = reinterpret_cast<void*>(0x4321);
     cout << ios::hex;
     cout << "cvp = " << cvp << endl;
     cout << "vp = " << vp << endl;

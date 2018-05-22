@@ -34,7 +34,7 @@ inline size_t Utf8SequenceBytes (wchar_t c) __attribute__((const));
 /// Returns the number of bytes required to UTF-8 encode \p v.
 inline size_t Utf8Bytes (wchar_t v)
 {
-    if ((uint32_t) v < 128)
+    if (uint32_t(v) < 128)
 	return 1;
     size_t n;
     #if __x86__
@@ -168,7 +168,7 @@ public:
     utf8out_iterator&		operator= (WChar v);
     inline utf8out_iterator&	operator* (void) { return *this; }
     inline utf8out_iterator&	operator++ (void) { return *this; }
-    inline utf8out_iterator&	operator++ (int) { return *this; }
+    inline utf8out_iterator	operator++ (int) { return *this; }
     inline bool			operator== (const utf8out_iterator& i) const { return _i == i._i; }
     inline bool			operator< (const utf8out_iterator& i) const { return _i < i._i; }
 private:

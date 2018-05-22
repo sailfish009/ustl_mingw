@@ -62,7 +62,7 @@ void TestBigFill (const size_t size, const T magic)
     if (iMismatch == vbig.end())
 	cout << "works\n";
     else
-	cout.format ("does not work: mismatch at %zd, =0x%lX\n", abs_distance (vbig.begin(), iMismatch), (unsigned long)(*iMismatch));
+	cout.format ("does not work: mismatch at %zd, =0x%lX\n", abs_distance (vbig.begin(), iMismatch), uintptr_t(*iMismatch));
 }
 
 template <typename T>
@@ -78,7 +78,7 @@ void TestBigCopy (const size_t size, const T magic)
     if (iMismatch.first == vbig1.end())
 	cout << "works\n";
     else
-	cout.format ("does not work: mismatch at %zd, 0x%lX != 0x%lX\n", abs_distance(vbig1.begin(), iMismatch.first), (unsigned long)(*iMismatch.first), (unsigned long)(*iMismatch.second));
+	cout.format ("does not work: mismatch at %zd, 0x%lX != 0x%lX\n", abs_distance(vbig1.begin(), iMismatch.first), uintptr_t(*iMismatch.first), uintptr_t(*iMismatch.second));
 }
 
 static void TestAlgorithms (void)

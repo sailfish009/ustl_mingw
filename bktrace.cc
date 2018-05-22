@@ -52,7 +52,7 @@ static size_t ExtractAbiName (const char* isym, char* nmbuf) noexcept
     if (isym) {
 	// Copy out the name; the strings are: "file(function+0x42) [0xAddress]"
 	const char* mnStart = strchr (isym, '(');
-	if (++mnStart == (const char*)(1))
+	if (++mnStart == reinterpret_cast<const char*>(1))
 	    mnStart = isym;
 	const char* mnEnd = strchr (isym, '+');
 	const char* isymEnd = isym + strlen (isym);
@@ -77,7 +77,7 @@ void CBacktrace::GetSymbols (void) noexcept
     size_t symSize = 1;
     for (uoff_t i = 0; i < _nFrames; ++ i)
 	symSize += ExtractAbiName (symbols[i], nmbuf) + 1;
-    if ((_symbols = (char*) calloc (symSize, 1))) {
+    if ((_symbols = static_cast<char*>(calloc (symSize, 1)))) {
 	for (uoff_t i = 0; _symbolsSize < symSize - 1; ++ i) {
 	    size_t sz = ExtractAbiName (symbols[i], nmbuf);
 	    memcpy (_symbols + _symbolsSize, nmbuf, sz);
@@ -112,7 +112,7 @@ void CBacktrace::read (istream& is)
     assert (is.aligned (stream_align_of (_addresses[0])) && "Backtrace object contains pointers and must be void* aligned");
     is >> _nFrames >> _symbolsSize;
     nfree (_symbols);
-    _symbols = (char*) malloc (_symbolsSize + 1);
+    _symbols = static_cast<char*> (malloc (_symbolsSize + 1));
     is.read (_symbols, _symbolsSize);
     _symbols [_symbolsSize] = 0;
     is.align();

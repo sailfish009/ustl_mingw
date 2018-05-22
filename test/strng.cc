@@ -38,7 +38,7 @@ void TestString (void)
     s1 = c_TestString2;
     s1 += c_TestString3;
     s1 += '$';
-    s1 += (unsigned char)'7';
+    s1 += static_cast<unsigned char>('7');
     s1.pop_back();
     cout << s1 << endl;
 
@@ -132,7 +132,7 @@ void TestString (void)
     cout << "to_string(42) = " << to_string(42) << endl;
     cout << "to_string(4.2f) = " << to_string(4.2f) << endl;
     cout << "to_string(4.2) = " << to_string(4.2) << endl;
-    cout << "to_string(ld(4.2)) = " << to_string((long double)(4.2)) << endl;
+    cout << "to_string(ld(4.2)) = " << to_string(static_cast<long double>(4.2)) << endl;
 }
 
 void MyFormat (const char* fmt, ...)

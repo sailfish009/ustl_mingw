@@ -27,8 +27,8 @@ void TestCML (void)
     if (a.begin() != phello)
 	cout.format ("a.begin() failed: %p != %p\n", a.begin(), phello);
     a.link (VectorRange (hello));
-    if (*(const char*)(a.begin() + 5) != hello[5])
-	cout.format ("begin()[5] failed: %c != %c\n", *(const char*)(a.begin() + 5), VectorElement(hello,5));
+    if (*reinterpret_cast<const char*>(a.begin() + 5) != hello[5])
+	cout.format ("begin()[5] failed: %c != %c\n", *reinterpret_cast<const char*>(a.begin() + 5), VectorElement(hello,5));
     if (a.size() != VectorSize(hello))
 	cout << "link to VectorRange doesn't work\n";
     if (0 != memcmp (a.begin(), hello, VectorSize(hello)))

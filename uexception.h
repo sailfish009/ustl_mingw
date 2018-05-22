@@ -52,7 +52,7 @@ class exception : public std::exception {
 public:
     typedef const CBacktrace& rcbktrace_t;
 public:
-    inline		exception (void) noexcept : _format (xfmt_Exception) {}
+    inline		exception (void) noexcept : _backtrace(),_format (xfmt_Exception) {}
     inline virtual	~exception (void) noexcept {}
     inline virtual const char* what (void) const noexcept { return "error"; }
     virtual void	info (string& msgbuf, const char* fmt = nullptr) const noexcept;

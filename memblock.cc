@@ -63,7 +63,7 @@ void memblock::copy_link (void)
 /// Copies data from \p p, \p n.
 void memblock::assign (const void* p, size_type n)
 {
-    assert ((p != (const void*) cdata() || size() == n) && "Self-assignment can not resize");
+    assert ((static_cast<const_pointer>(p) != cdata() || size() == n) && "Self-assignment can not resize");
     resize (n);
     copy_n (const_pointer(p), n, begin());
 }
@@ -86,7 +86,7 @@ void memblock::reserve (size_type newSize, bool bExact)
     const size_t alignedSize (NextPow2 (newSize));
     if (!bExact)
 	newSize = alignedSize;
-    pointer newBlock = (pointer) realloc (oldBlock, newSize);
+    pointer newBlock = static_cast<pointer> (realloc (oldBlock, newSize));
     if (!newBlock)
 	throw bad_alloc (newSize);
     if (!oldBlock & (cdata() != nullptr))
@@ -100,7 +100,7 @@ void memblock::shrink_to_fit (void)
 {
     if (is_linked())
 	return;
-    pointer newBlock = (pointer) realloc (begin(), size());
+    pointer newBlock = static_cast<pointer> (realloc (begin(), size()));
     if (!newBlock && size())
 	throw bad_alloc (size());
     _capacity = size();
