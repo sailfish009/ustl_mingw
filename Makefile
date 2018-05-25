@@ -71,10 +71,13 @@ RINCI	:= ${LIDIR}.h
 
 install:	install-incs
 install-incs: ${INCSI} ${RINCI}
-${INCSI}: ${LIDIR}/%.h: %.h
+${LIDIR}:
+	@echo "Creating $@ ..."
+	@mkdir -p $@
+${INCSI}: ${LIDIR}/%.h: %.h |${LIDIR}
 	@echo "Installing $@ ..."
 	@${INSTALLDATA} $< $@
-${RINCI}: ${NAME}.h
+${RINCI}: ${NAME}.h |${LIDIR}
 	@echo "Installing $@ ..."
 	@${INSTALLDATA} $< $@
 uninstall:	uninstall-incs
@@ -93,9 +96,13 @@ LIBTI	:= ${LIBDIR}/$(notdir ${SLIBT})
 LIBLI	:= $(addprefix ${LIBDIR}/,$(notdir ${SLINKS}))
 LIBAI	:= ${LIBDIR}/$(notdir ${LIBA})
 
+${LIBDIR}:
+	@echo "Creating $@ ..."
+	@mkdir -p $@
+
 ifdef BUILD_SHARED
 install:	${LIBTI} ${LIBLI}
-${LIBTI}:	${SLIBT}
+${LIBTI}:	${SLIBT} |${LIBDIR}
 	@echo "Installing $@ ..."
 	@${INSTALLLIB} $< $@
 ${LIBLI}: ${LIBTI}
@@ -104,7 +111,7 @@ endif
 
 ifdef BUILD_STATIC
 install:	${LIBAI}
-${LIBAI}:	${LIBA}
+${LIBAI}:	${LIBA} |${LIBDIR}
 	@echo "Installing $@ ..."
 	@${INSTALLLIB} $< $@
 endif

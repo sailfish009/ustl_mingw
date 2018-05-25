@@ -17,7 +17,7 @@ AR		:= @AR@
 RANLIB		:= @RANLIB@
 INSTALL		:= @INSTALL@
 
-INSTALLDATA	:= ${INSTALL} -D -p -m 644
+INSTALLDATA	:= ${INSTALL} -p -m 644
 INSTALLLIB	:= ${INSTALLDATA}
 RMPATH		:= rmdir -p --ignore-fail-on-non-empty
 

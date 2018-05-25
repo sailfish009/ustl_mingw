@@ -157,7 +157,7 @@ fi
 # Determine compiler version and dependent subs
 if [ "$CC" = "gcc" -o "$CC" = "clang" ]; then
     CCVER=`$CC -dumpversion|sed 's/\([1-9][0-9]*\).\([0-9]*\).\([0-9]*\)*/\1\2\3/'`
-    if [ "$CC" = "gcc" -a $CCVER -gt 400 ]; then
+    if [ "$CC" = "gcc" -a $CCVER -gt 421 ]; then
 	sub "s/ @INLINE_OPTS@/ -fvisibility-inlines-hidden -fno-threadsafe-statics -fno-enforce-eh-specs/"
     else
 	sub "s/ @INLINE_OPTS@//"
@@ -173,12 +173,16 @@ if [ "$CC" = "gcc" -o "$CC" = "clang" ]; then
 	    sub "s/@TGT_OPTS@/-std=c++14/"
 	elif [ $CCVER -ge 460 ]; then
 	    sub "s/@TGT_OPTS@/-std=c++11/"
+	else
+	    sub "s/@TGT_OPTS@//"
 	fi
     else # clang
 	if [ $CCVER -ge 360 ]; then
 	    sub "s/@TGT_OPTS@/-std=c++14/"
 	elif [ $CCVER -ge 320 ]; then
 	    sub "s/@TGT_OPTS@/-std=c++11/"
+	else
+	    sub "s/@TGT_OPTS@//"
 	fi
 	sub "s/ @libgcc_eh@//"
     fi
