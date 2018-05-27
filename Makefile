@@ -123,7 +123,10 @@ endif
 ifdef PKGCONFIGDIR
 PCI	:= ${PKGCONFIGDIR}/ustl.pc
 install:	${PCI}
-${PCI}:	ustl.pc
+${PKGCONFIGDIR}:
+	@echo "Creating $@ ..."
+	@mkdir -p $@
+${PCI}:	ustl.pc |${PKGCONFIGDIR}
 	@echo "Installing $@ ..."
 	@${INSTALLDATA} $< $@
 
