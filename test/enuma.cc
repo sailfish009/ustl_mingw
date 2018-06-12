@@ -5,7 +5,7 @@
 
 #include "stdtest.h"
 
-void TestEnumArithmetic (void)
+static void TestEnumArithmetic (void)
 {
     enum EFruit {
 	apple,

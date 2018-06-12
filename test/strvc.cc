@@ -5,12 +5,12 @@
 
 #include "stdtest.h"
 
-inline void PrintString (const string& str)
+inline static void PrintString (const string& str)
 {
     cout << str << endl;
 }
 
-void TestStringVector (void)
+static void TestStringVector (void)
 {
     vector<string> v;
 

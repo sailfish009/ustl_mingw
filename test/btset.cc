@@ -6,12 +6,7 @@
 
 #include "stdtest.h"
 
-size_t SizeOfSet (const bitset<30>& v)
-{
-    return stream_size_of (v);
-}
-
-void TestBitset (void)
+static void TestBitset (void)
 {
     bitset<30> bs1;
     cout.format ("bitset<%zu> bs1: capacity() = %zu, sizeof() = %zu\n", bs1.size(), bs1.capacity(), sizeof(bs1));

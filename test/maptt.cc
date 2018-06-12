@@ -6,7 +6,7 @@
 #include "stdtest.h"
 #include "../umap.h"
 
-void TestMap (void)
+static void TestMap (void)
 {
     typedef map<string,int> monthmap_t;
     monthmap_t months;

@@ -6,7 +6,7 @@
 #include "stdtest.h"
 
 template <size_t N, typename T>
-void TestTuple (const char* ctrType)
+static void TestTuple (const char* ctrType)
 {
     cout << "================================================" << endl;
     cout << "Testing " << ctrType << endl;
@@ -56,7 +56,7 @@ void TestTuple (const char* ctrType)
     cout << "pt1 = pt1 - pt2:\t" << pt1 << endl;
 }
 
-void TestIntegralTuples (void)
+static void TestIntegralTuples (void)
 {
     TestTuple<4,float> ("tuple<4,float>");
     TestTuple<2,float> ("tuple<2,float>");

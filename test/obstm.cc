@@ -5,7 +5,7 @@
 
 #include "stdtest.h"
 
-void ObjectSerialization (void)
+static void ObjectSerialization (void)
 {
     #define RW(stream)	rws[stream.pos() == expect]
     const void* pBufC = nullptr;

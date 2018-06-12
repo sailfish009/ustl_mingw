@@ -5,7 +5,7 @@
 
 #include "stdtest.h"
 
-void TestFStream (void)
+static void TestFStream (void)
 {
     fstream fs ("test/fstrm.std", ios::in | ios::nocreate);
     if (!fs && !(fs.open("fstrm.std", ios::in | ios::nocreate),fs))

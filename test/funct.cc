@@ -6,7 +6,7 @@
 #include "stdtest.h"
 
 template <typename Container>
-void PrintVector (const Container& ctr)
+static void PrintVector (const Container& ctr)
 {
     cout << "{";
     foreach (typename Container::const_iterator, i, ctr)
@@ -29,7 +29,7 @@ public:
 INTEGRAL_STREAMABLE(A)
 TEXT_STREAMABLE(A)
 
-void TestFunctors (void)
+static void TestFunctors (void)
 {
     vector<int> v;
     v.resize (20);

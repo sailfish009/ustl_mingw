@@ -5,7 +5,7 @@
 
 #include "stdtest.h"
 
-void TestMacros (void)
+static void TestMacros (void)
 {
     #define VARNAME(n) LARG_NUMBER(v,n)
     #define VARDECL(n) VARNAME(n) = n

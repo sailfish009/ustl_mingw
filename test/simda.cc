@@ -7,7 +7,7 @@
 using namespace ustl::simd;
 
 template <typename Ctr>
-void TestBitwiseOperations (Ctr op1, Ctr op2, const Ctr op3)
+static void TestBitwiseOperations (Ctr op1, Ctr op2, const Ctr op3)
 {
     passign (op3, op2);
     pand (op1, op2);
@@ -30,7 +30,7 @@ template <> inline void TestBitwiseOperations (tuple<2,float>, tuple<2,float>, c
 template <> inline void TestBitwiseOperations (tuple<4,float>, tuple<4,float>, const tuple<4,float>) {}
 
 template <typename Ctr>
-void TestCtr (const char* ctrType)
+static void TestCtr (const char* ctrType)
 {
     cout << "================================================" << endl;
     cout << "Testing " << ctrType << endl;
@@ -68,7 +68,7 @@ void TestCtr (const char* ctrType)
 }
 
 template <typename SrcCtr, typename DstCtr, typename Operation>
-void TestConversion (const char* ctrType)
+static void TestConversion (const char* ctrType)
 {
     cout << "================================================" << endl;
     cout << "Testing " << ctrType << endl;
@@ -87,7 +87,7 @@ void TestConversion (const char* ctrType)
     cout << src << " -> " << dst << endl;
 }
 
-void TestSimdAlgorithms (void)
+static void TestSimdAlgorithms (void)
 {
     TestCtr<tuple<8,uint8_t> >("uint8_t[8]");
     TestCtr<tuple<8,int8_t> >("int8_t[8]");

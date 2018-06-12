@@ -5,7 +5,7 @@
 
 #include "stdtest.h"
 
-void PrintVector (const int* first, const int* last)
+static void PrintVector (const int* first, const int* last)
 {
     cout << "{";
     while (first < last)
@@ -13,7 +13,7 @@ void PrintVector (const int* first, const int* last)
     cout << " }" << endl;
 }
 
-void TestSetAndMultiset (void)
+static void TestSetAndMultiset (void)
 {
 #if HAVE_CPP11
     set<int> v (set<int>({ 1, 8, 2, 3, 1, 1, 4, 6, 1, 3, 4 }));
@@ -22,7 +22,7 @@ void TestSetAndMultiset (void)
     mv.emplace (1);
     mv.emplace (1);
 #else
-    const int vv[] = { 1, 8, 9, 2, 3, 1, 1, 4, 6, 1, 3, 4 };
+    static const int vv[] = { 1, 8, 9, 2, 3, 1, 1, 4, 6, 1, 3, 4 };
     set<int> v (VectorRange (vv));
     multiset<int> mv (VectorRange (vv));
 #endif

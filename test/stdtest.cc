@@ -3,7 +3,9 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#define _GNU_SOURCE 1
+#ifndef _GNU_SOURCE
+    #define _GNU_SOURCE 1
+#endif
 #include "stdtest.h"
 #include <signal.h>
 
@@ -35,7 +37,7 @@ static void Terminate (void)
 /// Called when an exception violates a throw specification.
 static void OnUnexpected (void)
 {
-    cerr << "Fatal internal error: unexpected exception caught.\n";
+    cerr << "Fatal internal error: unexpected exception caught." << endl;
     Terminate();
 }
 

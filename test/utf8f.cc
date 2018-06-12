@@ -18,7 +18,7 @@ static void DumpWchars (const vector<wchar_t>& v)
 	cout.format (" %u", uint32_t(*i));
 }
 
-void TestUTF8 (void)
+static void TestUTF8 (void)
 {
     cout << "Generating Unicode characters ";
     vector<wchar_t> srcChars;

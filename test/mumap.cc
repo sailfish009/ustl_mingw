@@ -9,15 +9,16 @@
 typedef multimap<int,string> empmap_t;
 typedef empmap_t::const_iterator citer_t;
 
-void PrintEntries (citer_t first, citer_t last)
+static void PrintEntries (citer_t first, citer_t last)
 {
     for (citer_t i = first; i < last; ++ i)
 	cout << i->second << "\t- $" << i->first << endl;
 }
 
-inline void PrintEntries (const empmap_t& m)	{ PrintEntries (m.begin(), m.end()); }
+inline static void PrintEntries (const empmap_t& m)
+    { PrintEntries (m.begin(), m.end()); }
 
-void TestMultiMap (void)
+static void TestMultiMap (void)
 {
     empmap_t employees;
     employees.insert (make_pair (27000, string("Dave"))); 

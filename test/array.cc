@@ -17,7 +17,7 @@ struct make_array<T,8> { static array<T,8> make (void) { array<T,8> v {{ 1, 2, 3
 #endif
 
 template <typename T, size_t N>
-void TestArray (const char* ctrType)
+static void TestArray (const char* ctrType)
 {
     cout << "================================================" << endl;
     cout << "Testing " << ctrType << endl;
@@ -68,7 +68,7 @@ void TestArray (const char* ctrType)
     cout << "pt1 = pt1 - pt2:\t" << pt1 << endl;
 }
 
-void TestIntegralArrays (void)
+static void TestIntegralArrays (void)
 {
     TestArray<float,4> ("array<float,4>");
     TestArray<float,2> ("array<float,2>");

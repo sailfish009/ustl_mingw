@@ -53,7 +53,7 @@ static void TestEqualRange (rcintvec_t v)
 }
 
 template <typename T>
-void TestBigFill (const size_t size, const T magic)
+static void TestBigFill (const size_t size, const T magic)
 {
     vector<T> vbig (size);
     fill (vbig.begin() + 1, vbig.end(), magic);		// offset to test prealignment loop
@@ -66,7 +66,7 @@ void TestBigFill (const size_t size, const T magic)
 }
 
 template <typename T>
-void TestBigCopy (const size_t size, const T magic)
+static void TestBigCopy (const size_t size, const T magic)
 {
     vector<T> vbig1 (size), vbig2 (size);
     fill (vbig1, magic);

@@ -5,9 +5,9 @@
 
 #include "stdtest.h"
 
-void MyFormat (const char* fmt, ...) __attribute__((__format__(__printf__,1,2)));
+static void MyFormat (const char* fmt, ...) __attribute__((__format__(__printf__,1,2)));
 
-void TestString (void)
+static void TestString (void)
 {
     static const char c_TestString1[] = "123456789012345678901234567890";
     static const char c_TestString2[] = "abcdefghijklmnopqrstuvwxyz";
@@ -135,7 +135,7 @@ void TestString (void)
     cout << "to_string(ld(4.2)) = " << to_string(static_cast<long double>(4.2)) << endl;
 }
 
-void MyFormat (const char* fmt, ...)
+static void MyFormat (const char* fmt, ...)
 {
     string buf;
     simd::reset_mmx();

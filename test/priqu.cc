@@ -44,7 +44,7 @@ static void PrintHeap (const vector<int>& v)
     }
 }
 
-void TestHeapOperations (void)
+static void TestHeapOperations (void)
 {
     static const int c_Values [31] = {	// 31 values make a full 4-layer tree
 	93, 12, 90, 86, 83, 86, 17, 40, 72, 36, 68, 42, 62, 67, 63, 65,

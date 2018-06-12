@@ -5,7 +5,7 @@
 
 #include "stdtest.h"
 
-void TestStringStreams (void)
+static void TestStringStreams (void)
 {
     const unsigned char magic_Char = 'c';
     const unsigned short magic_Short = 1234;

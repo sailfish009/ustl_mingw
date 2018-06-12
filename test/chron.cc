@@ -6,7 +6,7 @@
 #include "stdtest.h"
 
 #if HAVE_CPP11
-void TestChrono (void)
+static void TestChrono (void)
 {
     // How to time a block of code with system_clock_ms
     auto mspt1 = chrono::system_clock_ms::now();
@@ -73,7 +73,7 @@ void TestChrono (void)
     cout << chrono::time_point_cast<chrono::milliseconds> (tps) << endl;
 }
 #else
-void TestChrono (void)
+static void TestChrono (void)
 {
     static const char* c_StdPaths[] = { "test/chron.std", "../../test/chron.std", "chron.std" };
     string so;

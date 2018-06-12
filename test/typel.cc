@@ -6,17 +6,17 @@
 #include "stdtest.h"
 using namespace tm;
 
-void Print (int v)
+static void Print (int v)
     { cout.format ("PrintInt %d\n", v); }
-void Print (short v)
+static void Print (short v)
     { cout.format ("PrintShort %d\n", v); }
-void Print (float v)
+static void Print (float v)
     { cout.format ("PrintFloat %.2f\n", v); }
 
 class Base { };
 class Derived : public Base { };
 
-void TestTypelists (void)
+static void TestTypelists (void)
 {
     cout << "----------------------------------------------------------------------\n"
 	    " Testing functionality from typet.h\n"

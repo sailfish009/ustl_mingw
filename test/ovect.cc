@@ -5,7 +5,7 @@
 
 #include "stdtest.h"
 
-void PrintBlock (const cmemlink& l)
+static void PrintBlock (const cmemlink& l)
 {
     const int* numbers = reinterpret_cast<const int*>(l.begin());
     const size_t nNumbers = l.size() / sizeof(int);
@@ -14,7 +14,7 @@ void PrintBlock (const cmemlink& l)
     cout << endl;
 }
 
-void TestObjectVector (void)
+static void TestObjectVector (void)
 {
     vector<memblock> v;
     const size_t nNumbers = 1000;

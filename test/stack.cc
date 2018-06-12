@@ -7,7 +7,7 @@
 #include "../uqueue.h"
 #include "../ustack.h"
 
-void TestStackAndQueue (void)
+static void TestStackAndQueue (void)
 {
     stack<int> s;
     cout << "Testing stack: ";

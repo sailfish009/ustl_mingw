@@ -24,7 +24,7 @@ struct OldScopeExit {
 };
 #endif
 
-void TestSmartPtrs (void)
+static void TestSmartPtrs (void)
 {
 #if HAVE_CPP14
     auto plo = make_unique<LoggedObj> (42);

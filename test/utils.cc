@@ -6,7 +6,7 @@
 #include "stdtest.h"
 
 template <typename T>
-void TestBswap (T v)
+static void TestBswap (T v)
 {
     const T vsw (bswap(v));
 #if BYTE_ORDER == LITTLE_ENDIAN
@@ -22,7 +22,7 @@ void TestBswap (T v)
     cout << "native_to_be(" << v << ") = " << ok[native_to_be(v) == vbe] << endl;
 }
 
-void TestUtility (void)
+static void TestUtility (void)
 {
     cout << "DivRU(13,5) = " << DivRU(13,5) << endl;
     cout << "DivRU(15,5) = " << DivRU(15,5) << endl;

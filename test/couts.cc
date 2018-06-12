@@ -9,7 +9,7 @@
 #include "stdtest.h"
 #include <stdio.h>
 
-void TestCoutCinCerr (void)
+static void TestCoutCinCerr (void)
 {
     string testStr;
     cin >> testStr;

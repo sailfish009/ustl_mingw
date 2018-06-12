@@ -6,7 +6,7 @@
 #include "stdtest.h"
 
 template <size_t NX, size_t NY, typename T>
-void TestMatrix (void)
+static void TestMatrix (void)
 {
     matrix<NX,NY,T> m1, m2;
     load_identity (m1);
@@ -55,7 +55,7 @@ void TestMatrix (void)
 	    "\n    vt = " << vt << endl;
 }
 
-void TestMatrixAlgorithms (void)
+static void TestMatrixAlgorithms (void)
 {
     cout << "========================================\n"
 	    "Testing 4x4 int matrix:\n"

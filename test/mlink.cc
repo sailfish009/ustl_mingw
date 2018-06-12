@@ -5,7 +5,7 @@
 
 #include "stdtest.h"
 
-void WriteCML (const cmemlink& l)
+static void WriteCML (const cmemlink& l)
 {
     cout.format ("memlink{%zu}: ", l.size());
     const char* pc = reinterpret_cast<const char*>(l.cdata());
@@ -16,7 +16,7 @@ void WriteCML (const cmemlink& l)
     cout << endl;
 }
 
-void TestML (void)
+static void TestML (void)
 {
     char str[] = "abcdefghijklmnopqrstuvwzyz";
     memlink::const_pointer cstr = str;

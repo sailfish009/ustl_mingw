@@ -5,7 +5,7 @@
 
 #include "stdtest.h"
 
-void WriteCML (const cmemlink& l)
+static void WriteCML (const cmemlink& l)
 {
     cout.format ("cmemlink{%zu}: ", l.size());
     const void* pv = l.cdata();
@@ -17,9 +17,9 @@ void WriteCML (const cmemlink& l)
     cout << endl;
 }
 
-void TestCML (void)
+static void TestCML (void)
 {
-    const char hello[] = "Hello world!";
+    static const char hello[] = "Hello world!";
     const char* phello = hello; // const storage is sometimes copied on pointing
 
     cmemlink a, b;

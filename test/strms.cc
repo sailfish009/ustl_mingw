@@ -5,7 +5,7 @@
 
 #include "stdtest.h"
 
-void TestStreams (void)
+static void TestStreams (void)
 {
     const uint8_t magic_Char = 0x12;
     const uint16_t magic_Short = 0x1234;
