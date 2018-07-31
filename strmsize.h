@@ -37,13 +37,12 @@ inline size_t stream_align_of (const T&)
     return 4;
 }
 
+} // namespace ustl
+
 #define ALIGNOF(type,grain)	\
 namespace ustl {		\
     template <> inline size_t stream_align_of (const type&) { return grain; } }
 
-} // namespace ustl
-
-//
 // Extra overloads in this macro are needed because it is the one used for
 // marshalling pointers. Passing a pointer to stream_size_of creates a
 // conversion ambiguity between converting to const pointer& and converting

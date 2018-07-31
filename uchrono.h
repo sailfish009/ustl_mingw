@@ -180,7 +180,7 @@ struct hrtime_t : public timespec {
     hrtime_t&			operator= (const hrtime_t&) = default;
     inline explicit constexpr	hrtime_t (const timespec& v)	: timespec(v){}
     inline constexpr		hrtime_t (time_t s, long ns)	: timespec{s,ns}{}
-    inline explicit constexpr	hrtime_t (intmax_t v)		: timespec{v/nano::den,v%nano::den}{}
+    inline explicit constexpr	hrtime_t (intmax_t v)		: timespec{time_t(v/nano::den),time_t(v%nano::den)}{}
     inline explicit constexpr	hrtime_t (float v)		: timespec{time_t(v),time_t((v-time_t(v))*nano::den)}{}
     inline explicit constexpr	hrtime_t (double v)		: timespec{time_t(v),time_t((v-time_t(v))*nano::den)}{}
     inline constexpr		operator intmax_t (void) const	{ return intmax_t(tv_sec)*nano::den + tv_nsec; }
