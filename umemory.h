@@ -173,7 +173,7 @@ private:
 public:
     inline constexpr		shared_ptr (void)		: _p (nullptr) {}
     inline explicit		shared_ptr (pointer p)		: _p (new container (p)) {}
-    inline			shared_ptr (shared_ptr&& p)	: _p (exchange (p._p, nullptr)) {}
+    inline			shared_ptr (shared_ptr&& p)	: _p (p._p) { p._p = nullptr; }
     inline			shared_ptr (const shared_ptr& p): _p (p._p) { if (_p) ++_p->refs; }
     inline			~shared_ptr (void)		{ reset(); }
     inline constexpr size_t	use_count (void) const		{ return _p ? _p->refs : 0; }
