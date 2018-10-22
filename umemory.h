@@ -90,6 +90,7 @@ public:
     inline constexpr pointer	operator-> (void) const		{ return get(); }
     inline constexpr reference	operator[] (size_t i) const	{ return get()[i]; }
     inline constexpr bool	operator== (const pointer p) const	{ return _p == p; }
+    inline constexpr bool	operator!= (const pointer p) const	{ return _p != p; }
     inline constexpr bool	operator== (const unique_ptr& p) const	{ return _p == p._p; }
     inline constexpr bool	operator< (const unique_ptr& p) const	{ return _p < p._p; }
 private:
@@ -121,6 +122,7 @@ public:
     inline constexpr pointer	operator-> (void) const		{ return _p; }
     inline constexpr reference	operator[] (size_t i) const	{ return _p[i]; }
     inline constexpr bool	operator== (const pointer p) const	{ return _p == p; }
+    inline constexpr bool	operator!= (const pointer p) const	{ return _p != p; }
     inline constexpr bool	operator== (const unique_ptr& p) const	{ return _p == p._p; }
     inline constexpr bool	operator< (const unique_ptr& p) const	{ return _p < p._p; }
 private:
@@ -195,6 +197,7 @@ public:
     inline constexpr pointer	operator-> (void) const		{ return get(); }
     inline constexpr reference	operator[] (size_t i) const	{ return get()[i]; }
     inline constexpr bool	operator== (const pointer p) const	{ return get() == p; }
+    inline constexpr bool	operator!= (const pointer p) const	{ return get() != p; }
     inline constexpr bool	operator== (const shared_ptr& p) const	{ return get() == p.get(); }
     inline constexpr bool	operator< (const shared_ptr& p) const	{ return get() < p.get(); }
 private:
