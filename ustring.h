@@ -356,6 +356,7 @@ STRING_TO_FLOAT_CONVERTER(stold,long double,strtold)
 #define NUMBER_TO_STRING_CONVERTER(type,fmts)\
     inline string to_string (type v) { string r; r.format(fmts,v); return r; }
 NUMBER_TO_STRING_CONVERTER(int,"%d")
+NUMBER_TO_STRING_CONVERTER(unsigned,"%u")
 NUMBER_TO_STRING_CONVERTER(long,"%ld")
 NUMBER_TO_STRING_CONVERTER(unsigned long,"%lu")
 #if HAVE_LONG_LONG
