@@ -22,6 +22,16 @@ istringstream::istringstream (void) noexcept
     set_delimiters (DEFAULT_DELIMITERS);
 }
 
+istringstream::istringstream (const char* p) noexcept
+: istream()
+,_flags (0)
+,_gcount (0)
+{
+    exceptions (goodbit);
+    relink (p, strlen(p));
+    set_delimiters (DEFAULT_DELIMITERS);
+}
+
 istringstream::istringstream (const void* p, size_type n) noexcept
 : istream()
 ,_flags (0)
@@ -161,7 +171,7 @@ void istringstream::iread (string& v)
 istringstream& istringstream::read (void* buffer, size_type sz)
 {
     if (remaining() < sz && underflow(sz) < sz)
-	verify_remaining ("read", "", sz);
+	get (reinterpret_cast<char*>(buffer), sz, 0);
     else
 	istream::read (buffer, _gcount = sz);
     return *this;
