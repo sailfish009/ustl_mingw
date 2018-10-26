@@ -17,23 +17,6 @@ namespace ustl {
     using max_align_t	= uintptr_t;
 #endif
 
-#if __GNUC__
-    /// Returns the number of elements in a static vector
-    #define VectorSize(v)	(sizeof(v) / sizeof(*v))
-#else
-    // Old compilers will not be able to evaluate *v on an empty vector.
-    // The tradeoff here is that VectorSize will not be able to measure arrays of local structs.
-    #define VectorSize(v)	(sizeof(v) / ustl::size_of_elements(1, v))
-#endif
-
-/// Returns the end() for a static vector
-template <typename T, size_t N> inline constexpr T* VectorEnd (T(&a)[N]) { return &a[N]; }
-
-/// Expands into a ptr,size expression for the given static vector; useful as link arguments.
-#define VectorBlock(v)	&(v)[0], VectorSize(v)
-/// Expands into a begin,end expression for the given static vector; useful for algorithm arguments.
-#define VectorRange(v)	&(v)[0], VectorEnd(v)
-
 /// Returns the number of bits in the given type
 #define BitsInType(t)	(sizeof(t) * CHAR_BIT)
 
@@ -46,11 +29,6 @@ template <typename T, size_t N> inline constexpr T* VectorEnd (T(&a)[N]) { retur
 #else
     #define DebugArg(x)
 #endif
-
-/// Shorthand for container iteration.
-#define foreach(type,i,ctr)	for (type i = (ctr).begin(); i != (ctr).end(); ++ i)
-/// Shorthand for container reverse iteration.
-#define eachfor(type,i,ctr)	for (type i = (ctr).rbegin(); i != (ctr).rend(); ++ i)
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 // Macro for passing template types as macro arguments.
@@ -69,16 +47,12 @@ template <typename T, size_t N> inline constexpr T* VectorEnd (T(&a)[N]) { retur
 /// Returns the minimum of \p a and \p b
 template <typename T1, typename T2>
 inline constexpr T1 min (const T1& a, const T2& b)
-{
-    return a < b ? a : b;
-}
+    { return a < b ? a : b; }
 
 /// Returns the maximum of \p a and \p b
 template <typename T1, typename T2>
 inline constexpr T1 max (const T1& a, const T2& b)
-{
-    return b < a ? a : b;
-}
+    { return b < a ? a : b; }
 
 /// Indexes into a static array with bounds limit
 template <typename T, size_t N>
@@ -109,6 +83,10 @@ template <typename T>
 inline constexpr T& NullValue (void)
     { return *NullPointer<T>(); }
 
+template <typename T>
+T* addressof (T& v)
+    { return reinterpret_cast<T*>(&const_cast<char&>(reinterpret_cast<const volatile char&>(v))); }
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 // Offsets a pointer
 template <typename T>
@@ -132,33 +110,6 @@ inline void* advance_ptr (void* p, ptrdiff_t offset)
 }
 #endif
 
-/// Offsets an iterator
-template <typename T, typename Distance>
-inline T advance (T i, Distance offset)
-    { return advance_ptr (i, offset); }
-
-/// Returns the difference \p p1 - \p p2
-template <typename T1, typename T2>
-inline constexpr ptrdiff_t distance (T1 i1, T2 i2)
-{
-    return i2 - i1;
-}
-
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-#define UNVOID_DISTANCE(T1const,T2const)   \
-template <> inline constexpr ptrdiff_t distance (T1const void* p1, T2const void* p2) \
-{ return static_cast<T2const uint8_t*>(p2) - static_cast<T1const uint8_t*>(p1); }
-UNVOID_DISTANCE(,)
-UNVOID_DISTANCE(const,const)
-UNVOID_DISTANCE(,const)
-UNVOID_DISTANCE(const,)
-#undef UNVOID_DISTANCE
-#endif
-
-template <typename T>
-T* addressof (T& v)
-    { return reinterpret_cast<T*>(&const_cast<char&>(reinterpret_cast<const volatile char&>(v))); }
-
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 // The compiler issues a warning if an unsigned type is compared to 0.
 template <typename T, bool IsSigned> struct __is_negative { inline constexpr bool operator()(const T& v) const { return v < 0; } };
@@ -180,20 +131,6 @@ template <typename T>
 inline constexpr T sign (T v)
 {
     return (0 < v) - is_negative(v);
-}
-
-/// Returns the absolute value of the distance i1 and i2
-template <typename T1, typename T2>
-inline constexpr size_t abs_distance (T1 i1, T2 i2)
-{
-    return absv (distance(i1, i2));
-}
-
-/// Returns the size of \p n elements of size \p T
-template <typename T>
-inline constexpr size_t size_of_elements (size_t n, const T*)
-{
-    return n * sizeof(T);
 }
 
 /// Returns the greatest common divisor

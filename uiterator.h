@@ -11,7 +11,140 @@
 
 namespace ustl {
 
-//----------------------------------------------------------------------
+//{{{ advance, distance ------------------------------------------------
+
+/// Offsets an iterator
+template <typename T, typename Distance>
+inline T advance (T i, Distance offset)
+    { return advance_ptr (i, offset); }
+
+/// Returns the difference \p p1 - \p p2
+template <typename T1, typename T2>
+inline constexpr ptrdiff_t distance (T1 i1, T2 i2)
+    { return i2 - i1; }
+
+/// Returns the absolute value of the distance i1 and i2
+template <typename T1, typename T2>
+inline constexpr size_t abs_distance (T1 i1, T2 i2)
+{
+    return absv (distance(i1, i2));
+}
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#define UNVOID_DISTANCE(T1const,T2const)   \
+template <> inline constexpr ptrdiff_t distance (T1const void* p1, T2const void* p2) \
+{ return static_cast<T2const uint8_t*>(p2) - static_cast<T1const uint8_t*>(p1); }
+UNVOID_DISTANCE(,)
+UNVOID_DISTANCE(const,const)
+UNVOID_DISTANCE(,const)
+UNVOID_DISTANCE(const,)
+#undef UNVOID_DISTANCE
+#endif
+
+//}}}-------------------------------------------------------------------
+//{{{ begin, end, size
+
+#if HAVE_CPP11
+
+// Array range accessors
+template <typename T>
+inline constexpr auto begin (T& c) -> decltype(c.begin())
+    { return c.begin(); }
+template <typename T>
+inline constexpr auto begin (const T& c) -> decltype(c.begin())
+    { return c.begin(); }
+template <typename T, size_t N>
+inline constexpr T* begin (T (&c)[N]) noexcept
+    { return &c[0]; }
+template <typename T>
+inline constexpr auto cbegin (const T& c) -> decltype(begin(c))
+    { return begin(c); }
+template <typename T>
+inline constexpr auto end (T& c) -> decltype(c.end())
+    { return c.end(); }
+template <typename T>
+inline constexpr auto end (const T& c) -> decltype(c.end())
+    { return c.end(); }
+template <typename T, size_t N>
+inline constexpr T* end (T (&c)[N]) noexcept
+    { return &c[N]; }
+template <typename T>
+inline constexpr auto cend (const T& c) -> decltype(end(c))
+    { return end(c); }
+template <typename T>
+inline constexpr auto rbegin (T& c) -> decltype(c.rbegin())
+    { return c.rbegin(); }
+template <typename T>
+inline constexpr auto rbegin (const T& c) -> decltype(c.rbegin())
+    { return c.rbegin(); }
+template <typename T>
+inline constexpr auto crbegin (const T& c) -> decltype(rbegin(c))
+    { return rbegin(c); }
+template <typename T>
+inline constexpr auto rend (T& c) -> decltype(c.rend())
+    { return c.rend(); }
+template <typename T>
+inline constexpr auto rend (const T& c) -> decltype(c.rend())
+    { return c.rend(); }
+template <typename T>
+inline constexpr auto crend (const T& c) -> decltype(rend(c))
+    { return rend(c); }
+template <typename T>
+inline constexpr auto size (const T& c) -> decltype(c.size())
+    { return c.size(); }
+template <typename T, size_t N>
+inline constexpr size_t size (const T (&)[N]) noexcept
+    { return N; }
+template <typename T>
+inline constexpr bool empty (const T& c)
+    { return !c.size(); }
+template <typename T>
+inline constexpr auto data (T& c) -> decltype(c.data())
+    { return c.data(); }
+template <typename T>
+inline constexpr auto data (const T& c) -> decltype(c.data())
+    { return c.data(); }
+template <typename T, size_t N>
+inline constexpr T* data(T (&c)[N]) noexcept
+    { return &c[0]; }
+
+template <typename T, size_t N>
+inline constexpr T* VectorEnd (T (&a)[N]) noexcept
+    { return end(a); }
+#define VectorBlock(v)	::ustl::data(v), ::ustl::size(v)
+#define VectorRange(v)	::ustl::begin(v), ::ustl::end(v)
+#define foreach(type,i,ctr)	for (type i = ::ustl::begin(ctr); i != ::ustl::end(ctr); ++i)
+#define eachfor(type,i,ctr)	for (type i = ::ustl::rbegin(ctr); i != ::ustl::rend(ctr); ++i)
+#else
+
+/// Returns the end() for a static vector
+template <typename T, size_t N> inline constexpr T* VectorEnd (T(&a)[N]) { return &a[N]; }
+
+/// Expands into a ptr,size expression for the given static vector; useful as link arguments.
+#define VectorBlock(v)	&(v)[0], VectorSize(v)
+/// Expands into a begin,end expression for the given static vector; useful for algorithm arguments.
+#define VectorRange(v)	&(v)[0], VectorEnd(v)
+
+/// Shorthand for container iteration.
+#define foreach(type,i,ctr)	for (type i = (ctr).begin(); i != (ctr).end(); ++ i)
+/// Shorthand for container reverse iteration.
+#define eachfor(type,i,ctr)	for (type i = (ctr).rbegin(); i != (ctr).rend(); ++ i)
+
+#endif // HAVE_CPP11
+
+/// Returns the size of \p n elements of size \p T
+template <typename T> inline constexpr size_t size_of_elements (size_t n, const T*) { return n * sizeof(T); }
+#if __GNUC__
+    /// Returns the number of elements in a static vector
+    #define VectorSize(v)	(sizeof(v) / sizeof(*v))
+#else
+    // Old compilers will not be able to evaluate *v on an empty vector.
+    // The tradeoff here is that VectorSize will not be able to measure arrays of local structs.
+    #define VectorSize(v)	(sizeof(v) / ustl::size_of_elements(1, v))
+#endif
+
+//}}}-------------------------------------------------------------------
+//{{{ iterator
 
 template <typename Category, typename T, typename Distance = ptrdiff_t, typename Pointer = T*, typename Reference = T&>
 struct iterator {
@@ -22,7 +155,8 @@ struct iterator {
     typedef Category	iterator_category;
 };
 
-//----------------------------------------------------------------------
+//}}}-------------------------------------------------------------------
+//{{{ iterator_traits
 
 struct input_iterator_tag {};
 struct output_iterator_tag {};
@@ -90,7 +224,8 @@ struct iterator_traits<const void*> {
 
 #endif
 
-//----------------------------------------------------------------------
+//}}}-------------------------------------------------------------------
+//{{{ reverse_iterator
 
 /// \class reverse_iterator uiterator.h ustl.h
 /// \ingroup IteratorAdaptors
@@ -130,7 +265,9 @@ template <typename Iterator>
 inline reverse_iterator<Iterator> make_reverse_iterator (Iterator i)
     { return reverse_iterator<Iterator>(i); }
 
-//----------------------------------------------------------------------
+//}}}-------------------------------------------------------------------
+//{{{ move_iterator
+
 #if HAVE_CPP11
 
 /// \class move_iterator uiterator.h ustl.h
@@ -172,7 +309,9 @@ inline move_iterator<Iterator> make_move_iterator (Iterator i)
     { return move_iterator<Iterator>(i); }
 
 #endif
-//----------------------------------------------------------------------
+
+//}}}-------------------------------------------------------------------
+//{{{ insert_iterator
 
 /// \class insert_iterator uiterator.h ustl.h
 /// \ingroup IteratorAdaptors
@@ -204,7 +343,8 @@ template <typename Container>
 inline insert_iterator<Container> inserter (Container& ctr, typename Container::iterator ip)
     { return insert_iterator<Container> (ctr, ip); }
 
-//----------------------------------------------------------------------
+//}}}-------------------------------------------------------------------
+//{{{ back_insert_iterator
 
 /// \class back_insert_iterator uiterator.h ustl.h
 /// \ingroup IteratorAdaptors
@@ -234,7 +374,8 @@ template <class Container>
 inline back_insert_iterator<Container> back_inserter (Container& ctr)
     { return back_insert_iterator<Container> (ctr); }
 
-//----------------------------------------------------------------------
+//}}}-------------------------------------------------------------------
+//{{{ front_insert_iterator
 
 /// \class front_insert_iterator uiterator.h ustl.h
 /// \ingroup IteratorAdaptors
@@ -264,7 +405,8 @@ template <class Container>
 inline front_insert_iterator<Container> front_inserter (Container& ctr)
     { return front_insert_iterator<Container> (ctr); }
 
-//----------------------------------------------------------------------
+//}}}-------------------------------------------------------------------
+//{{{ index_iterate
 
 /// \class index_iterate uiterator.h ustl.h
 /// \ingroup IteratorAdaptors
@@ -322,7 +464,8 @@ inline void indexv_to_iteratorv (typename IteratorContainer::value_type ibase, c
     copy_n (index_iterator (ibase, xc.begin()), xc.size(), ic.begin());
 }
 
-//----------------------------------------------------------------------
+//}}}-------------------------------------------------------------------
+//{{{ IBYI
 
 /// Converts the given const_iterator into an iterator.
 ///
@@ -355,6 +498,6 @@ inline typename Container2::iterator ibyi (typename Container1::iterator idx, Co
 
 #endif // DOXYGEN
 
-//----------------------------------------------------------------------
+//}}}-------------------------------------------------------------------
 
 } // namespace ustl
