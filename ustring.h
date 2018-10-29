@@ -354,7 +354,7 @@ STRING_TO_FLOAT_CONVERTER(stold,long double,strtold)
 #undef STRING_TO_FLOAT_CONVERTER
 
 #define NUMBER_TO_STRING_CONVERTER(type,fmts)\
-    inline string to_string (type v) { string r; r.format(fmts,v); return r; }
+    inline string to_string (type v) { string r(15, '\0'); r.format(fmts,v); return r; }
 NUMBER_TO_STRING_CONVERTER(int,"%d")
 NUMBER_TO_STRING_CONVERTER(unsigned,"%u")
 NUMBER_TO_STRING_CONVERTER(long,"%ld")
