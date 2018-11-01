@@ -161,7 +161,7 @@ extern "C" void copy_backward_fast (const void* first, const void* last, void* r
 inline void copy_backward_fast (const void* first, const void* last, void* result) noexcept
 {
     const size_t nBytes (distance (first, last));
-    memmove (advance (result, -nBytes), first, nBytes);
+    memmove (reinterpret_cast<uint8_t*>(result)-nBytes, first, nBytes);
 }
 #endif
 extern "C" void fill_n8_fast (uint8_t* dest, size_t count, uint8_t v) noexcept;
@@ -193,7 +193,7 @@ template <typename T>
 inline T* unrolled_copy (const T* first, size_t count, T* result)
 {
     copy_n_fast (first, count * sizeof(T), result);
-    return advance (result, count);
+    return result + count;
 }
 
 template <>
@@ -211,13 +211,13 @@ inline T* unrolled_fill (T* result, size_t count, T value)
     return result;
 }
 template <> inline uint8_t* unrolled_fill (uint8_t* result, size_t count, uint8_t value)
-    { fill_n8_fast (result, count, value); return advance (result, count); }
+    { fill_n8_fast (result, count, value); return result + count; }
 template <> inline uint16_t* unrolled_fill (uint16_t* result, size_t count, uint16_t value)
-    { fill_n16_fast (result, count, value); return advance (result, count); }
+    { fill_n16_fast (result, count, value); return result + count; }
 template <> inline uint32_t* unrolled_fill (uint32_t* result, size_t count, uint32_t value)
-    { fill_n32_fast (result, count, value); return advance (result, count); }
+    { fill_n32_fast (result, count, value); return result + count; }
 template <> inline float* unrolled_fill (float* result, size_t count, float value)
-    { fill_n32_fast (reinterpret_cast<uint32_t*>(result), count, *noalias_cast<uint32_t*>(&value)); return advance (result, count); }
+    { fill_n32_fast (reinterpret_cast<uint32_t*>(result), count, *noalias_cast<uint32_t*>(&value)); return result + count; }
 
 #if __MMX__
 #define UNROLLED_COPY_SPECIALIZATION(type)						\

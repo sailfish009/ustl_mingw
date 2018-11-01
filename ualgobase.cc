@@ -122,10 +122,10 @@ void copy_n_fast (const void* src, size_t nBytes, void* dest) noexcept
     if (!(uintptr_t(dest) % MMX_ALIGN)) {
 	const size_t nMiddleBlocks = nBytes / MMX_BS;
 	for (uoff_t i = 0; i < nMiddleBlocks; ++ i) {
-	    prefetch (advance (src, 512), 0, 0);
+	    prefetch (reinterpret_cast<const uint8_t*>(src)+512, 0, 0);
 	    simd_block_copy (src, dest);
-	    src = advance (src, MMX_BS);
-	    dest = advance (dest, MMX_BS);
+	    advance (src, MMX_BS);
+	    advance (dest, MMX_BS);
 	}
 	simd_block_cleanup();
 	nBytes %= MMX_BS;
@@ -142,14 +142,14 @@ void copy_backward_fast (const void* first, const void* last, void* result) noex
     size_t nBytes (distance (first, last));
     movsb_dir_down();
     size_t nHeadBytes = uintptr_t(last) % 4;
-    last = advance (last, -1);
-    result = advance (result, -1);
+    advance (last, -1);
+    advance (result, -1);
     movsb (last, nHeadBytes, result);
     nBytes -= nHeadBytes;
     if (uintptr_t(result) % 4 == 3) {
 	const size_t nMiddleBlocks = nBytes / 4;
-	last = advance (last, -3);
-	result = advance (result, -3);
+	advance (last, -3);
+	advance (result, -3);
 	movsd (last, nMiddleBlocks, result);
 	nBytes %= 4;
     }
@@ -185,7 +185,7 @@ template <> inline void build_block (uint32_t v)
 
 static inline void simd_block_fill_loop (uint8_t*& dest, size_t count)
 {
-    prefetch (advance (dest, 512), 1, 0);
+    prefetch (dest+512, 1, 0);
     for (const uint8_t* destEnd = dest + count * MMX_BS; dest < destEnd; dest += MMX_BS)
 	simd_block_store (dest);
     simd_block_cleanup();
@@ -236,7 +236,7 @@ void rotate_fast (void* first, void* middle, void* last) noexcept
 	} else {
 	    copy_n_fast (first, half1, buf);
 	    copy_n_fast (middle, half2, first);
-	    copy_n_fast (buf, half1, advance (first, half2));
+	    copy_n_fast (buf, half1, reinterpret_cast<uint8_t*>(first)+half2);
 	}
     } else
 #else

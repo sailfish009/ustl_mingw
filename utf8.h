@@ -141,7 +141,7 @@ utf8in_iterator<Iterator,WChar>::operator- (const utf8in_iterator<Iterator,WChar
 {
     difference_type dist = 0;
     for (Iterator first (last._i); first < _i; ++dist)
-	first = advance (first, Utf8SequenceBytes (*first));
+	advance (first, Utf8SequenceBytes (*first));
     return dist;
 }
 

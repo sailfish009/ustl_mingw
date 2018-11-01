@@ -18,8 +18,6 @@ NextPow2(4) = 4
 NextPow2(3827) = 4096
 NextPow2(0xFFFFFFF0) = 1
 
-advance(42,0) = 42
-advance(42,3) = 45
 cvp = 1234
 vp = 4321
 advance(cvp,5) = 1239

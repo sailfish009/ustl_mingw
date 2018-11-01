@@ -147,7 +147,7 @@ off_t fstream::read (void* p, off_t n)
 {
     off_t br = 0;
     while ((br < n) & good())
-	br += readsome (advance (p, br), n - br);
+	br += readsome (reinterpret_cast<uint8_t*>(p)+br, n-br);
     return br;
 }
 
@@ -171,7 +171,7 @@ off_t fstream::write (const void* p, off_t n)
     off_t btw = n;
     while (btw) {
 	const off_t bw = n - btw;
-	ssize_t bwn = ::write (_fd, advance(p,bw), btw);
+	ssize_t bwn = ::write (_fd, reinterpret_cast<const uint8_t*>(p)+bw, btw);
 	if (bwn > 0)
 	    btw -= bwn;
 	else if (!bwn) {

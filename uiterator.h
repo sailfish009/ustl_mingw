@@ -14,9 +14,13 @@ namespace ustl {
 //{{{ advance, distance ------------------------------------------------
 
 /// Offsets an iterator
-template <typename T, typename Distance>
-inline T advance (T i, Distance offset)
-    { return advance_ptr (i, offset); }
+template <typename T>
+inline T advance (T& i, ptrdiff_t o)
+    { return i += o; }
+template <> inline void* advance (void*& i, ptrdiff_t o)
+    { uint8_t* ib = reinterpret_cast<uint8_t*>(i); return i = advance (ib, o); }
+template <> inline const void* advance (const void*& i, ptrdiff_t o)
+    { const uint8_t* ib = reinterpret_cast<const uint8_t*>(i); return i = advance (ib, o); }
 
 /// Returns the difference \p p1 - \p p2
 template <typename T1, typename T2>
@@ -26,9 +30,7 @@ inline constexpr ptrdiff_t distance (T1 i1, T2 i2)
 /// Returns the absolute value of the distance i1 and i2
 template <typename T1, typename T2>
 inline constexpr size_t abs_distance (T1 i1, T2 i2)
-{
-    return absv (distance(i1, i2));
-}
+    { return absv (distance(i1, i2)); }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 #define UNVOID_DISTANCE(T1const,T2const)   \
@@ -432,7 +434,7 @@ public:
     inline bool			operator== (const RandomAccessIterator& i) const { return _base == i; }
     inline bool			operator< (const RandomAccessIterator& i) const { return _base < i; }
     inline IndexIterator	base (void) const { return _i; }
-    inline reference		operator* (void) const { return advance(_base, *_i); }
+    inline reference		operator* (void) const { return _base+*_i; }
     inline pointer		operator-> (void) const { return &(operator*()); }
     inline index_iterate&	operator++ (void) { ++_i; return *this; }
     inline index_iterate&	operator-- (void) { --_i; return *this; }

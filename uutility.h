@@ -88,29 +88,6 @@ T* addressof (T& v)
     { return reinterpret_cast<T*>(&const_cast<char&>(reinterpret_cast<const volatile char&>(v))); }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-// Offsets a pointer
-template <typename T>
-inline T advance_ptr (T i, ptrdiff_t offset)
-    { return i + offset; }
-
-// Offsets a void pointer
-template <>
-inline const void* advance_ptr (const void* p, ptrdiff_t offset)
-{
-    assert (p || !offset);
-    return reinterpret_cast<const uint8_t*>(p) + offset;
-}
-
-// Offsets a void pointer
-template <>
-inline void* advance_ptr (void* p, ptrdiff_t offset)
-{
-    assert (p || !offset);
-    return reinterpret_cast<uint8_t*>(p) + offset;
-}
-#endif
-
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
 // The compiler issues a warning if an unsigned type is compared to 0.
 template <typename T, bool IsSigned> struct __is_negative { inline constexpr bool operator()(const T& v) const { return v < 0; } };
 template <typename T> struct __is_negative<T,false> { inline constexpr bool operator()(const T&) const { return false; } };

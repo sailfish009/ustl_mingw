@@ -207,7 +207,7 @@ ForwardIterator lower_bound (ForwardIterator first, ForwardIterator last, const 
 {
     ForwardIterator mid;
     while (first != last) {
-	mid = advance (first, size_t(distance (first,last)) / 2);
+	mid = first + size_t(distance (first,last))/2;
 	if (comp (*mid, value))
 	    first = mid + 1;
 	else
@@ -237,7 +237,7 @@ ForwardIterator upper_bound (ForwardIterator first, ForwardIterator last, const 
 {
     ForwardIterator mid;
     while (first != last) {
-	mid = advance (first, size_t(distance (first,last)) / 2);
+	mid = first + size_t(distance (first,last))/2;
 	if (comp (value, *mid))
 	    last = mid;
 	else
@@ -559,13 +559,13 @@ ForwardIterator stable_partition (ForwardIterator first, ForwardIterator last, P
 {
     if (first == last)
 	return first;
-    ForwardIterator l, r, m = advance (first, distance (first, last) / 2);
+    ForwardIterator l, r, m = first + distance (first, last) / 2;
     if (first == m)
 	return pred(*first) ? last : first;
     l = stable_partition (first, m, pred);
     r = stable_partition (m, last, pred);
     rotate (l, m, r);
-    return advance (l, distance (m, r));
+    return l + distance (m, r);
 }
 
 /// \brief Splits [first,last) in two by \p pred.
