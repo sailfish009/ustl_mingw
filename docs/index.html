@@ -23,32 +23,24 @@
 
 <h2 id="introduction">Introduction</h2>
 <p>
-The C++ standard template library (STL) is a collection of common
-containers and algorithms in template form. Unfortunately its standard
-incarnation shipped with gcc is implemented without much concern for
-code size. Not only is the library itself large, the current version
-being over a megabyte in size, but with all the code you instantiate by
-using a vector for each of your containers, it is easy to become fearful
-and opt for using static arrays instead or, worse yet, abandon C++
-altogether for C. uSTL is an attempt to implement the standard library
-without quite so much template bloat for those old-school programmers
-who find it unacceptable that a program should take several seconds to
-start and in general prefer striving for maximum efficiency.
-</p><p>
-It is important to emphasize that uSTL is not a drop-in replacement
-for the standard library. There are many things that uSTL has to do
-differently to get the size savings; things that may cause your code to
-work incorrectly. For example, all uSTL containers are implemented on
-top of vector and have the same iterator invalidation semantics. Many
-project with heavy STL use depend on the containers being implemented
-with linked memory and will crash when compiled with uSTL. Please read
-this entire page before using. In general, uSTL is better suited to
-the "C with classes" programming style, having been written in those
-ancient times when the standard library was implemented very badly and
-was avoided whenever possible. If you learned programming back then,
-you should like uSTL just fine. If you learned programming in Java, use
-"object oriented" like a holy prayer, and have never seen the assembly
-your C++ code generates, then uSTL is probably not for you.
+This project is <strong>obsolete</strong>. When uSTL was created
+back in 2003, the C++ standard library implementation was implemented
+poorly, without any concern for code size, template bloat, or memory
+footprint. This library was then intended to remedy those problems
+and succeeded reasonably well, providing savings of several kb of code
+size per container, several megabytes of savings in memory footprint,
+and a variety of small space-saving and performance improvements. Today
+the official standard library implementation has improved drastically,
+owing to improvements in the C++ standard itself, as well as laudable
+optimization efforts by gcc developers. Furthermore, due to proliferation
+of C++-using applications, memory footprint reductions from using
+uSTL are no longer possible. Compared to the official standard library
+implementation, uSTL provides very little advantage, and many drawbacks
+due to the design tradeoffs and limitations that made the space savings
+originally possible. Therefore I strongly recommend that uSTL no longer
+be used in any new projects. I shall continue to maintain the library
+for existing users, if any, but would likewise recommend that you too
+use the official standard library instead.
 </p>
 <h2>Contents</h2>
 <ul>
@@ -60,7 +52,6 @@ your C++ code generates, then uSTL is probably not for you.
     <li><a href="#Streams">Streams</a></li>
     <li><a href="#Arrays">Arrays</a></li>
     <li><a href="#Exceptions">Exceptions</a></li>
-    <li><a href="#Savings">Savings</a></li>
     <li><a href="#Contact">Bug reporting</a></li>
 </ul>
 <h2 id="Installation">Installation</h2>
@@ -75,8 +66,7 @@ If you like living dangerously, you can pull the working branch directly from
 <a href="https://github.com/msharov/ustl">git@github.com:msharov/ustl.git</a>.
 The mainline source should build on any unix-based system, including
 Linux, BSD, MacOS, SunOS, and Solaris. Windows-based systems and embedded
-platforms, are not, and will not be supported by the mainline. However,
-if you make a port, I'll be happy to mention it here. After unpacking:
+platforms, are not, and will not be supported by the mainline. Unpack and:
 </p><pre>
 ./configure &amp;&amp; make install
 </pre><p>
@@ -568,137 +558,6 @@ file_exception, thrown by fstream operations, also contains the file name,
 which can be pretty darn useful. stream_bounds_exception is extremely
 useful in debugging corrupted data, as it tells you exactly where the
 corruption starts and what you were trying to read there.
-</p>
-<h2 id="Savings">Savings</h2>
-<p>
-So how much space are you going to save and where? Allow me to demonstrate with
-the following small program. I'm basically creating a vector and exercise the
-most common operations. Those are resize, push_back, insert, and erase, which
-you use pretty much every time you have a vector.
-</p><pre>
-#if USING_USTL
-    #include &lt;ustl.h&gt;
-    using namespace ustl;
-#else
-    #include &lt;vector&gt;
-    using namespace std;
-#endif
-
-int main (void)
-{
-    vector&lt;int&gt; v;
-    v.resize (30);
-    for (size_t i = 0; i &lt; v.size(); ++ i)
-	v[i] = i;
-    v.push_back (57);
-    v.insert (v.begin() + 20, 555);
-    v.erase (v.begin() + 3);
-    return (EXIT_SUCCESS);
-}
-</pre><p>
-The example is compiled with g++ 7.2 on an Intel Core i7 using <kbd>-Os
--DNDEBUG=1 -march=native</kbd>. The libstdc++ version is linked implicitly
-with it by g++, and uSTL version is linked using gcc. Both executables
-are stripped. uSTL was configured with <kbd>./configure --with-native
---without-bounds --force-inline</kbd>. The libstdc++ version looks
-like this:
-</p><pre>
-% ls -l std/tes
-10368 tes
-% size std/tes
-text	data	bss	dec	hex	filename
-3291    696     8       3995    f9b     std/tes
-% size -A std/tes.o
-std/tes.o  :
-section                                                                                                    size
-.group                                                                                                        8
-.group                                                                                                        8
-.group                                                                                                        8
-.group                                                                                                        8
-.text                                                                                                         0
-.data                                                                                                         0
-.bss                                                                                                          0
-.text._ZNKSt6vectorIiSaIiEE12_M_check_lenEmPKc                                                               72
-.text._ZNSt11__copy_moveILb1ELb1ESt26random_access_iterator_tagE8__copy_mIiEEPT_PKS3_S6_S4_                  38
-.rodata._ZNSt6vectorIiSaIiEE17_M_realloc_insertIJiEEEvN9__gnu_cxx17__normal_iteratorIPiS1_EEDpOT_.str1.1     26
-.text._ZNSt6vectorIiSaIiEE17_M_realloc_insertIJiEEEvN9__gnu_cxx17__normal_iteratorIPiS1_EEDpOT_             180
-.rodata.str1.1                                                                                               26
-.text.startup                                                                                               506
-.gcc_except_table                                                                                            15
-.data.DW.ref.__gxx_personality_v0                                                                             8
-.comment                                                                                                     18
-.note.GNU-stack                                                                                               0
-.eh_frame                                                                                                   256
-Total                                                                                                      1177
-</pre><p>
-The uSTL version looks like this:
-</p><pre>
-% ls -l ustl/tes
-6272 tes
-% size ustl/tes
-text    data     bss     dec     hex filename
-2750    680      8       3438    d6e ustl/tes
-% size -A ustl/tes.o
-ustl/tes.o  :
-section                             size
-.group                                 8
-.text                                  0
-.data                                  0
-.bss                                   0
-.text.startup                        309
-.gcc_except_table                     15
-.data.DW.ref.__gxx_personality_v0      8
-.comment                              18
-.note.GNU-stack                        0
-.eh_frame                             80
-Total                                438
-</pre><p>
-As you can see, the libstdc++ version instantiates the copy_move and
-realloc_insert functions for the vector, in addition to larger inlined
-functionality. This particular libstdc++ that comes with gcc 7.2 does
-significantly better in code size than previous versions. Just like uSTL,
-it now uses realloc to resize the storage, but still instantiates a
-specialized version of it for each vector and uses c++11 move semantics
-to optimize the element copying.
-</p><p>
-uSTL instead resizes the memory raw and relies on the objects being
-relocatable. This allows all the memory management code to be shared
-by all vector types, eliminating the need for specialized versions,
-and resulting in smaller code size.
-</p><p>
-Previously, uSTL was able to save 1k of code size per vector type.
-With version 7.2, libstdc++ has dramatically improved its result and
-now the savings are only half that. Vectors with complex objects will
-save more using uSTL due to the larger size of the emitted move_copy
-that uSTL replaces with a direct object storage relocation.
-</p><p>
-However, there is more! Let's look at the total memory footprint:
-</p><pre>
-   text    data     bss     dec     hex filename
-   3291     696       8    3995     f9b std/tes
-  86773     880     688   88341   15915 libgcc_s.so.1
- 147446    6060     376  153882   2591a ld-linux-x86-64.so.2
-1354200    1360       8 1355568  14af30 libm.so.6
-1534466   47080   13504 1595050  1856aa libstdc++.so.6
-1758373   20672   17072 1796117  1b6815 libc.so.6
-4884549   76748   31656 4992953  4c2fb9 (TOTALS)
-
-   text    data     bss     dec     hex filename
-   2750     680       8    3438     d6e ustl/tes
-  86773     880     688   88341   15915 libgcc_s.so.1
- 144640    7944     536  153120   25620 libustl.so.2
- 147446    6060     376  153882   2591a ld-linux-x86-64.so.2
-1758373   20672   17072 1796117  1b6815 libc.so.6
-2139982   36236   18680 2194898  217dd2 (TOTALS)
-</pre><p>
-As you can see, the footprint for the uSTL version is less than half
-the size, saving 2.8 megabytes. If you don't count libc, libgcc_s, and ld-linux,
-measuring only the C++-specific overhead, std/tes loads 2.9 megabytes
-of libraries, while ustl/tes loads only 157k, <em>eighteen times less</em>!
-</p><p>
-Finally, if you build a static libustl.a, it is only 34k. Linking with
-libsupc++.a adds 80k. ustl/tes linked with these is 79k. That is the
-entire C++-specific overhead, a 37-fold reduction from libstdc++.so.
 </p>
 <h2 id="Contact">Bug reporting</h2>
 <p>
