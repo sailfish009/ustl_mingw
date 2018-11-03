@@ -161,7 +161,7 @@ extern "C" void copy_backward_fast (const void* first, const void* last, void* r
 inline void copy_backward_fast (const void* first, const void* last, void* result) noexcept
 {
     const size_t nBytes (distance (first, last));
-    memmove (reinterpret_cast<uint8_t*>(result)-nBytes, first, nBytes);
+    memmove (advance_ptr(result,-nBytes), first, nBytes);
 }
 #endif
 extern "C" void fill_n8_fast (uint8_t* dest, size_t count, uint8_t v) noexcept;

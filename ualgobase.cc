@@ -122,7 +122,7 @@ void copy_n_fast (const void* src, size_t nBytes, void* dest) noexcept
     if (!(uintptr_t(dest) % MMX_ALIGN)) {
 	const size_t nMiddleBlocks = nBytes / MMX_BS;
 	for (uoff_t i = 0; i < nMiddleBlocks; ++ i) {
-	    prefetch (reinterpret_cast<const uint8_t*>(src)+512, 0, 0);
+	    prefetch (advance_ptr(src,512), 0, 0);
 	    simd_block_copy (src, dest);
 	    advance (src, MMX_BS);
 	    advance (dest, MMX_BS);
@@ -236,7 +236,7 @@ void rotate_fast (void* first, void* middle, void* last) noexcept
 	} else {
 	    copy_n_fast (first, half1, buf);
 	    copy_n_fast (middle, half2, first);
-	    copy_n_fast (buf, half1, reinterpret_cast<uint8_t*>(first)+half2);
+	    copy_n_fast (buf, half1, advance_ptr(first,half2));
 	}
     } else
 #else

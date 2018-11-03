@@ -8,11 +8,10 @@
 static void WriteCML (const cmemlink& l)
 {
     cout.format ("cmemlink{%zu}: ", l.size());
-    const void* pv = l.cdata();
-    const char* pc = reinterpret_cast<const char*>(pv);
+    const char* pc = l.cdata();
     size_t nc = l.size();
-    if (pc[nc - 1] == 0)
-	-- nc;
+    if (pc[nc-1] == 0)
+	--nc;
     cout.write (l.begin(), nc);
     cout << endl;
 }
@@ -27,8 +26,8 @@ static void TestCML (void)
     if (a.begin() != phello)
 	cout.format ("a.begin() failed: %p != %p\n", a.begin(), phello);
     a.link (VectorRange (hello));
-    if (*reinterpret_cast<const char*>(a.begin() + 5) != hello[5])
-	cout.format ("begin()[5] failed: %c != %c\n", *reinterpret_cast<const char*>(a.begin() + 5), VectorElement(hello,5));
+    if (*(a.begin() + 5) != hello[5])
+	cout.format ("begin()[5] failed: %c != %c\n", *(a.begin() + 5), VectorElement(hello,5));
     if (a.size() != VectorSize(hello))
 	cout << "link to VectorRange doesn't work\n";
     if (0 != memcmp (a.begin(), hello, VectorSize(hello)))

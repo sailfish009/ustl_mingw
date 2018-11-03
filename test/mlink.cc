@@ -8,7 +8,7 @@
 static void WriteCML (const cmemlink& l)
 {
     cout.format ("memlink{%zu}: ", l.size());
-    const char* pc = reinterpret_cast<const char*>(l.cdata());
+    const char* pc = l.cdata();
     size_t nc = l.size();
     if (pc[nc - 1] == 0)
 	-- nc;

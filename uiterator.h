@@ -13,14 +13,23 @@ namespace ustl {
 
 //{{{ advance, distance ------------------------------------------------
 
+/// Offsets a pointer
+template <typename T>
+inline T* advance_ptr (T* i, ptrdiff_t o)
+    { return i+o; }
+template <> inline void* advance_ptr (void* i, ptrdiff_t o)
+    { return reinterpret_cast<uint8_t*>(i)+o; }
+template <> inline const void* advance_ptr (const void* i, ptrdiff_t o)
+    { return reinterpret_cast<const uint8_t*>(i)+o; }
+
 /// Offsets an iterator
 template <typename T>
 inline T advance (T& i, ptrdiff_t o)
     { return i += o; }
 template <> inline void* advance (void*& i, ptrdiff_t o)
-    { uint8_t* ib = reinterpret_cast<uint8_t*>(i); return i = advance (ib, o); }
+    { return i = advance_ptr (i, o); }
 template <> inline const void* advance (const void*& i, ptrdiff_t o)
-    { const uint8_t* ib = reinterpret_cast<const uint8_t*>(i); return i = advance (ib, o); }
+    { return i = advance_ptr (i, o); }
 
 /// Returns the difference \p p1 - \p p2
 template <typename T1, typename T2>

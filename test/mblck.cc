@@ -8,7 +8,7 @@
 static void WriteCML (const memblock& l)
 {
     cout.format ("memblock{%zu}: ", l.size());
-    const char* pc = reinterpret_cast<const char*>(l.cdata());
+    const char* pc = l.cdata();
     size_t nc = l.size();
     while (nc && pc[nc - 1] == 0)
 	-- nc;
