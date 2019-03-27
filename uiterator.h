@@ -18,9 +18,9 @@ template <typename T>
 inline T* advance_ptr (T* i, ptrdiff_t o)
     { return i+o; }
 template <> inline void* advance_ptr (void* i, ptrdiff_t o)
-    { return reinterpret_cast<uint8_t*>(i)+o; }
+    { return static_cast<uint8_t*>(i)+o; }
 template <> inline const void* advance_ptr (const void* i, ptrdiff_t o)
-    { return reinterpret_cast<const uint8_t*>(i)+o; }
+    { return static_cast<const uint8_t*>(i)+o; }
 
 /// Offsets an iterator
 template <typename T>

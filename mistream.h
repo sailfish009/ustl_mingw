@@ -257,7 +257,7 @@ inline void istream::read (void* buffer, size_type n)
 #else
     assert (remaining() >= n && "Reading past end of buffer. Make sure you are reading the right format.");
 #endif
-    memcpy (reinterpret_cast<value_type*>(buffer), ipos(), n);
+    memcpy (static_cast<value_type*>(buffer), ipos(), n);
     _pos += n;
 }
 

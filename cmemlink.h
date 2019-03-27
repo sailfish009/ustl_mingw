@@ -85,7 +85,7 @@ private:
 /// A fast alternative to link which can be used when relinking to the same block (i.e. when it is resized)
 inline void cmemlink::relink (const void* p, size_type n)
 {
-    _data = reinterpret_cast<const_pointer>(p);
+    _data = static_cast<const_pointer>(p);
     _size = n;
 }
 

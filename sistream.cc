@@ -171,7 +171,7 @@ void istringstream::iread (string& v)
 istringstream& istringstream::read (void* buffer, size_type sz)
 {
     if (remaining() < sz && underflow(sz) < sz)
-	get (reinterpret_cast<char*>(buffer), sz, 0);
+	get (static_cast<char*>(buffer), sz, 0);
     else
 	istream::read (buffer, _gcount = sz);
     return *this;

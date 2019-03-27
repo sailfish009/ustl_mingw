@@ -35,7 +35,7 @@ void memlink::fill (const_iterator cstart, const void* p, size_type elSize, size
     assert (cstart >= begin() && cstart + elSize * elCount <= end());
     iterator start = const_cast<iterator>(cstart);
     if (elSize == 1)
-	fill_n (start, elCount, *reinterpret_cast<const uint8_t*>(p));
+	fill_n (start, elCount, *static_cast<const uint8_t*>(p));
     else while (elCount--)
 	start = copy_n (const_iterator(p), elSize, start);
 }

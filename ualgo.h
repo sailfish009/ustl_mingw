@@ -432,8 +432,7 @@ void random_shuffle (RandomAccessIterator first, RandomAccessIterator last)
 template <typename ConstPointer, typename Compare>
 int qsort_adapter (const void* p1, const void* p2)
 {
-    ConstPointer i1 = reinterpret_cast<ConstPointer>(p1);
-    ConstPointer i2 = reinterpret_cast<ConstPointer>(p2);
+    ConstPointer i1 = static_cast<ConstPointer>(p1), i2 = static_cast<ConstPointer>(p2);
     Compare comp;
     return comp (*i1, *i2) ? -1 : (comp (*i2, *i1) ? 1 : 0);
 }
