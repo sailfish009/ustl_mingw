@@ -33,6 +33,9 @@ public:
     typedef typename tuple_type::const_reverse_iterator	const_reverse_iterator;
 public:
     inline			matrix (void)			: tuple<NX*NY,T>() { }
+    template <typename T2>
+    inline			matrix (const matrix<NX,NY,T2>& src) : tuple<NX*NY,T2>(src) {}
+    inline			matrix (const matrix<NX,NY,T>& src) : tuple<NX*NY,T>(src) {}
     inline size_type		columns (void) const		{ return NX; }
     inline size_type		rows (void) const		{ return NY; }
     inline const_iterator	at (size_type i) const		{ return matrix::begin() + i * NX; }
