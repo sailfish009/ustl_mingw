@@ -15,12 +15,13 @@ uSTL is a partial implementation of the C++ standard library that focuses on
 decreasing the memory footprint of user executables. While many projects can
 use it to replace the standard library without any code changes, there exist
 important differences that you should be aware of. Please read documentation
-in docs/index.html (or online at http://msharov.github.io/ustl) before using
+in docs/index.html (or online at https://msharov.github.io/ustl) before using
 this library in your project.
 
-uSTL ought to still compile under gcc as old as 2.95, but many features will
-be unavailable. For best results, including C++11 support, use at least 4.6.
-Clang 3.2 or later is also supported. There are no other dependencies.
+The only dependency is a C++ compiler, gcc 3.4 or clang 3.2. C++11 support
+requires gcc 4.6 or clang 3.2. C++14 support requires gcc 5 or clang 3.6.
+clang does not optimize for size as well as gcc, producing binaries larger
+by about 15%, so its use is not recommended.
 
 Latest version:		https://github.com/msharov/ustl/releases/latest
 

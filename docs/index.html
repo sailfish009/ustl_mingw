@@ -56,9 +56,10 @@ use the official standard library instead.
 </ul>
 <h2 id="Installation">Installation</h2>
 <p>
-The only dependency is a C++ compiler. gcc requires version 3.4, clang
-requires version 3.2. C++11 support requires gcc 4.6 or clang 3.2.
-C++14 support requires gcc 5 or clang 3.6.
+The only dependency is a C++ compiler, gcc 3.4 or clang 3.2. C++11 support
+requires gcc 4.6 or clang 3.2. C++14 support requires gcc 5 or clang 3.6.
+clang does not optimize for size as well as gcc, producing binaries larger
+by about 15%, so its use is not recommended.
 </p><p>
 The latest version of uSTL can always be downloaded from its GitHub
 <a href="https://github.com/msharov/ustl/releases/latest">release page</a>.
@@ -96,8 +97,7 @@ without linking to libstdc++ (except on BSD platforms where gcc does not
 support it) Because g++ links to it by default, you'll need to link your
 applications with gcc, or to pass <kbd>-nodefaultlibs -lgcc_s -lc</kbd>
 to g++ if you want to use uSTL to completely replace libstdc++. This is
-where most of the space savings happen. (If you want to see just how much
-you can save, skip to the <a href="#Savings">Savings</a> section)
+where most of the space savings happen.
 </p><p>
 If you build uSTL as a static library, you will also need to explicitly
 link all projects using it with -lsupc++ and other libraries that shared
