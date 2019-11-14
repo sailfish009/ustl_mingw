@@ -250,7 +250,7 @@ string::pos_type string::find (const string& s, pos_type pos) const noexcept
     pos_type endi = s.size() - 1;
     value_type endchar = s[endi];
     pos_type lastPos = endi;
-    while (lastPos-- && s[lastPos] != endchar) ;
+    while (lastPos-- && s[lastPos] != endchar) {}
     const size_type skip = endi - lastPos;
     const_iterator i = iat(pos) + endi;
     for (; i < end() && (i = ::ustl::find (i, end(), endchar)) < end(); i += skip)

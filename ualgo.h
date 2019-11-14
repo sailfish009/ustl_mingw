@@ -468,7 +468,7 @@ template <typename RandomAccessIterator, typename Compare>
 void stable_sort (RandomAccessIterator first, RandomAccessIterator last, Compare comp)
 {
     for (RandomAccessIterator j, i = first; ++i < last;) { // Insertion sort
-	for (j = i; j-- > first && comp(*i, *j);) ;
+	for (j = i; j-- > first && comp(*i, *j);) {}
 	if (++j != i) rotate (j, i, i + 1);
     }
 }

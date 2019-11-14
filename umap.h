@@ -118,7 +118,7 @@ inline typename map<K,V,Comp>::const_iterator map<K,V,Comp>::find_data (const_da
 {
     if (!first) first = begin();
     if (!last) last = end();
-    for (; first != last && first->second != v; ++first) ;
+    for (; first != last && first->second != v; ++first) {}
     return first;
 }
 
