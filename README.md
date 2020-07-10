@@ -1,10 +1,8 @@
 # uSTL
 
-============================================================================
-
-This library is obsolete. Please use the official gcc C++ standard library.
-
-============================================================================
+----------------------------------------------------------------------------
+**This library is obsolete. Please use the official gcc C++ standard library.**
+----------------------------------------------------------------------------
 
 uSTL is a partial implementation of the C++ standard library that focuses on
 decreasing the memory footprint of user executables. While some projects can
