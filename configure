@@ -16,14 +16,6 @@ FILES="Config.mk config.h ustl.pc"
 # Package options
 COMPONENTS='
 {
-name=[with-static]
-desc=[	build the static library]
-seds=[s/^#\(BUILD_STATIC\)/\1/;s/-fPIC/-fPIC -ffunction-sections -fdata-sections/]
-}{
-name=[without-shared]
-desc=[do not build the shared library]
-seds=[s/^\(BUILD_SHARED\)/#\1/;s/ -fPIC//;/^Libs:/{h;d};/^Libs\.private:/{x;G;s/\nLibs\.private://}]
-}{
 name=[with-debug]
 desc=[	compile for debugging]
 seds=[s/^#\(DEBUG\)/\1/]
@@ -130,25 +122,15 @@ if [ "$SYSNAME" = "bsd" ]; then
 	s/-W\(inline\)/-Wno-\1/
 	s/#define \(HAVE_VA_COPY\) 1/#undef \1/'
 fi
-if [ "$SYSNAME" = "linux" -o "$SYSNAME" = "bsd" ]; then
-    sub 's/@SHBLDFL@/-shared -Wl,-soname=$1/'
-elif [ "$SYSNAME" = "alpha" ]; then
-    sub "s/\(BUILD_SHARED	= 1\)/#\1/;s/#\(BUILD_STATIC	= 1\)/\1/"
-fi
 if [ "$SYSNAME" = "mac" ]; then
     sub 's/ @libgcc_eh@//g
-	s/lib$1.so/lib$1.dylib/g
-	s/lib$1.so.${MAJOR}.${MINOR}.${BUILD}/lib$1.${MAJOR}.${MINOR}.${BUILD}.dylib/g
-	s/lib$1.so.${MAJOR}.${MINOR}/lib$1.${MAJOR}.${MINOR}.dylib/g
-	s/lib$1.so.${MAJOR}/lib$1.${MAJOR}.dylib/g
-	s/ -s -Wl,-gc-sections/ -mmacosx-version-min=10.9/g
-	s/@SHBLDFL@/-Wl,-single_module -compatibility_version 1 -current_version 1 -install_name $1 -Wl,-Y,1455 -dynamiclib -mmacosx-version-min=10.9/g'
+	s/ -s -Wl,-gc-sections/ -mmacosx-version-min=10.9/g'
     if [ "$CC" = "clang" ]; then
 	sub "s/ @libsupc++@/ @libc++abi@/g"
     fi
 fi
 if [ "$SYSNAME" != "linux" ]; then
-    sub "s/-p --ignore-fail-on-non-empty//;s/ -mfpmath=sse//"
+    sub "s/-p --ignore-fail-on-non-empty//"
 fi
 if [ "$SYSNAME" = "mac" -o "$SYSNAME" = "bsd" ]; then
     sub "s/#define \(HAVE_STRSIGNAL\) 1/#undef \1/g"
@@ -158,7 +140,7 @@ fi
 if [ "$CC" = "gcc" -o "$CC" = "clang" ]; then
     CCVER=`$CC -dumpversion|sed 's/\([1-9][0-9]*\).\([0-9]*\).\([0-9]*\)*/\1\2\3/'`
     if [ "$CC" = "gcc" -a $CCVER -gt 421 ]; then
-	sub "s/ @INLINE_OPTS@/ -fvisibility-inlines-hidden -fno-threadsafe-statics -fno-enforce-eh-specs/"
+	sub "s/ @INLINE_OPTS@/ -fno-threadsafe-statics -fno-enforce-eh-specs/"
     else
 	sub "s/ @INLINE_OPTS@//"
     fi

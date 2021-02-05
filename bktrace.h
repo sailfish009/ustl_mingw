@@ -34,7 +34,7 @@ public:
     void		write (ostream& os) const;
     size_t		stream_size (void) const;
 private:
-    void		GetSymbols (void) noexcept DLL_LOCAL;
+    void		GetSymbols (void) noexcept;
 private:
     void*		_addresses [64];	///< Addresses of each function on the stack.
     char*		_symbols;		///< Symbols corresponding to each address.

@@ -3,17 +3,9 @@
 test/SRCS	:= $(wildcard test/?????.cc)
 test/TESTS	:= $(addprefix $O,$(test/SRCS:.cc=))
 test/OBJS	:= $(addprefix $O,$(test/SRCS:.cc=.o))
-test/RPATH	:= $(abspath $O.)
-ifdef BUILD_STATIC
 test/LIBS	:= ${LIBA}
-else
-test/LIBS	:= -L${test/RPATH} -l${NAME}
-endif
-ifdef BUILD_SHARED
-test/LIBS	:= -Wl,-rpath,${test/RPATH} ${test/LIBS}
-endif
 ifdef NOLIBSTDCPP
-test/LIBS	+= ${STAL_LIBS} -lm
+test/LIBS	+= ${LIBS} -lm
 endif
 test/DEPS	:= ${test/OBJS:.o=.d} $Otest/stdtest.d
 test/OUTS	:= $(addprefix $O,$(test/SRCS:.cc=.out))
@@ -28,9 +20,7 @@ test/all:	${test/TESTS}
 # When the test runs, its output is compared to .std
 #
 test/run:	${test/TESTS}
-	@echo "Running build verification tests:";\
-	export DYLD_LIBRARY_PATH="${test/RPATH}";\
-	export LD_LIBRARY_PATH="${test/RPATH}";\
+	@echo "Running verification tests:";\
 	for i in ${test/TESTS}; do	\
 	    TEST="test/$$(basename $$i)";	\
 	    echo "Running $$i";		\
@@ -38,7 +28,7 @@ test/run:	${test/TESTS}
 	    diff $$TEST.std $$i.out && rm -f $$i.out; \
 	done
 
-${test/TESTS}: $Otest/%: $Otest/%.o $Otest/stdtest.o ${ALLTGTS}
+${test/TESTS}: $Otest/%: $Otest/%.o $Otest/stdtest.o ${LIBA}
 	@echo "Linking $@ ..."
 	@${LD} ${LDFLAGS} -o $@ $< $Otest/stdtest.o ${test/LIBS}
 

@@ -5,8 +5,6 @@ MAJOR		:= @PKG_MAJOR@
 MINOR		:= @PKG_MINOR@
 
 #DEBUG		:= 1
-BUILD_SHARED	:= 1
-#BUILD_STATIC	:= 1
 NOLIBSTDCPP	:= 1
 
 ################ Programs ############################################
@@ -35,25 +33,19 @@ WARNOPTS	:= -Wall -Wextra -Woverloaded-virtual -Wpointer-arith\
 TGTOPTS		:= @TGT_OPTS@ @CUSTOMINCDIR@
 INLINEOPTS	:= @INLINE_OPTS@
 
-CXXFLAGS	:= ${WARNOPTS} ${TGTOPTS} -fPIC
+CXXFLAGS	:= ${WARNOPTS} ${TGTOPTS}
 LDFLAGS		:= @CUSTOMLIBDIR@
 LIBS		:=
 ifdef DEBUG
     CXXFLAGS	+= -O0 -g
     LDFLAGS	+= -rdynamic
 else
-    CXXFLAGS	+= -Os -g0 -DNDEBUG=1 -fomit-frame-pointer ${INLINEOPTS}
+    CXXFLAGS	+= -Os -g0 -DNDEBUG=1 ${INLINEOPTS}
     LDFLAGS	+= -s -Wl,-gc-sections
 endif
 ifdef NOLIBSTDCPP
     LD		:= @CC@
-    STAL_LIBS	:= @libsupc++@ @libgcc_eh@ @libSystemStubs@
-    LIBS	:= ${STAL_LIBS}
+    LIBS	+= @libsupc++@ @libgcc_eh@ @libSystemStubs@
 endif
 BUILDDIR	:= @builddir@/${NAME}
 O		:= .o/
-
-slib_lnk	= lib$1.so
-slib_son	= lib$1.so.${MAJOR}
-slib_tgt	= lib$1.so.${MAJOR}.${MINOR}
-slib_flags	= @SHBLDFL@

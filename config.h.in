@@ -47,12 +47,8 @@
 #endif
 #define WEAKALIAS(sym)		__attribute__((weak,alias(sym)))
 #if __GNUC__ >= 4
-    #define DLL_EXPORT		__attribute__((visibility("default")))
-    #define DLL_LOCAL		__attribute__((visibility("hidden")))
     #define INLINE		__attribute__((always_inline))
 #else
-    #define DLL_EXPORT
-    #define DLL_LOCAL
     #define INLINE
 #endif
 #if __cplusplus >= 201103 && (!__GNUC__ || (__clang_major__ > 3 || (__clang_major__ == 3 && __clang_minor__ >= 2 && !__APPLE__)) || (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)))
