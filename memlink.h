@@ -39,20 +39,20 @@ public:
     typedef pointer			iterator;
     typedef const memlink&		rcself_t;
 public:
-    inline		memlink (void)				: cmemlink() {}
-    inline		memlink (void* p, size_type n)		: cmemlink (p, n) {}
-    inline		memlink (const void* p, size_type n)	: cmemlink (p, n) {}
-    inline		memlink (rcself_t l)			: cmemlink (l) {}
-    inline explicit	memlink (const cmemlink& l)		: cmemlink (l) {}
-    inline pointer	data (void)				{ return const_cast<pointer>(cmemlink::data()); }
-   inline const_pointer	data (void) const			{ return cmemlink::data(); }
-    inline iterator	begin (void)				{ return iterator (data()); }
-    inline iterator	iat (size_type i)			{ assert (i <= size()); return begin() + i; }
-    inline iterator	end (void)				{ return iat (size()); }
-    inline const_iterator	begin (void) const		{ return cmemlink::begin(); }
-    inline const_iterator	end (void) const		{ return cmemlink::end(); }
-    inline const_iterator	iat (size_type i) const		{ return cmemlink::iat (i); }
-    size_type		writable_size (void) const		{ return size(); }
+    constexpr		memlink (void)				: cmemlink() {}
+    constexpr		memlink (void* p, size_type n)		: cmemlink (p, n) {}
+    constexpr		memlink (const void* p, size_type n)	: cmemlink (p, n) {}
+    constexpr		memlink (rcself_t l)			: cmemlink (l) {}
+    constexpr explicit	memlink (const cmemlink& l)		: cmemlink (l) {}
+    constexpr pointer	data (void)				{ return const_cast<pointer>(cmemlink::data()); }
+    constexpr const_pointer data (void) const			{ return cmemlink::data(); }
+    constexpr iterator	begin (void)				{ return iterator (data()); }
+    constexpr iterator	iat (size_type i)			{ assert (i <= size()); return begin() + i; }
+    constexpr iterator	end (void)				{ return iat (size()); }
+    constexpr const_iterator	begin (void) const		{ return cmemlink::begin(); }
+    constexpr const_iterator	end (void) const		{ return cmemlink::end(); }
+    constexpr const_iterator	iat (size_type i) const		{ return cmemlink::iat (i); }
+    constexpr size_type	writable_size (void) const		{ return size(); }
     inline rcself_t	operator= (const cmemlink& l)		{ cmemlink::operator= (l); return *this; }
     inline rcself_t	operator= (rcself_t l)			{ cmemlink::operator= (l); return *this; }
     inline void		link (const void* p, size_type n)	{ cmemlink::link (p, n); }
@@ -61,9 +61,9 @@ public:
     inline void		link (memlink& l)			{ cmemlink::link (l); }
     inline void		link (const void* first, const void* last)	{ link (first, distance (first, last)); }
     inline void		link (void* first, void* last)		{ link (first, distance (first, last)); }
-    inline void		relink (const void* p, size_type n)	{ cmemlink::relink (p, n); }
-    inline void		relink (void* p, size_type n)		{ cmemlink::relink (p, n); }
-    inline void		swap (memlink& l)			{ cmemlink::swap (l); }
+    constexpr void	relink (const void* p, size_type n)	{ cmemlink::relink (p, n); }
+    constexpr void	relink (void* p, size_type n)		{ cmemlink::relink (p, n); }
+    constexpr void	swap (memlink& l)			{ cmemlink::swap (l); }
     void		fill (const_iterator start, const void* p, size_type elsize, size_type elCount = 1) noexcept;
     inline void		insert (const_iterator start, size_type size);
     inline void		erase (const_iterator start, size_type size);

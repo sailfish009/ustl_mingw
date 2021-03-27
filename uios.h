@@ -76,20 +76,20 @@ public:
 
     static const char c_DefaultDelimiters [16];	///< Default word delimiters for stringstreams.
 public:
-    inline		ios_base (void)			: _state (goodbit), _exceptions (allbadbits) {}
-    inline iostate	rdstate (void) const		{ return _state; }
-    inline bool		bad (void) const		{ return rdstate() & badbit; }
-    inline bool		good (void) const		{ return rdstate() == goodbit; }
-    inline bool		fail (void) const		{ return rdstate() & (badbit | failbit); }
-    inline bool		eof (void) const		{ return rdstate() & eofbit; }
-    inline bool		operator! (void) const		{ return fail(); }
-    inline		operator bool (void) const	{ return !fail(); }
-    inline void		clear (iostate v = goodbit)	{ _state = v; }
-    inline void		setstate (iostate v)		{ _state |= v; }
-    inline iostate	exceptions (void) const		{ return _exceptions; }
-    inline iostate	exceptions (iostate v)		{ return _exceptions = v; }
+    constexpr		ios_base (void)			: _state (goodbit), _exceptions (allbadbits) {}
+    constexpr iostate	rdstate (void) const		{ return _state; }
+    constexpr bool	bad (void) const		{ return rdstate() & badbit; }
+    constexpr bool	good (void) const		{ return rdstate() == goodbit; }
+    constexpr bool	fail (void) const		{ return rdstate() & (badbit | failbit); }
+    constexpr bool	eof (void) const		{ return rdstate() & eofbit; }
+    constexpr bool	operator! (void) const		{ return fail(); }
+    constexpr		operator bool (void) const	{ return !fail(); }
+    constexpr void	clear (iostate v = goodbit)	{ _state = v; }
+    constexpr void	setstate (iostate v)		{ _state |= v; }
+    constexpr iostate	exceptions (void) const		{ return _exceptions; }
+    constexpr iostate	exceptions (iostate v)		{ return _exceptions = v; }
 protected:
-    inline bool		set_and_throw (iostate v)	{ setstate(v); return exceptions() & v; }
+    constexpr bool	set_and_throw (iostate v)	{ setstate(v); return exceptions() & v; }
     void		overrun (const char* op, const char* type, uint32_t n, uint32_t p, uint32_t rem);
 private:
     uint16_t		_state;		///< Open state, using ios::iostate_bits.

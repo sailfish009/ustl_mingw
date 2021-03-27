@@ -56,7 +56,7 @@ public:
     typedef size_type		pos_type;
     static constexpr const pos_type npos = INT_MAX;	///< Value that means the end of string.
 public:
-    inline			string (void) noexcept		: memblock () { relink ("",0); }
+    constexpr			string (void) noexcept		: memblock () { relink ("",0); }
 				string (const string& s);
     inline			string (const string& s, pos_type o, size_type n = npos);
     inline explicit		string (const cmemlink& l);
@@ -65,38 +65,38 @@ public:
     inline			string (const_pointer s1, const_pointer s2);
 				string (size_type n, value_type c);
     inline			~string (void) noexcept		{ }
-    inline pointer		data (void)			{ return string::pointer (memblock::data()); }
-    inline const_pointer	data (void) const		{ return string::const_pointer (memblock::data()); }
-    inline const_pointer	c_str (void) const		{ return string::const_pointer (memblock::cdata()); }
-    inline size_type		max_size (void) const		{ size_type s (memblock::max_size()); return s - !!s; }
-    inline size_type		capacity (void) const		{ size_type c (memblock::capacity()); return c - !!c; }
+    constexpr pointer		data (void)			{ return string::pointer (memblock::data()); }
+    constexpr const_pointer	data (void) const		{ return string::const_pointer (memblock::data()); }
+    constexpr const_pointer	c_str (void) const		{ return string::const_pointer (memblock::cdata()); }
+    constexpr size_type		max_size (void) const		{ size_type s (memblock::max_size()); return s - !!s; }
+    constexpr size_type		capacity (void) const		{ size_type c (memblock::capacity()); return c - !!c; }
     void			resize (size_type n);
     inline void			resize (size_type n, value_type c);
     inline void			clear (void)			{ resize (0); }
-    inline iterator		begin (void)			{ return iterator (memblock::begin()); }
-    inline const_iterator	begin (void) const		{ return const_iterator (memblock::begin()); }
-    inline const_iterator	cbegin (void) const		{ return begin(); }
-    inline iterator		end (void)			{ return iterator (memblock::end()); }
-    inline const_iterator	end (void) const		{ return const_iterator (memblock::end()); }
-    inline const_iterator	cend (void) const		{ return end(); }
-    inline reverse_iterator	rbegin (void)			{ return reverse_iterator (end()); }
-  inline const_reverse_iterator	rbegin (void) const		{ return const_reverse_iterator (end()); }
-  inline const_reverse_iterator	crbegin (void) const		{ return rbegin(); }
-    inline reverse_iterator	rend (void)			{ return reverse_iterator (begin()); }
-  inline const_reverse_iterator	rend (void) const		{ return const_reverse_iterator (begin()); }
-  inline const_reverse_iterator	crend (void) const		{ return rend(); }
+    constexpr iterator		begin (void)			{ return iterator (memblock::begin()); }
+    constexpr const_iterator	begin (void) const		{ return const_iterator (memblock::begin()); }
+    constexpr const_iterator	cbegin (void) const		{ return begin(); }
+    constexpr iterator		end (void)			{ return iterator (memblock::end()); }
+    constexpr const_iterator	end (void) const		{ return const_iterator (memblock::end()); }
+    constexpr const_iterator	cend (void) const		{ return end(); }
+    constexpr reverse_iterator	rbegin (void)			{ return reverse_iterator (end()); }
+    constexpr const_reverse_iterator	rbegin (void) const		{ return const_reverse_iterator (end()); }
+    constexpr const_reverse_iterator	crbegin (void) const		{ return rbegin(); }
+    constexpr reverse_iterator	rend (void)			{ return reverse_iterator (begin()); }
+    constexpr const_reverse_iterator	rend (void) const		{ return const_reverse_iterator (begin()); }
+    constexpr const_reverse_iterator	crend (void) const		{ return rend(); }
     inline utf8_iterator	utf8_begin (void) const		{ return utf8_iterator (begin()); }
     inline utf8_iterator	utf8_end (void) const		{ return utf8_iterator (end()); }
-    inline const_reference	at (pos_type pos) const		{ assert (pos <= size() && begin()); return begin()[pos]; }
-    inline reference		at (pos_type pos)		{ assert (pos <= size() && begin()); return begin()[pos]; }
-    inline const_iterator	iat (pos_type pos) const	{ return begin() + (__builtin_constant_p(pos) && pos >= npos ? size() : min(size_type(pos),size())); }
-    inline iterator		iat (pos_type pos)		{ return const_cast<iterator>(const_cast<const string*>(this)->iat(pos)); }
+    constexpr const_reference	at (pos_type pos) const		{ assert (pos <= size() && begin()); return begin()[pos]; }
+    constexpr reference		at (pos_type pos)		{ assert (pos <= size() && begin()); return begin()[pos]; }
+    constexpr const_iterator	iat (pos_type pos) const	{ return begin() + (__builtin_constant_p(pos) && pos >= npos ? size() : min(size_type(pos),size())); }
+    constexpr iterator		iat (pos_type pos)		{ return const_cast<iterator>(const_cast<const string*>(this)->iat(pos)); }
     const_iterator		wiat (pos_type i) const noexcept;
     inline iterator		wiat (pos_type i)		{ return const_cast<iterator>(const_cast<const string*>(this)->wiat(i)); }
-    inline const_reference	front (void) const		{ return at(0); }
-    inline reference		front (void)			{ return at(0); }
-    inline const_reference	back (void) const		{ return at(size()-1); }
-    inline reference		back (void)			{ return at(size()-1); }
+    constexpr const_reference	front (void) const		{ return at(0); }
+    constexpr reference		front (void)			{ return at(0); }
+    constexpr const_reference	back (void) const		{ return at(size()-1); }
+    constexpr reference		back (void)			{ return at(size()-1); }
     inline size_type		length (void) const		{ return distance (utf8_begin(), utf8_end()); }
     inline string&		append (const_iterator i1, const_iterator i2)	{ return append (i1, distance (i1, i2)); }
     string&	   		append (const_pointer s, size_type len);
@@ -128,8 +128,8 @@ public:
     inline int			compare (pos_type s1, size_type l1, const_pointer s, size_type l2) const { return compare (iat(s1), iat(s1+l1), s, s+l2); }
     inline int			compare (pos_type s1, size_type l1, const_pointer s) const { return compare (s1, l1, s, strlen(s)); }
     static int			compare (const_iterator first1, const_iterator last1, const_iterator first2, const_iterator last2) noexcept;
-    inline			operator const value_type* (void) const;
-    inline			operator value_type* (void);
+    inline constexpr		operator const value_type* (void) const;
+    inline constexpr		operator value_type* (void);
     inline const string&	operator= (const string& s)		{ return assign (s.begin(), s.end()); }
     inline const string&	operator= (const_reference c)		{ return assign (&c, 1); }
     inline const string&	operator= (const_pointer s)		{ return assign (s); }
@@ -143,7 +143,7 @@ public:
     inline string		operator+ (const string& s) const;
     inline bool			operator== (const string& s) const	{ return memblock::operator== (s); }
     bool			operator== (const_pointer s) const noexcept;
-    inline bool			operator== (value_type c) const		{ return size() == 1 && c == at(0); }
+    constexpr bool		operator== (value_type c) const		{ return size() == 1 && c == at(0); }
     inline bool			operator== (uvalue_type c) const	{ return operator== (value_type(c)); }
     inline bool			operator!= (const string& s) const	{ return !operator== (s); }
     inline bool			operator!= (const_pointer s) const	{ return !operator== (s); }
@@ -185,7 +185,7 @@ public:
     inline string&		replace (pos_type rp, size_type n, const_pointer s)					{ return replace (iat(rp), iat(rp + n), string(s)); }
     inline string&		replace (pos_type rp, size_type n, size_type count, value_type c)			{ return replace (iat(rp), iat(rp + n), count, c); }
     inline string		substr (pos_type o = 0, size_type n = npos) const	{ return string (*this, o, n); }
-    inline void			swap (string& v)					{ memblock::swap (v); }
+    constexpr void		swap (string& v)					{ memblock::swap (v); }
     pos_type			find (value_type c, pos_type pos = 0) const noexcept;
     pos_type			find (const string& s, pos_type pos = 0) const noexcept;
     inline pos_type		find (uvalue_type c, pos_type pos = 0) const noexcept		{ return find (value_type(c), pos); }
@@ -265,14 +265,14 @@ inline string::string (const_pointer s1, const_pointer s2)
 }
 
 /// Returns the pointer to the first character.
-inline string::operator const string::value_type* (void) const
+inline constexpr string::operator const string::value_type* (void) const
 {
     assert ((!end() || !*end()) && "This string is linked to data that is not 0-terminated. This may cause serious security problems. Please assign the data instead of linking.");
     return begin();
 }
 
 /// Returns the pointer to the first character.
-inline string::operator string::value_type* (void)
+inline constexpr string::operator string::value_type* (void)
 {
     assert ((end() && !*end()) && "This string is linked to data that is not 0-terminated. This may cause serious security problems. Please assign the data instead of linking.");
     return begin();

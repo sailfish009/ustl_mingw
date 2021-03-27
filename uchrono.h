@@ -19,13 +19,13 @@ template <typename ToDuration, typename Rep, typename Period>
 struct __duration_cast_impl {
     using to_rep	= typename ToDuration::rep;
     using conv_ratio	= typename ratio_divide<Period, typename ToDuration::period>::type;
-    static inline ToDuration cast (const duration<Rep, Period>& d)
+    static inline constexpr ToDuration cast (const duration<Rep, Period>& d)
 	{ return ToDuration (static_cast<to_rep>(d.count()) * conv_ratio::num / conv_ratio::den); }
 };
 
 /// Converts durations of different periods or representations
 template <typename ToDuration, typename Rep, typename Period>
-ToDuration duration_cast (const duration<Rep, Period>& d)
+constexpr ToDuration duration_cast (const duration<Rep, Period>& d)
     { return __duration_cast_impl<ToDuration,Rep,Period>::cast (d); }
 
 //}}}-------------------------------------------------------------------
@@ -67,25 +67,25 @@ struct duration {
     constexpr			duration (void) = default;
     constexpr			duration (const duration& d) = default;
 				~duration (void) = default;
-    duration&			operator= (const duration&) = default;
+    constexpr duration&		operator= (const duration&) = default;
     inline constexpr const rep&	count (void) const		{ return _r; }
     inline constexpr duration	operator+ (void) const		{ return *this; }
     inline constexpr duration	operator- (void) const		{ return duration(-count()); }
-    inline duration&		operator++ (void)		{ ++_r; return *this; }
-    inline duration		operator++ (int)		{ return duration(_r++); }
-    inline duration&		operator-- (void)		{ --_r; return *this; }
-    inline duration		operator-- (int)		{ return duration(_r--); }
-    inline duration&		operator+= (const duration& v)	{ _r += v.count(); return *this; }
-    inline duration&		operator-= (const duration& v)	{ _r -= v.count(); return *this; }
-    inline duration&		operator*= (const rep& v)	{ _r *= v; return *this; }
-    inline duration&		operator/= (const rep& v)	{ _r /= v; return *this; }
-    inline duration		operator+ (const duration& v) const	{ return duration (_r + v.count()); }
-    inline duration		operator- (const duration& v) const	{ return duration (_r - v.count()); }
+    inline constexpr duration&	operator++ (void)		{ ++_r; return *this; }
+    inline constexpr duration	operator++ (int)		{ return duration(_r++); }
+    inline constexpr duration&	operator-- (void)		{ --_r; return *this; }
+    inline constexpr duration	operator-- (int)		{ return duration(_r--); }
+    inline constexpr duration&	operator+= (const duration& v)	{ _r += v.count(); return *this; }
+    inline constexpr duration&	operator-= (const duration& v)	{ _r -= v.count(); return *this; }
+    inline constexpr duration&	operator*= (const rep& v)	{ _r *= v; return *this; }
+    inline constexpr duration&	operator/= (const rep& v)	{ _r /= v; return *this; }
+    inline constexpr duration	operator+ (const duration& v) const	{ return duration (_r + v.count()); }
+    inline constexpr duration	operator- (const duration& v) const	{ return duration (_r - v.count()); }
 
     // Mod allowed only for integers
-    template <typename Rep2 = rep> typename enable_if<numeric_limits<Rep2>::is_integer,
+    template <typename Rep2 = rep> constexpr typename enable_if<numeric_limits<Rep2>::is_integer,
     duration&>::type		operator%= (const rep& v)	{ _r %= v; return *this; }
-    template <typename Rep2 = rep> typename enable_if<numeric_limits<Rep2>::is_integer,
+    template <typename Rep2 = rep> constexpr typename enable_if<numeric_limits<Rep2>::is_integer,
     duration&>::type		operator%= (const duration& v)	{ _r %= v.count(); return *this; }
 
     inline constexpr bool	operator== (const duration& v) const	{ return count() == v.count(); }
@@ -119,7 +119,7 @@ struct duration {
 
     inline void			read (istream& is)		{ is >> _r; }
     inline void			write (ostream& os) const	{ os << _r; }
-    inline streamsize		stream_size (void) const	{ return stream_size_of(_r); }
+    inline constexpr streamsize	stream_size (void) const	{ return stream_size_of(_r); }
     inline void			text_write (ostringstream& os) const;
 
     // Named ctors for special values
@@ -177,7 +177,7 @@ DURATION_TEXT_SUFFIX (millenia, "_millenia");
 struct hrtime_t : public timespec {
     inline constexpr		hrtime_t (void)			: timespec(){}
 				hrtime_t (const hrtime_t&) = default;
-    hrtime_t&			operator= (const hrtime_t&) = default;
+    constexpr hrtime_t&		operator= (const hrtime_t&) = default;
     inline explicit constexpr	hrtime_t (const timespec& v)	: timespec(v){}
     inline constexpr		hrtime_t (time_t s, long ns)	: timespec{s,ns}{}
     inline explicit constexpr	hrtime_t (intmax_t v)		: timespec{time_t(v/nano::den),time_t(v%nano::den)}{}
@@ -188,14 +188,14 @@ struct hrtime_t : public timespec {
     inline constexpr		operator double (void) const	{ return double(tv_nsec)/nano::den + tv_sec; }
     inline constexpr hrtime_t	operator+ (void) const		{ return *this; }
     inline constexpr hrtime_t	operator- (void) const		{ return hrtime_t(-tv_sec,-tv_nsec); }
-    hrtime_t&			operator++ (void) {
+    constexpr hrtime_t&		operator++ (void) {
 				    if (++tv_nsec > nano::den) {
 					tv_nsec -= nano::den;
 					++tv_sec;
 				    }
 				    return *this;
 				}
-    hrtime_t&			operator-- (void) {
+    constexpr hrtime_t&		operator-- (void) {
 				    if (!tv_nsec) {
 					tv_nsec = nano::den;
 					--tv_sec;
@@ -203,9 +203,9 @@ struct hrtime_t : public timespec {
 				    --tv_nsec;
 				    return *this;
 				}
-    inline hrtime_t		operator++ (int)		{ hrtime_t r(*this); operator++(); return r; }
-    inline hrtime_t		operator-- (int)		{ hrtime_t r(*this); operator--(); return r; }
-    hrtime_t&			operator+= (const hrtime_t& v) {
+    inline constexpr hrtime_t	operator++ (int)		{ hrtime_t r(*this); operator++(); return r; }
+    inline constexpr hrtime_t	operator-- (int)		{ hrtime_t r(*this); operator--(); return r; }
+    constexpr hrtime_t&			operator+= (const hrtime_t& v) {
 				    if (nano::den <= (tv_nsec += v.tv_nsec)) {
 					tv_nsec -= nano::den;
 					++tv_sec;
@@ -213,7 +213,7 @@ struct hrtime_t : public timespec {
 				    tv_sec += v.tv_sec;
 				    return *this;
 				}
-    hrtime_t&			operator-= (const hrtime_t& v) {
+    constexpr hrtime_t&		operator-= (const hrtime_t& v) {
 				    if (0 > (tv_nsec -= v.tv_nsec)) {
 					tv_nsec += nano::den;
 					--tv_sec;
@@ -221,7 +221,7 @@ struct hrtime_t : public timespec {
 				    tv_sec -= v.tv_sec;
 				    return *this;
 				}
-    hrtime_t&			operator*= (intmax_t v) {
+    constexpr hrtime_t&		operator*= (intmax_t v) {
 				    tv_sec *= v;
 				    if (nano::den <= (tv_nsec *= v)) {
 					tv_sec += tv_nsec / nano::den;
@@ -229,22 +229,22 @@ struct hrtime_t : public timespec {
 				    }
 				    return *this;
 				}
-    hrtime_t&			operator/= (intmax_t v)	{
+    constexpr hrtime_t&		operator/= (intmax_t v)	{
 				    tv_nsec /= v;
 				    tv_nsec += (tv_sec % v) * nano::den;
 				    tv_sec /= v;
 				    return *this;
 				}
-    inline hrtime_t		operator+ (const hrtime_t& v) const	{ hrtime_t r(*this); return r += v; }
-    inline hrtime_t		operator- (const hrtime_t& v) const	{ hrtime_t r(*this); return r -= v; }
-    inline hrtime_t		operator* (intmax_t v) const		{ hrtime_t r(*this); return r *= v; }
-    inline hrtime_t		operator/ (intmax_t v) const		{ hrtime_t r(*this); return r /= v; }
+    inline constexpr hrtime_t	operator+ (const hrtime_t& v) const	{ hrtime_t r(*this); return r += v; }
+    inline constexpr hrtime_t	operator- (const hrtime_t& v) const	{ hrtime_t r(*this); return r -= v; }
+    inline constexpr hrtime_t	operator* (intmax_t v) const		{ hrtime_t r(*this); return r *= v; }
+    inline constexpr hrtime_t	operator/ (intmax_t v) const		{ hrtime_t r(*this); return r /= v; }
     inline constexpr bool	operator== (const hrtime_t& v) const	{ return tv_sec == v.tv_sec && tv_nsec == v.tv_nsec; }
     inline constexpr bool	operator< (const hrtime_t& v) const	{ return tv_sec < v.tv_sec || (tv_sec == v.tv_sec && tv_nsec < v.tv_nsec); }
     inline void			read (istream& is)			{ is >> tv_sec >> tv_nsec; }
     inline void			write (ostream& os) const		{ os << tv_sec << tv_nsec; }
     void			text_write (ostringstream& os) const	{ os.format ("%ld.%09ld", tv_sec, tv_nsec); }
-    inline streamsize		stream_size (void) const		{ return stream_size_of(tv_sec) + stream_size_of(tv_nsec); }
+    inline constexpr streamsize	stream_size (void) const		{ return stream_size_of(tv_sec) + stream_size_of(tv_nsec); }
 };
 
 // numeric_limits<hrtime_t>::min,max will always return 0
@@ -266,7 +266,7 @@ struct __duration_cast_impl<ToDuration, hrtime_t, Period> {
     using to_rep	= typename ToDuration::rep;
     using ns_conv_ratio	= typename ratio_divide<Period, typename ToDuration::period>::type;
     using s_conv_ratio	= typename ratio_divide<ns_conv_ratio, Period>::type;
-    static inline ToDuration cast (const duration<hrtime_t, Period>& d) {
+    static inline constexpr ToDuration cast (const duration<hrtime_t, Period>& d) {
 	auto& t = d.count();
 	return ToDuration (
 		static_cast<to_rep>(t.tv_sec) * s_conv_ratio::num / s_conv_ratio::den
@@ -296,12 +296,12 @@ struct time_point {
     inline constexpr		time_point (const time_point<clock, Duration2>& t)
 				    :_t (t.time_since_epoch()) {}
     constexpr const duration&	time_since_epoch (void) const	{ return _t; }
-    inline time_point&		operator+= (const duration& t)	{ _t += t; return *this; }
-    inline time_point&		operator-= (const duration& t)	{ _t -= t; return *this; }
-    inline time_point		operator- (const duration& t) const { return time_point(_t - t); }
-    inline time_point		operator+ (const duration& t) const { return time_point(_t + t); }
+    constexpr time_point&	operator+= (const duration& t)	{ _t += t; return *this; }
+    constexpr time_point&	operator-= (const duration& t)	{ _t -= t; return *this; }
+    constexpr time_point	operator- (const duration& t) const { return time_point(_t - t); }
+    constexpr time_point	operator+ (const duration& t) const { return time_point(_t + t); }
     template <typename Duration2 = duration>
-    inline duration		operator- (const time_point<clock,Duration2>& t) const
+    constexpr duration		operator- (const time_point<clock,Duration2>& t) const
 				    { return _t - t.time_since_epoch(); }
     template <typename Duration2 = duration>
     inline constexpr bool	operator== (const time_point<clock,Duration2>& t) const
@@ -311,7 +311,7 @@ struct time_point {
 				    { return time_since_epoch() < t.time_since_epoch(); }
     inline void			read (istream& is)		{ is >> _t; }
     inline void			write (ostream& os) const	{ os << _t; }
-    inline streamsize		stream_size (void) const	{ return stream_size_of(_t); }
+    inline constexpr streamsize	stream_size (void) const	{ return stream_size_of(_t); }
     inline void			text_write (ostringstream& os) const;
     static constexpr time_point	zero (void)	{ return time_point (duration::zero()); }
     static constexpr time_point	min (void)	{ return time_point (duration::min()); }
@@ -336,9 +336,9 @@ struct system_clock {
     using period	= typename duration::period;
     using time_point	= ::ustl::chrono::time_point<system_clock, duration>;
 
-    static inline time_t	to_time_t (const time_point& tp) noexcept
+    static constexpr time_t	to_time_t (const time_point& tp) noexcept
 				    { return static_cast<time_t>(tp.time_since_epoch().count()); }
-    static inline time_point	from_time_t (time_t t) noexcept
+    static constexpr time_point	from_time_t (time_t t) noexcept
 				    { return time_point (duration (t)); }
     static inline time_point	now (void) noexcept
 				    { return from_time_t (time (nullptr)); }

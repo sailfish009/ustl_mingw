@@ -14,14 +14,14 @@ namespace ustl {
 
 /// For partial specialization of stream_size_of for objects
 template <typename T> struct object_stream_size {
-    inline streamsize operator()(const T& v) const { return v.stream_size(); }
+    inline constexpr streamsize operator()(const T& v) const { return v.stream_size(); }
 };
 template <typename T> struct integral_object_stream_size {
-    inline streamsize operator()(const T& v) const { return sizeof(v); }
+    inline constexpr streamsize operator()(const T& v) const { return sizeof(v); }
 };
 /// Returns the size of the given object. Overloads for standard types are available.
 template <typename T>
-inline streamsize stream_size_of (const T& v) {
+inline constexpr streamsize stream_size_of (const T& v) {
     typedef typename tm::Select <numeric_limits<T>::is_integral,
 	integral_object_stream_size<T>, object_stream_size<T> >::Result stream_sizer_t;
     return stream_sizer_t()(v);
@@ -30,7 +30,7 @@ inline streamsize stream_size_of (const T& v) {
 /// \brief Returns the recommended stream alignment for type \p T. Override with ALIGNOF.
 /// Because this is occasionally called with a null value, do not access the argument!
 template <typename T>
-inline size_t stream_align_of (const T&)
+inline constexpr size_t stream_align_of (const T&)
 {
     if (numeric_limits<T>::is_integral)
 	return __alignof__(T);
@@ -41,7 +41,7 @@ inline size_t stream_align_of (const T&)
 
 #define ALIGNOF(type,grain)	\
 namespace ustl {		\
-    template <> inline size_t stream_align_of (const type&) { return grain; } }
+    template <> inline constexpr size_t stream_align_of (const type&) { return grain; } }
 
 // Extra overloads in this macro are needed because it is the one used for
 // marshalling pointers. Passing a pointer to stream_size_of creates a
@@ -57,7 +57,7 @@ namespace ustl {		\
 	inline istream& operator>> (istream& is, T& v)		{ is.iread(v);  return is; }	\
 	inline ostream& operator<< (ostream& os, const T& v)	{ os.iwrite(v); return os; }	\
 	inline ostream& operator<< (ostream& os, T& v)		{ os.iwrite(v); return os; }	\
-	template<> inline streamsize stream_size_of(const T& v)	{ return sizeof(v); }		\
+	template<> inline constexpr streamsize stream_size_of (const T& v) { return sizeof(v); }\
     }
 
 /// Declares that T contains read, write, and stream_size methods. This is no longer needed and is deprecated.
@@ -71,7 +71,7 @@ namespace ustl {		\
     namespace ustl {		\
 	inline istream& operator>> (istream& is, T& v)		{ TSUB sv; is >> sv; v = T(sv); return is; }	\
 	inline ostream& operator<< (ostream& os, const T& v)	{ os << TSUB(v); return os; }			\
-	template<> inline streamsize stream_size_of(const T& v)	{ return stream_size_of (TSUB(v)); }		\
+	template<> inline constexpr streamsize stream_size_of(const T& v)	{ return stream_size_of (TSUB(v)); }		\
     }
 
 /// Placed into a class it declares the methods required by STD_STREAMABLE. Syntactic sugar.

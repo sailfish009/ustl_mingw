@@ -38,7 +38,7 @@ inline OutputIterator copy_if (Container& ctr, OutputIterator result, Predicate 
 /// \ingroup MutatingAlgorithms
 ///
 template <typename Container, typename UnaryFunction>
-inline UnaryFunction for_each (Container& ctr, UnaryFunction f)
+constexpr UnaryFunction for_each (Container& ctr, UnaryFunction f)
 {
     return for_each (ctr.begin(), ctr.end(), f);
 }
@@ -50,7 +50,7 @@ inline UnaryFunction for_each (Container& ctr, UnaryFunction f)
 /// \ingroup MutatingAlgorithms
 ///
 template <typename Container, typename UnaryFunction>
-inline UnaryFunction for_each (const Container& ctr, UnaryFunction f)
+constexpr UnaryFunction for_each (const Container& ctr, UnaryFunction f)
 {
     return for_each (ctr.begin(), ctr.end(), f);
 }
@@ -60,12 +60,12 @@ inline UnaryFunction for_each (const Container& ctr, UnaryFunction f)
 /// \ingroup SearchingAlgorithms
 ///
 template <typename Container, typename EqualityComparable>
-inline typename Container::const_iterator find (const Container& ctr, const EqualityComparable& value)
+constexpr typename Container::const_iterator find (const Container& ctr, const EqualityComparable& value)
 {
     return find (ctr.begin(), ctr.end(), value);
 }
 template <typename Container, typename EqualityComparable>
-inline typename Container::iterator find (Container& ctr, const EqualityComparable& value)
+constexpr typename Container::iterator find (Container& ctr, const EqualityComparable& value)
 {
     return find (ctr.begin(), ctr.end(), value);
 }
@@ -75,12 +75,12 @@ inline typename Container::iterator find (Container& ctr, const EqualityComparab
 /// \ingroup SearchingAlgorithms
 ///
 template <typename Container, typename Predicate>
-inline typename Container::const_iterator find_if (const Container& ctr, Predicate pred)
+constexpr typename Container::const_iterator find_if (const Container& ctr, Predicate pred)
 {
     return find_if (ctr.begin(), ctr.end(), pred);
 }
 template <typename Container, typename Predicate>
-inline typename Container::iterator find_if (Container& ctr, Predicate pred)
+constexpr typename Container::iterator find_if (Container& ctr, Predicate pred)
 {
     return find_if (ctr.begin(), ctr.end(), pred);
 }
@@ -91,7 +91,7 @@ inline typename Container::iterator find_if (Container& ctr, Predicate pred)
 /// \ingroup ConditionAlgorithms
 ///
 template <typename Container, typename EqualityComparable>
-inline size_t count (const Container& ctr, const EqualityComparable& value)
+constexpr size_t count (const Container& ctr, const EqualityComparable& value)
 {
     return count (ctr.begin(), ctr.end(), value);
 }
@@ -102,7 +102,7 @@ inline size_t count (const Container& ctr, const EqualityComparable& value)
 /// \ingroup ConditionAlgorithms
 ///
 template <typename Container, typename Predicate>
-inline size_t count_if (const Container& ctr, Predicate pred)
+constexpr size_t count_if (const Container& ctr, Predicate pred)
 {
     return count_if (ctr.begin(), ctr.end(), pred);
 }
@@ -116,7 +116,7 @@ inline size_t count_if (const Container& ctr, Predicate pred)
 /// \ingroup MutatingAlgorithms
 ///
 template <typename Container, typename UnaryFunction>
-inline void transform (Container& ctr, UnaryFunction op)
+constexpr void transform (Container& ctr, UnaryFunction op)
 {
     transform (ctr.begin(), ctr.end(), ctr.begin(), op);
 }
@@ -130,7 +130,7 @@ inline void transform (Container& ctr, UnaryFunction op)
 /// \ingroup MutatingAlgorithms
 ///
 template <typename Container, typename OutputIterator, typename UnaryFunction>
-inline OutputIterator transform (Container& ctr, OutputIterator result, UnaryFunction op)
+constexpr OutputIterator transform (Container& ctr, OutputIterator result, UnaryFunction op)
 {
     return transform (ctr.begin(), ctr.end(), result, op);
 }
@@ -146,7 +146,7 @@ inline OutputIterator transform (Container& ctr, OutputIterator result, UnaryFun
 /// \ingroup MutatingAlgorithms
 ///
 template <typename Container, typename InputIterator, typename OutputIterator, typename BinaryFunction>
-inline OutputIterator transform (Container& ctr, InputIterator first, OutputIterator result, BinaryFunction op)
+constexpr OutputIterator transform (Container& ctr, InputIterator first, OutputIterator result, BinaryFunction op)
 {
     return transform (ctr.begin(), ctr.end(), first, result, op);
 }
@@ -157,7 +157,7 @@ inline OutputIterator transform (Container& ctr, InputIterator first, OutputIter
 /// \ingroup MutatingAlgorithms
 ///
 template <typename Container, typename T>
-inline void replace (Container& ctr, const T& old_value, const T& new_value)
+constexpr void replace (Container& ctr, const T& old_value, const T& new_value)
 {
     replace (ctr.begin(), ctr.end(), old_value, new_value);
 }
@@ -168,7 +168,7 @@ inline void replace (Container& ctr, const T& old_value, const T& new_value)
 /// \ingroup MutatingAlgorithms
 ///
 template <typename Container, typename Predicate, typename T>
-inline void replace_if (Container& ctr, Predicate pred, const T& new_value)
+constexpr void replace_if (Container& ctr, Predicate pred, const T& new_value)
 {
     replace_if (ctr.begin(), ctr.end(), pred, new_value);
 }
@@ -182,7 +182,7 @@ inline void replace_if (Container& ctr, Predicate pred, const T& new_value)
 /// \ingroup MutatingAlgorithms
 ///
 template <typename Container, typename OutputIterator, typename T>
-inline OutputIterator replace_copy (const Container& ctr, OutputIterator result, const T& old_value, const T& new_value)
+constexpr OutputIterator replace_copy (const Container& ctr, OutputIterator result, const T& old_value, const T& new_value)
 {
     return replace_copy (ctr.begin(), ctr.end(), result, old_value, new_value);
 }
@@ -196,7 +196,7 @@ inline OutputIterator replace_copy (const Container& ctr, OutputIterator result,
 /// \ingroup MutatingAlgorithms
 ///
 template <typename Container, typename OutputIterator, typename Predicate, typename T>
-inline OutputIterator replace_copy_if (const Container& ctr, OutputIterator result, Predicate pred, const T& new_value) 
+constexpr OutputIterator replace_copy_if (const Container& ctr, OutputIterator result, Predicate pred, const T& new_value) 
 {
     return replace_copy_if (ctr.begin(), ctr.end(), result, pred, new_value);
 }
@@ -217,7 +217,7 @@ inline void fill (Container& ctr, const T& value)
 /// \ingroup GeneratorAlgorithms
 ///
 template <typename Container, typename Generator>
-inline void generate (Container& ctr, Generator gen)
+constexpr void generate (Container& ctr, Generator gen)
 {
     generate (ctr.begin(), ctr.end(), gen);
 }
@@ -239,7 +239,7 @@ inline void random_shuffle (Container& ctr)
 /// \ingroup MutatingAlgorithms
 ///
 template <typename Container, typename OutputIterator, typename T>
-inline OutputIterator remove_copy (const Container& ctr, OutputIterator result, const T& value)
+constexpr OutputIterator remove_copy (const Container& ctr, OutputIterator result, const T& value)
 {
     return remove_copy (ctr.begin(), ctr.end(), result, value);
 }
@@ -252,7 +252,7 @@ inline OutputIterator remove_copy (const Container& ctr, OutputIterator result, 
 /// \ingroup MutatingAlgorithms
 ///
 template <typename Container, typename OutputIterator, typename Predicate>
-inline OutputIterator remove_copy_if (const Container& ctr, OutputIterator result, Predicate pred)
+constexpr OutputIterator remove_copy_if (const Container& ctr, OutputIterator result, Predicate pred)
 {
     return remove_copy_if (ctr.begin(), ctr.end(), result, pred);
 }
@@ -307,7 +307,7 @@ inline void remove_if (Container& ctr, Predicate pred)
 /// \ingroup MutatingAlgorithms
 ///
 template <typename Container, typename OutputIterator>
-inline OutputIterator unique_copy (const Container& ctr, OutputIterator result)
+constexpr OutputIterator unique_copy (const Container& ctr, OutputIterator result)
 {
     return unique_copy (ctr.begin(), ctr.end(), result);
 }
@@ -350,7 +350,7 @@ inline void unique (Container& ctr, BinaryPredicate binary_pred)
 /// \ingroup MutatingAlgorithms
 ///
 template <typename Container>
-inline void reverse (Container& ctr)
+constexpr void reverse (Container& ctr)
 {
     reverse (ctr.begin(), ctr.end());
 }
@@ -359,7 +359,7 @@ inline void reverse (Container& ctr)
 /// \ingroup MutatingAlgorithms
 ///
 template <typename Container>
-inline void rotate (Container& ctr, off_t offset)
+constexpr void rotate (Container& ctr, off_t offset)
 {
     assert (size_t(offset > 0 ? offset : -offset) < ctr.size());
     if (offset > 0)
@@ -374,12 +374,12 @@ inline void rotate (Container& ctr, off_t offset)
 /// \ingroup SearchingAlgorithms
 ///
 template <typename Container, typename LessThanComparable>
-inline typename Container::const_iterator lower_bound (const Container& ctr, const LessThanComparable& value)
+constexpr typename Container::const_iterator lower_bound (const Container& ctr, const LessThanComparable& value)
 {
     return lower_bound (ctr.begin(), ctr.end(), value);
 }
 template <typename Container, typename LessThanComparable>
-inline typename Container::iterator lower_bound (Container& ctr, const LessThanComparable& value)
+constexpr typename Container::iterator lower_bound (Container& ctr, const LessThanComparable& value)
 {
     return lower_bound (ctr.begin(), ctr.end(), value);
 }
@@ -389,12 +389,12 @@ inline typename Container::iterator lower_bound (Container& ctr, const LessThanC
 /// \ingroup SearchingAlgorithms
 ///
 template <typename Container, typename LessThanComparable>
-inline typename Container::const_iterator upper_bound (const Container& ctr, const LessThanComparable& value)
+constexpr typename Container::const_iterator upper_bound (const Container& ctr, const LessThanComparable& value)
 {
     return upper_bound (ctr.begin(), ctr.end(), value);
 }
 template <typename Container, typename LessThanComparable>
-inline typename Container::iterator upper_bound (Container& ctr, const LessThanComparable& value)
+constexpr typename Container::iterator upper_bound (Container& ctr, const LessThanComparable& value)
 {
     return upper_bound (ctr.begin(), ctr.end(), value);
 }
@@ -404,12 +404,12 @@ inline typename Container::iterator upper_bound (Container& ctr, const LessThanC
 /// \ingroup SearchingAlgorithms
 ///
 template <typename Container>
-inline bool binary_search (const Container& ctr, const typename Container::value_type& value)
+constexpr bool binary_search (const Container& ctr, const typename Container::value_type& value)
 {
     return binary_search (ctr.begin(), ctr.end(), value);
 }
 template <typename Container>
-inline bool binary_search (Container& ctr, const typename Container::value_type& value)
+constexpr bool binary_search (Container& ctr, const typename Container::value_type& value)
 {
     return binary_search (ctr.begin(), ctr.end(), value);
 }
@@ -418,12 +418,12 @@ inline bool binary_search (Container& ctr, const typename Container::value_type&
 /// \ingroup SearchingAlgorithms
 ///
 template <typename Container, typename LessThanComparable>
-inline pair<typename Container::const_iterator,typename Container::const_iterator> equal_range (const Container& ctr, const LessThanComparable& value)
+constexpr pair<typename Container::const_iterator,typename Container::const_iterator> equal_range (const Container& ctr, const LessThanComparable& value)
 {
     return equal_range (ctr.begin(), ctr.end(), value);
 }
 template <typename Container, typename LessThanComparable>
-inline pair<typename Container::iterator,typename Container::iterator> equal_range (Container& ctr, const LessThanComparable& value)
+constexpr pair<typename Container::iterator,typename Container::iterator> equal_range (Container& ctr, const LessThanComparable& value)
 {
     return equal_range (ctr.begin(), ctr.end(), value);
 }
@@ -450,7 +450,7 @@ inline void sort (Container& ctr, Compare comp)
 /// \ingroup SortingAlgorithms
 ///
 template <typename Container>
-inline void stable_sort (Container& ctr)
+constexpr void stable_sort (Container& ctr)
 {
     stable_sort (ctr.begin(), ctr.end());
 }
@@ -459,7 +459,7 @@ inline void stable_sort (Container& ctr)
 /// \ingroup SortingAlgorithms
 ///
 template <typename Container, typename Compare>
-inline void stable_sort (Container& ctr, Compare comp)
+constexpr void stable_sort (Container& ctr, Compare comp)
 {
     stable_sort (ctr.begin(), ctr.end(), comp);
 }

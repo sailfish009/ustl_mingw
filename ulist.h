@@ -81,5 +81,4 @@ void list<T>::splice (iterator ip, list<T>& l, iterator first, iterator last)
     #define deque list ///< list has all the functionality provided by deque
 #endif
 
-
 } // namespace ustl

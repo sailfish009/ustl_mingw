@@ -42,12 +42,12 @@ inline ostream& nr_container_write (ostream& os, const Container& v)
 
 /// Computes the stream size of a fixed size standard container.
 template <typename Container>
-inline size_t nr_container_stream_size (const Container& v)
+constexpr size_t nr_container_stream_size (const Container& v)
 {
     typedef typename Container::const_iterator vciter_t;
     if (!v.size())
 	return 0;
-    size_t s = 0, dvs;
+    size_t s = 0, dvs = 0;
     vciter_t i = v.begin();
     do {
 	dvs = stream_size_of(*i);
@@ -98,7 +98,7 @@ ostream& container_write (ostream& os, const Container& v)
 
 /// Computes the stream size of a standard container.
 template <typename Container>
-size_t container_stream_size (const Container& v)
+constexpr size_t container_stream_size (const Container& v)
 {
     typedef typename Container::value_type value_type;
     typedef typename Container::written_size_type written_size_type;

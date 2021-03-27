@@ -44,31 +44,35 @@ private:
     static const size_t	s_nWords	= Size / s_WordBits + ((Size % s_WordBits) != 0);
     static const size_t	s_nBits		= s_nWords * s_WordBits;
 private:
-    inline value_type&		BitRef (uoff_t n)	{ assert (n < Size); return _bits [n / s_WordBits]; }
-    inline value_type		BitRef (uoff_t n) const	{ assert (n < Size); return _bits [n / s_WordBits]; }
-    inline value_type		Mask (uoff_t n) const	{ assert (n < Size); return 1 << (n % s_WordBits); }
+    constexpr value_type&	BitRef (uoff_t n)	{ assert (n < Size); return _bits [n / s_WordBits]; }
+    constexpr value_type	BitRef (uoff_t n) const	{ assert (n < Size); return _bits [n / s_WordBits]; }
+    constexpr value_type	Mask (uoff_t n) const	{ assert (n < Size); return 1 << (n % s_WordBits); }
 public:
-    inline		bitset (value_type v = 0)	{ fill_n (_bits, s_nWords, 0); _bits[0] = v; }
+#if HAVE_CPP11
+    constexpr		bitset (value_type v = 0)	:_bits{v}{}
+#else
+    inline		bitset (value_type v = 0)	{ for (size_t i = 0; i < VectorSize(_bits); ++i) _bits[i] = 0; _bits[0] = v; }
+#endif
     inline		bitset (const string& buf)	{ convert_from_bitstring (buf, _bits, s_nWords); }
-    inline void		flip (uoff_t n)			{ BitRef(n) ^= Mask(n); }
-    inline void		reset (void)			{ fill_n (_bits, s_nWords, 0); }
-    inline void		clear (void)			{ fill_n (_bits, s_nWords, 0); }
-    inline void		set (void)			{ fill_n (_bits, s_nWords, -1); }
-    inline bitset	operator~ (void) const		{ bitset rv (*this); rv.flip(); return rv; }
-    inline size_type	size (void) const		{ return Size; }
-    inline size_type	capacity (void) const		{ return s_nBits; }
-    inline bool		test (uoff_t n) const		{ return BitRef(n) & Mask(n); }
-    inline bool		operator[] (uoff_t n) const	{ return test(n); }
-  inline const_iterator	begin (void) const		{ return _bits; }
-    inline iterator	begin (void)			{ return _bits; }
-  inline const_iterator	end (void) const		{ return _bits + s_nWords; }
-    inline iterator	end (void)			{ return _bits + s_nWords; }
+    constexpr void	flip (uoff_t n)			{ BitRef(n) ^= Mask(n); }
+    constexpr void	reset (void)			{ fill_n (_bits, s_nWords, 0); }
+    constexpr void	clear (void)			{ fill_n (_bits, s_nWords, 0); }
+    constexpr void	set (void)			{ fill_n (_bits, s_nWords, -1); }
+    constexpr bitset	operator~ (void) const		{ bitset rv (*this); rv.flip(); return rv; }
+    constexpr size_type	size (void) const		{ return Size; }
+    constexpr size_type	capacity (void) const		{ return s_nBits; }
+    constexpr bool	test (uoff_t n) const		{ return BitRef(n) & Mask(n); }
+    constexpr bool	operator[] (uoff_t n) const	{ return test(n); }
+    constexpr const_iterator	begin (void) const		{ return _bits; }
+    constexpr iterator	begin (void)			{ return _bits; }
+    constexpr const_iterator	end (void) const		{ return _bits + s_nWords; }
+    constexpr iterator	end (void)			{ return _bits + s_nWords; }
  			/// Returns the value_type with the equivalent bits. If size() > 1, you'll get only the first BitsInType(value_type) bits.
-    inline value_type	to_value (void) const		{ return _bits[0]; }
+    constexpr value_type to_value (void) const		{ return _bits[0]; }
     			/// Flips all the bits in the set.
-    inline void		flip (void) { transform (begin(), end(), begin(), bitwise_not<value_type>()); }
+    constexpr void	flip (void) { transform (begin(), end(), begin(), bitwise_not<value_type>()); }
 			/// Sets or clears bit \p n.
-    inline void		set (uoff_t n, bool val = true)
+    constexpr void	set (uoff_t n, bool val = true)
 			{
 			    value_type& br (BitRef (n));
 			    const value_type mask (Mask (n));
@@ -76,7 +80,7 @@ public:
 			    br = val ? bOn : bOff;
 			}
 			// Sets the value of the bitrange \p first through \p last to the equivalent number of bits from \p v.
-    inline void		set (uoff_t first, uoff_t DebugArg(last), value_type v)
+    constexpr void	set (uoff_t first, uoff_t DebugArg(last), value_type v)
 			{
 			    assert (size_t (distance (first, last)) <= s_WordBits && "Bit ranges must be 32 bits or smaller");
 			    assert (first / s_WordBits == last / s_WordBits && "Bit ranges can not cross dword (4 byte) boundary");
@@ -84,7 +88,7 @@ public:
 			    BitRef(first) |= v << (first % s_WordBits);
 			}
     			/// Clears the bit \p n.
-    inline void		reset (uoff_t n)		{ set (n, false); }
+    constexpr void	reset (uoff_t n)		{ set (n, false); }
 			/// Returns a string with bits MSB "001101001..." LSB.
     inline string	to_string (void) const
 			{
@@ -92,36 +96,36 @@ public:
 			    convert_to_bitstring (_bits, s_nWords, rv);
 			    return rv;
 			}
-    inline value_type	at (uoff_t n) const		{ return test(n); }
+    constexpr value_type at (uoff_t n) const		{ return test(n); }
 			/// Returns the value in bits \p first through \p last.
-    inline value_type	at (uoff_t first, uoff_t last) const
+    constexpr value_type at (uoff_t first, uoff_t last) const
 			{
 			    assert (size_t (distance (first, last)) <= s_WordBits && "Bit ranges must be 32 bits or smaller");
 			    assert (first / s_WordBits == last / s_WordBits && "Bit ranges can not cross dword (4 byte) boundary");
 			    return (BitRef(first) >> (first % s_WordBits)) & BitMask(value_type,distance(first, last));
 			}
-    inline bool		any (void) const	{ value_type sum = 0; foreach (const_iterator, i, *this) sum |= *i; return sum; }
-    inline bool		none (void) const	{ return !any(); }
-    inline size_t	count (void) const	{ size_t sum = 0; foreach (const_iterator, i, *this) sum += popcount(*i); return sum; }
-    inline bool		operator== (rcself_t v) const
+    constexpr bool	any (void) const	{ value_type sum = 0; foreach (const_iterator, i, *this) sum |= *i; return sum; }
+    constexpr bool	none (void) const	{ return !any(); }
+    constexpr size_t	count (void) const	{ size_t sum = 0; foreach (const_iterator, i, *this) sum += popcount(*i); return sum; }
+    constexpr bool	operator== (rcself_t v) const
 			    { return s_nWords == 1 ? (_bits[0] == v._bits[0]) : equal (begin(), end(), v.begin()); }
-    inline bitset	operator& (rcself_t v) const
+    constexpr bitset	operator& (rcself_t v) const
 			    { bitset<Size> result; transform (begin(), end(), v.begin(), result.begin(), bitwise_and<value_type>()); return result; }
-    inline bitset	operator| (rcself_t v) const
+    constexpr bitset	operator| (rcself_t v) const
 			    { bitset<Size> result; transform (begin(), end(), v.begin(), result.begin(), bitwise_or<value_type>()); return result; }
-    inline bitset	operator^ (rcself_t v) const
+    constexpr bitset	operator^ (rcself_t v) const
 			    { bitset<Size> result; transform (begin(), end(), v.begin(), result.begin(), bitwise_xor<value_type>()); return result; }
-    inline rcself_t	operator&= (rcself_t v)
+    constexpr rcself_t	operator&= (rcself_t v)
 			    { transform (begin(), end(), v.begin(), begin(), bitwise_and<value_type>()); return *this; }
-    inline rcself_t	operator|= (rcself_t v)
+    constexpr rcself_t	operator|= (rcself_t v)
 			    { transform (begin(), end(), v.begin(), begin(), bitwise_or<value_type>()); return *this; }
-    inline rcself_t	operator^= (rcself_t v)
+    constexpr rcself_t	operator^= (rcself_t v)
 			    { transform (begin(), end(), v.begin(), begin(), bitwise_xor<value_type>()); return *this; }
     inline void		read (istream& is)			{ nr_container_read (is, *this); }
     inline void		write (ostream& os) const		{ nr_container_write (os, *this); }
     inline void		text_write (ostringstream& os) const	{ os << to_string(); }
     void		text_read (istringstream& is);
-    inline size_t	stream_size (void) const		{ return sizeof(_bits); }
+    constexpr size_t	stream_size (void) const		{ return sizeof(_bits); }
 private:
     value_type		_bits [s_nWords];
 };

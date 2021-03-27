@@ -11,7 +11,6 @@
 
 namespace ustl {
 
-memblock::memblock (void) noexcept		: memlink(), _capacity (0) { }
 memblock::memblock (const void* p, size_type n) : memlink(), _capacity (0) { assign (p, n); }
 memblock::memblock (size_type n)		: memlink(), _capacity (0) { resize (n); }
 memblock::memblock (const cmemlink& b)		: memlink(), _capacity (0) { assign (b); }
@@ -153,7 +152,5 @@ void memblock::read_file (const char* filename)
     f.close();
     resize (fsize);
 }
-
-memblock::size_type memblock::minimumFreeCapacity (void) const noexcept { return 0; }
 
 } // namespace ustl

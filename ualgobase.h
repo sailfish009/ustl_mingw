@@ -25,7 +25,7 @@ inline constexpr T&& forward (typename tm::RemoveReference<T>::Result&& v) noexc
 
 #if HAVE_CPP14
 template <typename T, typename U = T>
-auto exchange (T& a, U&& b)
+constexpr auto exchange (T& a, U&& b)
 {
     auto t = move(a);
     a = forward<U>(b);
@@ -50,7 +50,7 @@ inline constexpr T& forward (typename tm::RemoveReference<T>::Result& v) noexcep
 /// \ingroup SwapAlgorithms
 ///
 template <typename T>
-inline void swap (T& a, T& b)
+inline constexpr void swap (T& a, T& b)
 {
     typename tm::RemoveReference<T>::Result t = move(a);
     a = move(b);
@@ -61,7 +61,7 @@ inline void swap (T& a, T& b)
 /// \ingroup SwapAlgorithms
 ///
 template <typename Iterator> 
-inline void iter_swap (Iterator a, Iterator b)
+inline constexpr void iter_swap (Iterator a, Iterator b)
 {
     swap (*a, *b);
 }

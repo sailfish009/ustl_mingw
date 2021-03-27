@@ -14,7 +14,7 @@ namespace ustl {
 /// \ingroup SwapAlgorithms
 ///
 template <typename ForwardIterator1, typename ForwardIterator2>
-inline ForwardIterator2 swap_ranges (ForwardIterator1 first, ForwardIterator2 last, ForwardIterator2 result)
+inline constexpr ForwardIterator2 swap_ranges (ForwardIterator1 first, ForwardIterator2 last, ForwardIterator2 result)
 {
     for (; first != last; ++first, ++result)
 	iter_swap (first, result);
@@ -26,7 +26,7 @@ inline ForwardIterator2 swap_ranges (ForwardIterator1 first, ForwardIterator2 la
 /// \ingroup SearchingAlgorithms
 ///
 template <typename InputIterator, typename EqualityComparable>
-inline InputIterator find (InputIterator first, InputIterator last, const EqualityComparable& value)
+inline constexpr InputIterator find (InputIterator first, InputIterator last, const EqualityComparable& value)
 {
     while (first != last && !(*first == value))
 	++ first;
@@ -37,7 +37,7 @@ inline InputIterator find (InputIterator first, InputIterator last, const Equali
 /// \ingroup SearchingAlgorithms
 ///
 template <typename ForwardIterator>
-ForwardIterator adjacent_find (ForwardIterator first, ForwardIterator last)
+constexpr ForwardIterator adjacent_find (ForwardIterator first, ForwardIterator last)
 {
     if (first != last)
 	for (ForwardIterator prev = first; ++first != last; ++ prev)
@@ -50,7 +50,7 @@ ForwardIterator adjacent_find (ForwardIterator first, ForwardIterator last)
 /// \ingroup SearchingAlgorithms
 ///
 template <typename InputIterator>
-pair<InputIterator,InputIterator>
+constexpr pair<InputIterator,InputIterator>
 mismatch (InputIterator first1, InputIterator last1, InputIterator first2)
 {
     while (first1 != last1 && *first1 == *first2)
@@ -63,7 +63,7 @@ mismatch (InputIterator first1, InputIterator last1, InputIterator first2)
 /// \ingroup SearchingAlgorithms
 ///
 template <typename InputIterator>
-inline bool equal (InputIterator first1, InputIterator last1, InputIterator first2)
+inline constexpr bool equal (InputIterator first1, InputIterator last1, InputIterator first2)
 {
     return mismatch (first1, last1, first2).first == last1;
 }
@@ -74,7 +74,7 @@ inline bool equal (InputIterator first1, InputIterator last1, InputIterator firs
 /// \ingroup SearchingAlgorithms
 ///
 template <typename InputIterator, typename EqualityComparable>
-inline size_t count (InputIterator first, InputIterator last, const EqualityComparable& value)
+inline constexpr size_t count (InputIterator first, InputIterator last, const EqualityComparable& value)
 {
     size_t total = 0;
     for (; first != last; ++first)
@@ -94,7 +94,7 @@ inline size_t count (InputIterator first, InputIterator last, const EqualityComp
 /// \ingroup PredicateAlgorithms
 ///
 template <typename InputIterator, typename OutputIterator, typename UnaryFunction>
-inline OutputIterator transform (InputIterator first, InputIterator last, OutputIterator result, UnaryFunction op)
+inline constexpr OutputIterator transform (InputIterator first, InputIterator last, OutputIterator result, UnaryFunction op)
 {
     for (; first != last; ++result, ++first)
 	*result = op (*first);
@@ -114,7 +114,7 @@ inline OutputIterator transform (InputIterator first, InputIterator last, Output
 /// \ingroup PredicateAlgorithms
 ///
 template <typename InputIterator1, typename InputIterator2, typename OutputIterator, typename BinaryFunction>
-inline OutputIterator transform (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, OutputIterator result, BinaryFunction op)
+inline constexpr OutputIterator transform (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, OutputIterator result, BinaryFunction op)
 {
     for (; first1 != last1; ++result, ++first1, ++first2)
 	*result = op (*first1, *first2);
@@ -127,7 +127,7 @@ inline OutputIterator transform (InputIterator1 first1, InputIterator1 last1, In
 /// \ingroup MutatingAlgorithms
 ///
 template <typename ForwardIterator, typename T>
-inline void replace (ForwardIterator first, ForwardIterator last, const T& old_value, const T& new_value)
+inline constexpr void replace (ForwardIterator first, ForwardIterator last, const T& old_value, const T& new_value)
 {
     for (; first != last; ++first)
 	if (*first == old_value)
@@ -143,7 +143,7 @@ inline void replace (ForwardIterator first, ForwardIterator last, const T& old_v
 /// \ingroup MutatingAlgorithms
 ///
 template <typename InputIterator, typename OutputIterator, typename T>
-inline OutputIterator replace_copy (InputIterator first, InputIterator last, OutputIterator result, const T& old_value, const T& new_value)
+inline constexpr OutputIterator replace_copy (InputIterator first, InputIterator last, OutputIterator result, const T& old_value, const T& new_value)
 {
     for (; first != last; ++result, ++first)
         *result = (*first == old_value) ? new_value : *first;
@@ -155,7 +155,7 @@ inline OutputIterator replace_copy (InputIterator first, InputIterator last, Out
 /// \ingroup PredicateAlgorithms
 ///
 template <typename ForwardIterator, typename Generator>
-inline void generate (ForwardIterator first, ForwardIterator last, Generator gen)
+inline constexpr void generate (ForwardIterator first, ForwardIterator last, Generator gen)
 {
     for (; first != last; ++first)
 	*first = gen();
@@ -168,7 +168,7 @@ inline void generate (ForwardIterator first, ForwardIterator last, Generator gen
 /// \ingroup PredicateAlgorithms
 ///
 template <typename OutputIterator, typename Generator>
-inline OutputIterator generate_n (OutputIterator first, size_t n, Generator gen)
+inline constexpr OutputIterator generate_n (OutputIterator first, size_t n, Generator gen)
 {
     for (uoff_t i = 0; i != n; ++i, ++first)
 	*first = gen();
@@ -181,7 +181,7 @@ inline OutputIterator generate_n (OutputIterator first, size_t n, Generator gen)
 /// \ingroup MutatingAlgorithms
 ///
 template <typename BidirectionalIterator>
-inline void reverse (BidirectionalIterator first, BidirectionalIterator last)
+inline constexpr void reverse (BidirectionalIterator first, BidirectionalIterator last)
 {
     for (; distance (first, --last) > 0; ++first)
 	iter_swap (first, last);
@@ -191,7 +191,7 @@ inline void reverse (BidirectionalIterator first, BidirectionalIterator last)
 /// \ingroup MutatingAlgorithms
 ///
 template <typename BidirectionalIterator, typename OutputIterator>
-inline OutputIterator reverse_copy (BidirectionalIterator first, BidirectionalIterator last, OutputIterator result)
+inline constexpr OutputIterator reverse_copy (BidirectionalIterator first, BidirectionalIterator last, OutputIterator result)
 {
     for (; first != last; ++result)
 	*result = *--last;
@@ -202,7 +202,7 @@ inline OutputIterator reverse_copy (BidirectionalIterator first, BidirectionalIt
 /// \ingroup MutatingAlgorithms
 ///
 template <typename ForwardIterator>
-ForwardIterator rotate (ForwardIterator first, ForwardIterator middle, ForwardIterator last)
+constexpr ForwardIterator rotate (ForwardIterator first, ForwardIterator middle, ForwardIterator last)
 {
     if (first == middle || middle == last)
 	return first;
@@ -255,7 +255,7 @@ OutputIterator merge (InputIterator1 first1, InputIterator1 last1,
 /// \ingroup SortingAlgorithms
 ///
 template <typename InputIterator>
-void inplace_merge (InputIterator first, InputIterator middle, InputIterator last)
+constexpr void inplace_merge (InputIterator first, InputIterator middle, InputIterator last)
 {
     for (; middle != last; ++first) {
 	while (*first < *middle)
@@ -273,7 +273,7 @@ void inplace_merge (InputIterator first, InputIterator middle, InputIterator las
 /// \ingroup MutatingAlgorithms
 ///
 template <typename InputIterator, typename OutputIterator, typename T>
-OutputIterator remove_copy (InputIterator first, InputIterator last, OutputIterator result, const T& value)
+constexpr OutputIterator remove_copy (InputIterator first, InputIterator last, OutputIterator result, const T& value)
 {
     for (; first != last; ++first) {
 	if (!(*first == value)) {
@@ -293,7 +293,7 @@ OutputIterator remove_copy (InputIterator first, InputIterator last, OutputItera
 /// \ingroup MutatingAlgorithms
 ///
 template <typename InputIterator, typename OutputIterator, typename RInputIterator>
-OutputIterator remove_copy (InputIterator first, InputIterator last, OutputIterator result, RInputIterator rfirst, RInputIterator rlast)
+constexpr OutputIterator remove_copy (InputIterator first, InputIterator last, OutputIterator result, RInputIterator rfirst, RInputIterator rlast)
 {
     for (; first != last; ++first) {
 	while (rfirst != rlast && *rfirst < first)
@@ -316,7 +316,7 @@ OutputIterator remove_copy (InputIterator first, InputIterator last, OutputItera
 /// \ingroup MutatingAlgorithms
 ///
 template <typename ForwardIterator, typename T>
-inline ForwardIterator remove (ForwardIterator first, ForwardIterator last, const T& value)
+inline constexpr ForwardIterator remove (ForwardIterator first, ForwardIterator last, const T& value)
 {
     return remove_copy (first, last, first, value);
 }
@@ -329,7 +329,7 @@ inline ForwardIterator remove (ForwardIterator first, ForwardIterator last, cons
 /// \ingroup MutatingAlgorithms
 ///
 template <typename InputIterator, typename OutputIterator>
-OutputIterator unique_copy (InputIterator first, InputIterator last, OutputIterator result)
+constexpr OutputIterator unique_copy (InputIterator first, InputIterator last, OutputIterator result)
 {
     if (first != last) {
 	*result = *first;
@@ -352,7 +352,7 @@ OutputIterator unique_copy (InputIterator first, InputIterator last, OutputItera
 /// \ingroup MutatingAlgorithms
 ///
 template <typename ForwardIterator>
-inline ForwardIterator unique (ForwardIterator first, ForwardIterator last)
+inline constexpr ForwardIterator unique (ForwardIterator first, ForwardIterator last)
 {
     return unique_copy (first, last, first);
 }
@@ -363,7 +363,7 @@ inline ForwardIterator unique (ForwardIterator first, ForwardIterator last)
 /// \ingroup SearchingAlgorithms
 ///
 template <typename ForwardIterator, typename LessThanComparable>
-ForwardIterator lower_bound (ForwardIterator first, ForwardIterator last, const LessThanComparable& value)
+constexpr ForwardIterator lower_bound (ForwardIterator first, ForwardIterator last, const LessThanComparable& value)
 {
     ForwardIterator mid;
     while (first != last) {
@@ -380,7 +380,7 @@ ForwardIterator lower_bound (ForwardIterator first, ForwardIterator last, const 
 /// \ingroup SearchingAlgorithms
 ///
 template <typename ForwardIterator, typename LessThanComparable>
-inline bool binary_search (ForwardIterator first, ForwardIterator last, const LessThanComparable& value)
+inline constexpr bool binary_search (ForwardIterator first, ForwardIterator last, const LessThanComparable& value)
 {
     ForwardIterator found = lower_bound (first, last, value);
     return found != last && !(value < *found);
@@ -391,7 +391,7 @@ inline bool binary_search (ForwardIterator first, ForwardIterator last, const Le
 /// \ingroup SearchingAlgorithms
 ///
 template <typename ForwardIterator, typename LessThanComparable>
-ForwardIterator upper_bound (ForwardIterator first, ForwardIterator last, const LessThanComparable& value)
+constexpr ForwardIterator upper_bound (ForwardIterator first, ForwardIterator last, const LessThanComparable& value)
 {
     ForwardIterator mid;
     while (first != last) {
@@ -408,7 +408,7 @@ ForwardIterator upper_bound (ForwardIterator first, ForwardIterator last, const 
 /// \ingroup SearchingAlgorithms
 ///
 template <typename ForwardIterator, typename LessThanComparable>
-inline pair<ForwardIterator,ForwardIterator> equal_range (ForwardIterator first, ForwardIterator last, const LessThanComparable& value)
+inline constexpr pair<ForwardIterator,ForwardIterator> equal_range (ForwardIterator first, ForwardIterator last, const LessThanComparable& value)
 {
     pair<ForwardIterator,ForwardIterator> rv;
     rv.second = rv.first = lower_bound (first, last, value);
@@ -430,7 +430,7 @@ void random_shuffle (RandomAccessIterator first, RandomAccessIterator last)
 /// \brief Generic compare function adaptor to pass to qsort
 /// \ingroup FunctorObjects
 template <typename ConstPointer, typename Compare>
-int qsort_adapter (const void* p1, const void* p2)
+constexpr int qsort_adapter (const void* p1, const void* p2)
 {
     ConstPointer i1 = static_cast<ConstPointer>(p1), i2 = static_cast<ConstPointer>(p2);
     Compare comp;
@@ -465,7 +465,7 @@ inline void sort (RandomAccessIterator first, RandomAccessIterator last)
 /// \ingroup PredicateAlgorithms
 ///
 template <typename RandomAccessIterator, typename Compare>
-void stable_sort (RandomAccessIterator first, RandomAccessIterator last, Compare comp)
+constexpr void stable_sort (RandomAccessIterator first, RandomAccessIterator last, Compare comp)
 {
     for (RandomAccessIterator j, i = first; ++i < last;) { // Insertion sort
 	for (j = i; j-- > first && comp(*i, *j);) {}
@@ -477,7 +477,7 @@ void stable_sort (RandomAccessIterator first, RandomAccessIterator last, Compare
 /// \ingroup SortingAlgorithms
 ///
 template <typename RandomAccessIterator>
-inline void stable_sort (RandomAccessIterator first, RandomAccessIterator last)
+inline constexpr void stable_sort (RandomAccessIterator first, RandomAccessIterator last)
 {
     typedef typename iterator_traits<RandomAccessIterator>::value_type value_type;
     stable_sort (first, last, less<value_type>());
@@ -486,7 +486,7 @@ inline void stable_sort (RandomAccessIterator first, RandomAccessIterator last)
 /// \brief Searches for the first subsequence [first2,last2) in [first1,last1)
 /// \ingroup SearchingAlgorithms
 template <typename ForwardIterator1, typename ForwardIterator2>
-inline ForwardIterator1 search (ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2, ForwardIterator2 last2)
+inline constexpr ForwardIterator1 search (ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2, ForwardIterator2 last2)
 {
     typedef typename iterator_traits<ForwardIterator1>::value_type value_type;
     return search (first1, last1, first2, last2, equal_to<value_type>());
@@ -495,7 +495,7 @@ inline ForwardIterator1 search (ForwardIterator1 first1, ForwardIterator1 last1,
 /// \brief Searches for the last subsequence [first2,last2) in [first1,last1)
 /// \ingroup SearchingAlgorithms
 template <typename ForwardIterator1, typename ForwardIterator2>
-inline ForwardIterator1 find_end (ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2, ForwardIterator2 last2)
+inline constexpr ForwardIterator1 find_end (ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2, ForwardIterator2 last2)
 {
     typedef typename iterator_traits<ForwardIterator1>::value_type value_type;
     return find_end (first1, last1, first2, last2, equal_to<value_type>());
@@ -504,7 +504,7 @@ inline ForwardIterator1 find_end (ForwardIterator1 first1, ForwardIterator1 last
 /// \brief Searches for the first occurence of \p count \p values in [first, last)
 /// \ingroup SearchingAlgorithms
 template <typename Iterator, typename T>
-inline Iterator search_n (Iterator first, Iterator last, size_t count, const T& value)
+inline constexpr Iterator search_n (Iterator first, Iterator last, size_t count, const T& value)
 {
     typedef typename iterator_traits<Iterator>::value_type value_type;
     return search_n (first, last, count, value, equal_to<value_type>());
@@ -513,7 +513,7 @@ inline Iterator search_n (Iterator first, Iterator last, size_t count, const T& 
 /// \brief Searches [first1,last1) for the first occurrence of an element from [first2,last2)
 /// \ingroup SearchingAlgorithms
 template <typename InputIterator, typename ForwardIterator>
-inline InputIterator find_first_of (InputIterator first1, InputIterator last1, ForwardIterator first2, ForwardIterator last2)
+inline constexpr InputIterator find_first_of (InputIterator first1, InputIterator last1, ForwardIterator first2, ForwardIterator last2)
 {
     typedef typename iterator_traits<InputIterator>::value_type value_type;
     return find_first_of (first1, last1, first2, last2, equal_to<value_type>());
@@ -523,7 +523,7 @@ inline InputIterator find_first_of (InputIterator first1, InputIterator last1, F
 /// \ingroup ConditionAlgorithms
 /// \ingroup SetAlgorithms
 template <typename InputIterator1, typename InputIterator2>
-inline bool includes (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2)
+inline constexpr bool includes (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2)
 {
     typedef typename iterator_traits<InputIterator1>::value_type value_type;
     return includes (first1, last1, first2, last2, less<value_type>());
@@ -536,7 +536,7 @@ inline bool includes (InputIterator1 first1, InputIterator1 last1, InputIterator
 ///
 /// \ingroup SetAlgorithms
 template <typename InputIterator1, typename InputIterator2, typename OutputIterator>
-inline OutputIterator set_union (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator result)
+inline constexpr OutputIterator set_union (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator result)
 {
     typedef typename iterator_traits<InputIterator1>::value_type value_type;
     return set_union (first1, last1, first2, last2, result, less<value_type>());
@@ -545,7 +545,7 @@ inline OutputIterator set_union (InputIterator1 first1, InputIterator1 last1, In
 /// \brief Creates a set containing elements shared by the given ranges.
 /// \ingroup SetAlgorithms
 template <typename InputIterator1, typename InputIterator2, typename OutputIterator>
-inline OutputIterator set_intersection (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator result)
+inline constexpr OutputIterator set_intersection (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator result)
 {
     typedef typename iterator_traits<InputIterator1>::value_type value_type;
     return set_intersection (first1, last1, first2, last2, result, less<value_type>());
@@ -554,7 +554,7 @@ inline OutputIterator set_intersection (InputIterator1 first1, InputIterator1 la
 /// \brief Removes from [first1,last1) elements present in [first2,last2)
 /// \ingroup SetAlgorithms
 template <typename InputIterator1, typename InputIterator2, typename OutputIterator>
-inline OutputIterator set_difference (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator result)
+inline constexpr OutputIterator set_difference (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator result)
 {
     typedef typename iterator_traits<InputIterator1>::value_type value_type;
     return set_difference (first1, last1, first2, last2, result, less<value_type>());
@@ -563,7 +563,7 @@ inline OutputIterator set_difference (InputIterator1 first1, InputIterator1 last
 /// \brief Performs union of sets A-B and B-A.
 /// \ingroup SetAlgorithms
 template <typename InputIterator1, typename InputIterator2, typename OutputIterator>
-inline OutputIterator set_symmetric_difference (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator result)
+inline constexpr OutputIterator set_symmetric_difference (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator result)
 {
     typedef typename iterator_traits<InputIterator1>::value_type value_type;
     return set_symmetric_difference (first1, last1, first2, last2, result, less<value_type>());
@@ -572,7 +572,7 @@ inline OutputIterator set_symmetric_difference (InputIterator1 first1, InputIter
 /// \brief Returns true if the given range is sorted.
 /// \ingroup ConditionAlgorithms
 template <typename ForwardIterator>
-inline bool is_sorted (ForwardIterator first, ForwardIterator last)
+inline constexpr bool is_sorted (ForwardIterator first, ForwardIterator last)
 {
     typedef typename iterator_traits<ForwardIterator>::value_type value_type;
     return is_sorted (first, last, less<value_type>());
@@ -581,7 +581,7 @@ inline bool is_sorted (ForwardIterator first, ForwardIterator last)
 /// \brief Compares two given containers like strcmp compares strings.
 /// \ingroup ConditionAlgorithms
 template <typename InputIterator1, typename InputIterator2>
-inline bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2)
+inline constexpr bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2)
 {
     typedef typename iterator_traits<InputIterator1>::value_type value_type;
     return lexicographical_compare (first1, last1, first2, last2, less<value_type>());
@@ -591,7 +591,7 @@ inline bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1
 /// Returns false if no further permutations can be created.
 /// \ingroup GeneratorAlgorithms
 template <typename BidirectionalIterator>
-inline bool next_permutation (BidirectionalIterator first, BidirectionalIterator last)
+inline constexpr bool next_permutation (BidirectionalIterator first, BidirectionalIterator last)
 {
     typedef typename iterator_traits<BidirectionalIterator>::value_type value_type;
     return next_permutation (first, last, less<value_type>());
@@ -601,7 +601,7 @@ inline bool next_permutation (BidirectionalIterator first, BidirectionalIterator
 /// Returns false if no further permutations can be created.
 /// \ingroup GeneratorAlgorithms
 template <typename BidirectionalIterator>
-inline bool prev_permutation (BidirectionalIterator first, BidirectionalIterator last)
+inline constexpr bool prev_permutation (BidirectionalIterator first, BidirectionalIterator last)
 {
     typedef typename iterator_traits<BidirectionalIterator>::value_type value_type;
     return prev_permutation (first, last, less<value_type>());
@@ -609,16 +609,16 @@ inline bool prev_permutation (BidirectionalIterator first, BidirectionalIterator
 
 /// Returns \p v clamped to the given range
 template <typename T, typename Compare>
-inline T clamp (const T& v, const T& l, const T& h, Compare comp)
+inline constexpr T clamp (const T& v, const T& l, const T& h, Compare comp)
     { return comp(v, l) ? l : comp(h, v) ? h : v; }
 template <typename T>
-inline T clamp (const T& v, const T& l, const T& h)
+inline constexpr T clamp (const T& v, const T& l, const T& h)
     { return v < l ? l : (h < v ? h : v); }
 
 /// Returns iterator to the max element in [first,last)
 /// \ingroup SearchingAlgorithms
 template <typename ForwardIterator>
-inline ForwardIterator max_element (ForwardIterator first, ForwardIterator last)
+inline constexpr ForwardIterator max_element (ForwardIterator first, ForwardIterator last)
 {
     typedef typename iterator_traits<ForwardIterator>::value_type value_type;
     return max_element (first, last, less<value_type>());
@@ -627,7 +627,7 @@ inline ForwardIterator max_element (ForwardIterator first, ForwardIterator last)
 /// Returns iterator to the min element in [first,last)
 /// \ingroup SearchingAlgorithms
 template <typename ForwardIterator>
-inline ForwardIterator min_element (ForwardIterator first, ForwardIterator last)
+inline constexpr ForwardIterator min_element (ForwardIterator first, ForwardIterator last)
 {
     typedef typename iterator_traits<ForwardIterator>::value_type value_type;
     return min_element (first, last, less<value_type>());
@@ -649,7 +649,7 @@ template <typename T> constexpr void minmax (T&& a, T&& b) = delete;
 template <typename T, typename Compare> constexpr void minmax (const T& a, const T& b, Compare comp) = delete;
 
 template <typename T>
-auto minmax (std::initializer_list<T> l)
+constexpr auto minmax (std::initializer_list<T> l)
 {
     auto r = make_pair (*l.begin(),*l.begin());
     for (auto& i : l) {
@@ -659,7 +659,7 @@ auto minmax (std::initializer_list<T> l)
     return r;
 }
 template <typename T, typename Compare>
-auto minmax (std::initializer_list<T> l, Compare comp)
+constexpr auto minmax (std::initializer_list<T> l, Compare comp)
 {
     auto r = make_pair (*l.begin(),*l.begin());
     for (auto& i : l) {
@@ -673,7 +673,7 @@ auto minmax (std::initializer_list<T> l, Compare comp)
 #endif
 
 template <typename ForwardIterator>
-pair<ForwardIterator,ForwardIterator> minmax_element (ForwardIterator first, ForwardIterator last)
+constexpr pair<ForwardIterator,ForwardIterator> minmax_element (ForwardIterator first, ForwardIterator last)
 {
     pair<ForwardIterator,ForwardIterator> r = make_pair (first, first);
     for (; first != last; ++first) {
@@ -685,7 +685,7 @@ pair<ForwardIterator,ForwardIterator> minmax_element (ForwardIterator first, For
     return r;
 }
 template <typename ForwardIterator, typename Compare>
-pair<ForwardIterator,ForwardIterator> minmax_element (ForwardIterator first, ForwardIterator last, Compare comp)
+constexpr pair<ForwardIterator,ForwardIterator> minmax_element (ForwardIterator first, ForwardIterator last, Compare comp)
 {
     pair<ForwardIterator,ForwardIterator> r = make_pair (first, first);
     for (; first != last; ++first) {
@@ -701,7 +701,7 @@ pair<ForwardIterator,ForwardIterator> minmax_element (ForwardIterator first, For
 /// Contents of [middle,last) is undefined. This implementation just calls stable_sort.
 /// \ingroup SortingAlgorithms
 template <typename RandomAccessIterator>
-inline void partial_sort (RandomAccessIterator first, RandomAccessIterator middle, RandomAccessIterator last)
+inline constexpr void partial_sort (RandomAccessIterator first, RandomAccessIterator middle, RandomAccessIterator last)
 {
     typedef typename iterator_traits<RandomAccessIterator>::value_type value_type;
     partial_sort (first, middle, last, less<value_type>());
@@ -714,7 +714,7 @@ inline void partial_sort (RandomAccessIterator first, RandomAccessIterator middl
 /// \ingroup SearchingAlgorithms
 ///
 template <typename RandomAccessIterator>
-inline void nth_element (RandomAccessIterator first, RandomAccessIterator nth, RandomAccessIterator last)
+inline constexpr void nth_element (RandomAccessIterator first, RandomAccessIterator nth, RandomAccessIterator last)
 {
     partial_sort (first, nth, last);
 }
@@ -722,7 +722,7 @@ inline void nth_element (RandomAccessIterator first, RandomAccessIterator nth, R
 /// \brief Like partial_sort, but outputs to [result_first,result_last)
 /// \ingroup SortingAlgorithms
 template <typename InputIterator, typename RandomAccessIterator>
-inline RandomAccessIterator partial_sort_copy (InputIterator first, InputIterator last, RandomAccessIterator result_first, RandomAccessIterator result_last)
+inline constexpr RandomAccessIterator partial_sort_copy (InputIterator first, InputIterator last, RandomAccessIterator result_first, RandomAccessIterator result_last)
 {
     typedef typename iterator_traits<InputIterator>::value_type value_type;
     return partial_sort_copy (first, last, result_first, result_last, less<value_type>());

@@ -87,6 +87,12 @@ template <typename T>
 T* addressof (T& v)
     { return reinterpret_cast<T*>(&const_cast<char&>(reinterpret_cast<const volatile char&>(v))); }
 
+// constexpr cast between pointers without reinterpret_cast
+template <typename T, typename F> constexpr T* pointer_cast (F* p)
+    { return static_cast<T*>(static_cast<void*>(p)); }
+template <typename T, typename F> constexpr const T* pointer_cast (const F* p)
+    { return static_cast<const T*>(static_cast<const void*>(p)); }
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 // The compiler issues a warning if an unsigned type is compared to 0.
 template <typename T, bool IsSigned> struct __is_negative { inline constexpr bool operator()(const T& v) const { return v < 0; } };
@@ -129,57 +135,38 @@ constexpr T lcm (T a, T b)
 #undef bswap_32
 #undef bswap_64
 
-inline uint16_t bswap_16 (uint16_t v)
-{
-#if __x86__
-    if (!__builtin_constant_p(v)) asm ("rorw $8, %0":"+r"(v)); else
-#endif
-	v = v << 8 | v >> 8;
-    return v;
-}
-inline uint32_t bswap_32 (uint32_t v)
-{
-#if __x86__
-    if (!__builtin_constant_p(v)) asm ("bswap %0":"+r"(v)); else
-#endif
-	v = v << 24 | (v & 0xFF00) << 8 | ((v >> 8) & 0xFF00) | v >> 24;
-    return v;
-}
-#if HAVE_INT64_T
-inline uint64_t bswap_64 (uint64_t v)
-{
-#if __x86_64__
-    if (!__builtin_constant_p(v)) asm ("bswap %0":"+r"(v)); else
-#endif
-	v = (uint64_t(bswap_32(v)) << 32) | bswap_32(v >> 32);
-    return v;
-}
-#endif
+inline constexpr uint8_t bswap_8 (uint8_t v)	{ return v; }
+inline constexpr uint16_t bswap_16 (uint16_t v)	{ return __builtin_bswap16 (v); }
+inline constexpr uint32_t bswap_32 (uint32_t v)	{ return __builtin_bswap32 (v); }
+inline constexpr uint64_t bswap_64 (uint64_t v)	{ return __builtin_bswap64 (v); }
 
-/// \brief Swaps the byteorder of \p v.
-template <typename T>
-inline T bswap (const T& v)
-{
-    switch (BitsInType(T)) {
-	default:	return v;
-	case 16:	return T (bswap_16 (uint16_t (v)));
-	case 32:	return T (bswap_32 (uint32_t (v)));
-#if HAVE_INT64_T
-	case 64:	return T (bswap_64 (uint64_t (v)));
+inline constexpr uint8_t bswap (uint8_t v)	{ return v; }
+inline constexpr uint16_t bswap (uint16_t v)	{ return __builtin_bswap16 (v); }
+inline constexpr uint32_t bswap (uint32_t v)	{ return __builtin_bswap32 (v); }
+inline constexpr uint64_t bswap (uint64_t v)	{ return __builtin_bswap64 (v); }
+inline constexpr int8_t bswap (int8_t v)	{ return v; }
+inline constexpr int16_t bswap (int16_t v)	{ return __builtin_bswap16 (v); }
+inline constexpr int32_t bswap (int32_t v)	{ return __builtin_bswap32 (v); }
+inline constexpr int64_t bswap (int64_t v)	{ return __builtin_bswap64 (v); }
+
+#if HAVE_CPP11
+enum class endian {
+    little	= __ORDER_LITTLE_ENDIAN__,
+    big		= __ORDER_BIG_ENDIAN__,
+    native	= __BYTE_ORDER__
+};
 #endif
-    }
-}
 
 #if BYTE_ORDER == BIG_ENDIAN
-template <typename T> inline T le_to_native (const T& v) { return bswap (v); }
-template <typename T> inline T be_to_native (const T& v) { return v; }
-template <typename T> inline T native_to_le (const T& v) { return bswap (v); }
-template <typename T> inline T native_to_be (const T& v) { return v; }
+template <typename T> inline constexpr T le_to_native (const T& v) { return bswap (v); }
+template <typename T> inline constexpr T be_to_native (const T& v) { return v; }
+template <typename T> inline constexpr T native_to_le (const T& v) { return bswap (v); }
+template <typename T> inline constexpr T native_to_be (const T& v) { return v; }
 #elif BYTE_ORDER == LITTLE_ENDIAN
-template <typename T> inline T le_to_native (const T& v) { return v; }
-template <typename T> inline T be_to_native (const T& v) { return bswap (v); }
-template <typename T> inline T native_to_le (const T& v) { return v; }
-template <typename T> inline T native_to_be (const T& v) { return bswap (v); }
+template <typename T> inline constexpr T le_to_native (const T& v) { return v; }
+template <typename T> inline constexpr T be_to_native (const T& v) { return bswap (v); }
+template <typename T> inline constexpr T native_to_le (const T& v) { return v; }
+template <typename T> inline constexpr T native_to_be (const T& v) { return bswap (v); }
 #endif // BYTE_ORDER
 
 /// Deletes \p p and sets it to nullptr
@@ -220,7 +207,7 @@ inline constexpr bool operator>= (const T& x, const T& y)
 
 /// Packs \p s multiple times into \p b. Useful for loop unrolling.
 template <typename TSmall, typename TBig>
-inline void pack_type (TSmall s, TBig& b)
+inline constexpr void pack_type (TSmall s, TBig& b)
 {
     b = s;
     for (unsigned h = BitsInType(TSmall); h < BitsInType(TBig); h *= 2)
@@ -230,7 +217,7 @@ inline void pack_type (TSmall s, TBig& b)
 /// \brief Divides \p n1 by \p n2 and rounds the result up.
 /// This is in contrast to regular division, which rounds down.
 template <typename T1, typename T2>
-inline T1 DivRU (T1 n1, T2 n2)
+inline constexpr T1 DivRU (T1 n1, T2 n2)
 {
     T2 adj = n2 - 1;
     if (is_negative (n1))
@@ -301,24 +288,16 @@ inline uint32_t NextPow2 (uint32_t v)
 
 /// Bitwise rotate value left
 template <typename T>
-inline T Rol (T v, size_t n)
+inline constexpr T Rol (T v, size_t n)
 {
-#if __x86__
-    if (!(__builtin_constant_p(v) && __builtin_constant_p(n))) asm("rol\t%b1, %0":"+r,r"(v):"i,c"(n)); else
-#endif
-    v = (v << n) | (v >> (BitsInType(T)-n));
-    return v;
+    return (v << n) | (v >> (BitsInType(T)-n));
 }
 
 /// Bitwise rotate value right
 template <typename T>
-inline T Ror (T v, size_t n)
+inline constexpr T Ror (T v, size_t n)
 {
-#if __x86__
-    if (!(__builtin_constant_p(v) && __builtin_constant_p(n))) asm("ror\t%b1, %0":"+r,r"(v):"i,c"(n)); else
-#endif
-    v = (v >> n) | (v << (BitsInType(T)-n));
-    return v;
+    return (v >> n) | (v << (BitsInType(T)-n));
 }
 
 /// \brief This template is to be used for dereferencing a type-punned pointer without a warning.

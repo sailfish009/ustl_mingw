@@ -23,12 +23,12 @@ namespace ustl {
 // Alogrithm specializations not in use by the library code.
 //----------------------------------------------------------------------
 
-template <> inline void swap (cmemlink& a, cmemlink& b)			{ a.swap (b); }
-template <> inline void swap (memlink& a, memlink& b)			{ a.swap (b); }
-template <> inline void swap (memblock& a, memblock& b)			{ a.swap (b); }
-template <> inline void swap (string& a, string& b)			{ a.swap (b); }
+template <> inline constexpr void swap (cmemlink& a, cmemlink& b)	{ a.swap (b); }
+template <> inline constexpr void swap (memlink& a, memlink& b)		{ a.swap (b); }
+template <> inline constexpr void swap (memblock& a, memblock& b)	{ a.swap (b); }
+template <> inline constexpr void swap (string& a, string& b)		{ a.swap (b); }
 #define TEMPLATE_SWAP_PSPEC(type, template_decl)	\
-template_decl inline void swap (type& a, type& b) { a.swap (b); }
+template_decl inline constexpr void swap (type& a, type& b) { a.swap (b); }
 TEMPLATE_SWAP_PSPEC (TEMPLATE_TYPE1 (vector,T),		TEMPLATE_DECL1 (T))
 TEMPLATE_SWAP_PSPEC (TEMPLATE_TYPE1 (set,T),		TEMPLATE_DECL1 (T))
 TEMPLATE_SWAP_PSPEC (TEMPLATE_TYPE1 (multiset,T),	TEMPLATE_DECL1 (T))
@@ -62,7 +62,7 @@ void pair<T1,T2>::write (ostream& os) const
 
 /// Returns the written size of the object.
 template <typename T1, typename T2>
-size_t pair<T1,T2>::stream_size (void) const
+constexpr size_t pair<T1,T2>::stream_size (void) const
 {
     return Align (stream_size_of(first), stream_align_of(second)) +
 	    Align (stream_size_of(second), stream_align_of(first));

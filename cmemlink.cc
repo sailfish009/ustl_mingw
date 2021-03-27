@@ -56,11 +56,4 @@ void cmemlink::write_file (const char* filename, int mode) const
     f.close();
 }
 
-/// Compares to memory block pointed by l. Size is compared first.
-bool cmemlink::operator== (const cmemlink& l) const noexcept
-{
-    return l._size == _size &&
-	    (l._data == _data || 0 == memcmp (l._data, _data, _size));
-}
-
 } // namespace ustl

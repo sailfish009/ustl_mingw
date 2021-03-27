@@ -62,29 +62,32 @@ class string;
 ///
 class istream : public cmemlink, public ios_base {
 public:
-    inline		istream (void)				: cmemlink(), _pos (0) {}
-    inline		istream (const void* p, streamsize n)	: cmemlink(p, n), _pos (0) {}
-    inline explicit	istream (const cmemlink& source)	: cmemlink (source), _pos (0) {}
+    constexpr		istream (void)				: cmemlink(), _pos (0) {}
+    constexpr		istream (const void* p, streamsize n)	: cmemlink(p, n), _pos (0) {}
+    constexpr explicit	istream (const cmemlink& source)	: cmemlink (source), _pos (0) {}
     explicit		istream (const ostream& source) noexcept;
-    inline iterator	end (void) const			{ return cmemlink::end(); }
+    constexpr iterator	end (void) const			{ return cmemlink::end(); }
     inline void		link (const void* p, streamsize n)	{ cmemlink::link (p, n); }
     inline void		link (const cmemlink& l)		{ cmemlink::link (l.cdata(), l.readable_size()); }
     inline void		link (const void* f, const void* l)	{ cmemlink::link (f, l); }
-    inline void		relink (const void* p, streamsize n)	{ cmemlink::relink (p, n); _pos = 0; }
-    inline void		relink (const cmemlink& l)		{ relink (l.cdata(), l.readable_size()); }
+    constexpr void	relink (const void* p, streamsize n)	{ cmemlink::relink (p, n); _pos = 0; }
+    constexpr void	relink (const cmemlink& l)		{ relink (l.cdata(), l.readable_size()); }
     virtual void	unlink (void) noexcept override;
     virtual streamsize	underflow (streamsize = 1);
-    inline uoff_t	pos (void) const	{ return _pos; }
-    inline const_iterator ipos (void) const	{ return begin() + pos(); }
-    inline streamsize	remaining (void) const	{ return size() - pos(); }
+    constexpr uoff_t	pos (void) const	{ return _pos; }
+    constexpr const_iterator ipos (void) const	{ return begin() + pos(); }
+    constexpr streamsize remaining (void) const	{ return size() - pos(); }
     inline void		seek (uoff_t newPos);
     inline void		iseek (const_iterator newPos);
     inline void		skip (streamsize nBytes);
-    inline bool		aligned (streamsize grain = c_DefaultAlignment) const;
+    constexpr bool	aligned (streamsize grain = c_DefaultAlignment) const
+			    { return pos() % grain == 0; }
     inline bool		verify_remaining (const char* op, const char* type, streamsize n);
-    inline streamsize	align_size (streamsize grain = c_DefaultAlignment) const;
+    constexpr streamsize align_size (streamsize grain = c_DefaultAlignment) const
+			    { return Align (pos(), grain) - pos(); }
     inline void		align (streamsize grain = c_DefaultAlignment);
-    inline void		swap (istream& is);
+    constexpr void	swap (istream& is)
+			    { cmemlink::swap (is); ::ustl::swap (_pos, is._pos); }
     inline void		read (void* buffer, streamsize size);
     inline void		read (memlink& buf)	{ read (buf.begin(), buf.writable_size()); }
     void		read_strz (string& str);
@@ -92,11 +95,11 @@ public:
     inline void		read (istream&)			{ }
     void		write (ostream& os) const;
     void		text_write (ostringstream& os) const;
-    inline streamsize	stream_size (void) const	{ return remaining(); }
+    constexpr streamsize stream_size (void) const	{ return remaining(); }
     template <typename T>
     inline void		iread (T& v);
     inline void		ungetc (void)		{ seek (pos() - 1); }
-    inline off_t	tellg (void) const	{ return pos(); }
+    constexpr off_t	tellg (void) const	{ return pos(); }
     inline void		seekg (off_t p, seekdir d = beg);
 private:
     streamoff		_pos;		///< The current read position.
@@ -105,14 +108,14 @@ private:
 //----------------------------------------------------------------------
 
 template <typename T, typename Stream>
-inline streamsize required_stream_size (T, const Stream&) { return 1; }
+inline constexpr streamsize required_stream_size (T, const Stream&) { return 1; }
 template <typename T>
-inline streamsize required_stream_size (T v, const istream&) { return stream_size_of(v); }
+inline constexpr streamsize required_stream_size (T v, const istream&) { return stream_size_of(v); }
 
 template <typename Stream>
-inline bool stream_at_eof (const Stream& stm)	{ return stm.eof(); }
+inline constexpr bool stream_at_eof (const Stream& stm)	{ return stm.eof(); }
 template <>
-inline bool stream_at_eof (const istream&)	{ return false; }
+inline constexpr bool stream_at_eof (const istream&)	{ return false; }
 
 /// \class istream_iterator
 /// \ingroup BinaryStreamIterators
@@ -129,11 +132,11 @@ public:
     typedef typename Stream::size_type	size_type;
     typedef input_iterator_tag	iterator_category;
 public:
-				istream_iterator (void)		: _pis (nullptr), _v() {}
-    explicit			istream_iterator (Stream& is)	: _pis (&is), _v() { Read(); }
-				istream_iterator (const istream_iterator& i)	: _pis (i._pis), _v (i._v) {}
+    constexpr			istream_iterator (void)		: _pis (nullptr), _v() {}
+    constexpr explicit		istream_iterator (Stream& is)	: _pis (&is), _v() { Read(); }
+    constexpr			istream_iterator (const istream_iterator& i)	: _pis (i._pis), _v (i._v) {}
     /// Reads and returns the next value.
-    inline const T&		operator* (void)	{ return _v; }
+    constexpr const T&		operator* (void)	{ return _v; }
     inline istream_iterator&	operator++ (void)	{ Read(); return *this; }
     inline istream_iterator&	operator-- (void)	{ _pis->seek (_pis->pos() - 2 * stream_size_of(_v)); return operator++(); }
     inline istream_iterator	operator++ (int)	{ istream_iterator old (*this); operator++(); return old; }
@@ -141,9 +144,9 @@ public:
     inline istream_iterator&	operator+= (streamsize n)	{ while (n--) operator++(); return *this; }
     inline istream_iterator&	operator-= (streamsize n)	{ _pis->seek (_pis->pos() - (n + 1) * stream_size_of(_v)); return operator++(); }
     inline istream_iterator	operator- (streamoff n) const			{ istream_iterator result (*this); return result -= n; }
-    inline difference_type	operator- (const istream_iterator& i) const	{ return distance (i._pis->pos(), _pis->pos()) / stream_size_of(_v); }
-    inline bool			operator== (const istream_iterator& i) const	{ return (!_pis && !i._pis) || (_pis && i._pis && _pis->pos() == i._pis->pos()); }
-    inline bool			operator< (const istream_iterator& i) const	{ return !i._pis || (_pis && _pis->pos() < i._pis->pos()); }
+    constexpr difference_type	operator- (const istream_iterator& i) const	{ return distance (i._pis->pos(), _pis->pos()) / stream_size_of(_v); }
+    constexpr bool		operator== (const istream_iterator& i) const	{ return (!_pis && !i._pis) || (_pis && i._pis && _pis->pos() == i._pis->pos()); }
+    constexpr bool		operator< (const istream_iterator& i) const	{ return !i._pis || (_pis && _pis->pos() < i._pis->pos()); }
 private:
     void Read (void)
     {
@@ -208,18 +211,6 @@ inline void istream::skip (streamsize nBytes)
     seek (pos() + nBytes);
 }
 
-/// Returns the number of bytes to skip to be aligned on \p grain.
-inline streamsize istream::align_size (streamsize grain) const
-{
-    return Align (pos(), grain) - pos();
-}
-
-/// Returns \c true if the read position is aligned on \p grain
-inline bool istream::aligned (streamsize grain) const
-{
-    return pos() % grain == 0;
-}
-
 /// aligns the read position on \p grain
 inline void istream::align (streamsize grain)
 {
@@ -239,13 +230,6 @@ inline void istream::iread (T& v)
 #endif
     v = *reinterpret_cast<const T*>(ipos());
     _pos += sizeof(T);
-}
-
-/// Swaps contents with \p is
-inline void istream::swap (istream& is)
-{
-    cmemlink::swap (is);
-    ::ustl::swap (_pos, is._pos);
 }
 
 /// Reads \p n bytes into \p buffer.

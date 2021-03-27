@@ -15,7 +15,7 @@ namespace ustl {
 /// \ingroup ConditionAlgorithms
 ///
 template <typename RandomAccessIterator, typename Compare>
-bool is_heap (RandomAccessIterator first, RandomAccessIterator last, Compare comp)
+constexpr bool is_heap (RandomAccessIterator first, RandomAccessIterator last, Compare comp)
 {
     RandomAccessIterator iChild (first);
     for (; ++iChild < last; ++first)
@@ -27,11 +27,11 @@ bool is_heap (RandomAccessIterator first, RandomAccessIterator last, Compare com
 /// Utility function to "trickle down" the root item - swaps the root item with its
 /// largest child and recursively fixes the proper subtree.
 template <typename RandomAccessIterator, typename Compare>
-void trickle_down_heap (RandomAccessIterator first, size_t iHole, size_t heapSize, Compare comp)
+constexpr void trickle_down_heap (RandomAccessIterator first, size_t iHole, size_t heapSize, Compare comp)
 {
     typedef typename iterator_traits<RandomAccessIterator>::value_type value_type;
     const value_type v (first[iHole]);
-    for (size_t iChild; (iChild = 2 * iHole + 1) < heapSize;) {
+    for (size_t iChild = 0; (iChild = 2 * iHole + 1) < heapSize;) {
 	if (iChild + 1 < heapSize)
 	    iChild += comp (first[iChild], first[iChild + 1]);
 	if (comp (v, first[iChild])) {
@@ -50,7 +50,7 @@ void trickle_down_heap (RandomAccessIterator first, size_t iHole, size_t heapSiz
 /// \ingroup SortingAlgorithms
 ///
 template <typename RandomAccessIterator, typename Compare>
-void make_heap (RandomAccessIterator first, RandomAccessIterator last, Compare comp)
+constexpr void make_heap (RandomAccessIterator first, RandomAccessIterator last, Compare comp)
 {
     if (last <= first)
 	return;
@@ -63,7 +63,7 @@ void make_heap (RandomAccessIterator first, RandomAccessIterator last, Compare c
 /// \ingroup HeapAlgorithms
 /// \ingroup MutatingAlgorithms
 template <typename RandomAccessIterator, typename Compare>
-void push_heap (RandomAccessIterator first, RandomAccessIterator last, Compare comp)
+constexpr void push_heap (RandomAccessIterator first, RandomAccessIterator last, Compare comp)
 {
     if (last <= first)
 	return;
@@ -84,7 +84,7 @@ void push_heap (RandomAccessIterator first, RandomAccessIterator last, Compare c
 /// \ingroup HeapAlgorithms
 /// \ingroup MutatingAlgorithms
 template <typename RandomAccessIterator, typename Compare>
-void pop_heap (RandomAccessIterator first, RandomAccessIterator last, Compare comp)
+constexpr void pop_heap (RandomAccessIterator first, RandomAccessIterator last, Compare comp)
 {
     if (--last <= first)
 	return;
@@ -96,7 +96,7 @@ void pop_heap (RandomAccessIterator first, RandomAccessIterator last, Compare co
 /// \ingroup HeapAlgorithms
 /// \ingroup SortingAlgorithms
 template <typename RandomAccessIterator, typename Compare>
-void sort_heap (RandomAccessIterator first, RandomAccessIterator last, Compare comp)
+constexpr void sort_heap (RandomAccessIterator first, RandomAccessIterator last, Compare comp)
 {
     for (; first < last; --last)
 	pop_heap (first, last, comp);
@@ -104,7 +104,7 @@ void sort_heap (RandomAccessIterator first, RandomAccessIterator last, Compare c
 
 #define HEAP_FN_WITH_LESS(rtype, name)	\
 template <typename RandomAccessIterator>\
-inline rtype name (RandomAccessIterator first, RandomAccessIterator last)		\
+inline constexpr rtype name (RandomAccessIterator first, RandomAccessIterator last)		\
 {											\
     typedef typename iterator_traits<RandomAccessIterator>::value_type value_type;	\
     return name (first, last, less<value_type>());					\
@@ -134,22 +134,22 @@ public:
     typedef typename container_type::const_reference	const_reference;
     typedef typename container_type::const_iterator	const_iterator;
 public:
-    inline explicit		priority_queue (const Comp& c = Comp()) : _v(), _c(c) {}
-    inline			priority_queue (const Comp& c, const container_type& v) : _v(v), _c(c) {}
-				priority_queue (const_iterator f, const_iterator l, const Comp& c = Comp())
+    constexpr explicit		priority_queue (const Comp& c = Comp()) : _v(), _c(c) {}
+    constexpr			priority_queue (const Comp& c, const container_type& v) : _v(v), _c(c) {}
+    constexpr			priority_queue (const_iterator f, const_iterator l, const Comp& c = Comp())
 				    : _v(f, l), _c(c) { make_heap (_v.begin(), _v.end(), _c); }
-    inline size_type		size (void) const	{ return _v.size(); }
-    inline bool			empty (void) const	{ return _v.empty(); }
-    inline const_reference	top (void) const	{ return _v.front(); }
+    constexpr size_type		size (void) const	{ return _v.size(); }
+    constexpr bool			empty (void) const	{ return _v.empty(); }
+    constexpr const_reference	top (void) const	{ return _v.front(); }
     inline void			push (const_reference v){ _v.push_back (v); push_heap (_v.begin(), _v.end(), _c); }
     inline void			pop (void)		{ pop_heap (_v.begin(), _v.end()); _v.pop_back(); }
-    inline void			swap (priority_queue& v){ _v.swap (v._v); swap (_c, v._c); }
+    constexpr void		swap (priority_queue& v){ _v.swap (v._v); swap (_c, v._c); }
 #if HAVE_CPP11
-    inline explicit		priority_queue (priority_queue&& v)	: _v(move(v._v)),_c(v._c) {}
-    inline			priority_queue (const Comp& c, container_type&& v)	: _v(move(v)),_c(c) {}
+    constexpr explicit		priority_queue (priority_queue&& v)	: _v(move(v._v)),_c(v._c) {}
+    constexpr			priority_queue (const Comp& c, container_type&& v)	: _v(move(v)),_c(c) {}
 				priority_queue (const_iterator f, const_iterator l, const Comp& c, container_type&& v)
 				    : _v(move(v)), _c(c) { _v.insert (_v.end(), f, l); make_heap (_v.begin(), _v.end(), _c); }
-    inline priority_queue&	operator= (priority_queue&& v)	{ swap (v); return *this; }
+    constexpr priority_queue&	operator= (priority_queue&& v)	{ swap (v); return *this; }
     template <typename... Args>
     inline void			emplace (Args&&... args)	{ _v.emplace_back (forward<Args>(args)...); push_heap (_v.begin(), _v.end(), _c); }
 #endif
