@@ -28,8 +28,7 @@
 #include <ctype.h>
 #include <errno.h>
 #if HAVE_ALLOCA_H
-    // #include <alloca.h>
-    #include <malloc.h>
+    #include <alloca.h>
 #endif
 #ifndef WITHOUT_LIBSTDCPP
     #include <exception>

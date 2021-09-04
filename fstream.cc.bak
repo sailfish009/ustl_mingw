@@ -8,26 +8,10 @@
 #include "uutility.h"
 #include <fcntl.h>
 #include <sys/stat.h>
-// #include <sys/ioctl.h>
-#include "sys/ioctl.h"
+#include <sys/ioctl.h>
 #if HAVE_SYS_MMAN_H
-    // #include <sys/mman.h>
-    #include "sys/mman.h"
+    #include <sys/mman.h>
 #endif
-
-#include <stdio.h>
-
-#ifndef O_NONBLOCK
-#define O_NONBLOCK      00004000
-#endif
-
-#ifndef O_NOCTTY
-#define O_NOCTTY        00000400        /* not fcntl */
-#endif
-
-#define F_GETFL         3               /* get file->f_flags */
-#define F_SETFL         4               /* set file->f_flags */
-
 
 namespace ustl {
 
@@ -215,9 +199,7 @@ off_t fstream::size (void) const
 /// Synchronizes the file's data and status with the disk.
 void fstream::sync (void)
 {
-    // if (fsync (_fd))
-    // if (fflush (_fd))
-    if (_commit (_fd))
+    if (fsync (_fd))
 	set_and_throw (badbit | failbit, "sync");
 }
 
@@ -240,11 +222,10 @@ int fstream::ioctl (const char* rname, int request, long argument)
 /// Calls the given fcntl. Use FCNTLID macro to pass in both \p name and \p request.
 int fstream::fcntl (const char* rname, int request, long argument)
 {
-    return 0;
-    // int rv = ::fcntl (_fd, request, argument);
-    // if (rv < 0)
-    //     set_and_throw (failbit, rname);
-    // return rv;
+    int rv = ::fcntl (_fd, request, argument);
+    if (rv < 0)
+	set_and_throw (failbit, rname);
+    return rv;
 }
 
 void fstream::set_nonblock (bool v) noexcept
